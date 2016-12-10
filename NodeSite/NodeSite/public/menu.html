@@ -1,0 +1,47 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <title>BeachBevs - Menu</title>
+    <link rel = "stylesheet" type = "text/css" href = "stylesheets/menuStyle.css" media = "all">
+        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+</head>
+<body>
+    <script defer src="javascripts/jquery-1.12.0.js"></script>
+    <script defer src="javascripts/long.min.js"></script>
+    <script defer src="javascripts/bytebuffer.min.js"></script>
+    <script defer src="javascripts/protobuf.min.js"></script>
+    <script defer src="javascripts/PacketIO.js"></script>
+    <script defer src="javascripts/PacketManager.js"></script>
+    <script defer src="javascripts/TCPConnection.js"></script>
+    <script defer src="javascripts/SetupManager.js"></script>
+    <script defer src="javascripts/Client.js"></script>
+    <script defer src="javascripts/menu.js"></script>
+    <h1 id="title">BEACH<span id="titleB2">B</span>EVS</h1>
+    <div id="headerRect"></div>
+    <img id="loading" src="images/load.gif" alt="loading">
+    <canvas id="itemCanvas"></canvas>
+    <img id="itemBackSelected" class="hidden" src="images/menuITemp.png">
+    <img id="itemBack" class="hidden" src="images/menuBack.png">
+    <img id="itemTab" class="hidden" src="images/tab.png">
+    <img id="itemAdd" class="hidden" src="images/addClick.png">
+    <img id="itemSubtract" class="hidden" src="images/subtractClick.png">
+    <table id="reviewTable" class="hidden">
+        <tr>
+            <td><u><b>Item</b></u></td>
+            <td><u><b>Price</b></u></td>
+            <td><u><b>Amount</b></u></td>
+            <td><u><b>Total Cost</b></u></td>
+        </tr>
+    </table>
+    <input id="reviewOrder" class="hidden" type="image" src="images/reviewOrder.png" alt="settings">
+    <p id="noOrder" class="hidden">You Didn't Order Anything...</p>
+    <p id="totalCost" class="hidden"></p>
+    <form id="orderName" class="hidden" >
+        Your Name:<br>
+        <input id="orderNameField" type="text">
+    </form>
+    <input id="editOrder" class="hidden" type="image" src="images/editOrder.png" alt="settings">
+    <input id="confirmOrder" class="hidden" type="image" src="images/confirmOrder.png" alt="settings">
+</body>
+</html>

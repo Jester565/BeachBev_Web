@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <title>BeachBevs - Orders</title>
+    <link rel = "stylesheet" type = "text/css" href = "stylesheets/orderStyle.css" media = "all">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+</head>
+<body>
+    <script defer src="javascripts/jquery-1.12.0.js"></script>
+    <script defer src="javascripts/long.min.js"></script>
+    <script defer src="javascripts/bytebuffer.min.js"></script>
+    <script defer src="javascripts/protobuf.min.js"></script>
+    <script defer src="javascripts/PacketIO.js"></script>
+    <script defer src="javascripts/PacketManager.js"></script>
+    <script defer src="javascripts/TCPConnection.js"></script>
+    <script defer src="javascripts/SetupManager.js"></script>
+    <script defer src="javascripts/Client.js"></script>
+    <script defer src="javascripts/orders.js"></script>
+    <script defer src="javascripts/aScore.js"></script>
+    <h1 id="title">beachboy</h1>
+    <div id="headerRect"></div>
+    <input id="settingButton" type="image" src="setting2.png" alt="settings">
+    <div id="settings">
+        <p id="name">Guest</p>
+        <button id="logout"> Log Out </button>
+    </div>
+    <div id="order" class='hidden'>
+        <p class="oElm">Time</p>
+        <p id="oTime" class="oElm2">a</p>
+        <p class="oElm">Items</p>
+        <p id="oItems" class="oElm2">a</p>
+        <p class="oElm">Total Cost</p>
+        <p id="oCost" class="oElm2">a</p>
+        <button id="oNavigate" class="oElm2"> Navigate To </button>
+        <br>
+        <br>
+        <button id="oDone"> Done </button>
+        <button id="oFail" class="oElm2"> Failed </button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>NodeSite</Name>
+    <RootNamespace>NodeSite</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>7969dda8-f229-45df-ac93-045d36d374a0</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>app.js</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <ProjectView>ShowAllFiles</ProjectView>
+    <NodejsPort>1337</NodejsPort>
+    <StartWebBrowser>true</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="app.js" />
+    <Compile Include="public\javascripts\apply.js" />
+    <Compile Include="public\javascripts\aScore.js" />
+    <Compile Include="public\javascripts\bytebuffer.min.js" />
+    <Compile Include="public\javascripts\Client.js" />
+    <Compile Include="public\javascripts\employee.js" />
+    <Compile Include="public\javascripts\index.js" />
+    <Compile Include="public\javascripts\jquery-1.12.0.js" />
+    <Compile Include="public\javascripts\login.js" />
+    <Compile Include="public\javascripts\long.min.js" />
+    <Compile Include="public\javascripts\menu.js" />
+    <Compile Include="public\javascripts\orders.js" />
+    <Compile Include="public\javascripts\PacketIO.js" />
+    <Compile Include="public\javascripts\PacketManager.js" />
+    <Compile Include="public\javascripts\protobuf.min.js" />
+    <Compile Include="public\javascripts\SetupManager.js" />
+    <Compile Include="public\javascripts\TCPConnection.js" />
+    <Compile Include="routes\users.js" />
+    <Content Include="package.json" />
+    <Content Include="public\apply.html" />
+    <Content Include="public\employee.html" />
+    <Content Include="public\fonts\Berlin.ttf" />
+    <Content Include="public\fonts\BERNHC.TTF" />
+    <Content Include="public\fonts\BLADRMF_.TTF" />
+    <Content Include="public\images\addClick.png" />
+    <Content Include="public\images\bar.png" />
+    <Content Include="public\images\beach.jpg" />
+    <Content Include="public\images\closed.png" />
+    <Content Include="public\images\confirmOrder.png" />
+    <Content Include="public\images\editOrder.png" />
+    <Content Include="public\images\foodman.png" />
+    <Content Include="public\images\HB2.jpg" />
+    <Content Include="public\images\lifeguard.png" />
+    <Content Include="public\images\load.gif" />
+    <Content Include="public\images\menuBack.png" />
+    <Content Include="public\images\menuItemp.png" />
+    <Content Include="public\images\noGeo.png" />
+    <Content Include="public\images\ordernow.png" />
+    <Content Include="public\images\outRange.png" />
+    <Content Include="public\images\phoneman.png" />
+    <Content Include="public\images\reviewOrder.png" />
+    <Content Include="public\images\setting2.png" />
+    <Content Include="public\images\subtractClick.png" />
+    <Content Include="public\images\tab.png" />
+    <Content Include="public\index.html" />
+    <Content Include="public\login.html" />
+    <Content Include="public\menu.html" />
+    <Content Include="public\noGeo.html" />
+    <Content Include="public\noServer.html" />
+    <Content Include="public\orders.html" />
+    <Content Include="public\stylesheets\indexStyle.css" />
+    <Content Include="public\stylesheets\menuStyle.css" />
+    <Content Include="public\stylesheets\noGeoStyle.css" />
+    <Content Include="public\stylesheets\noServerStyle.css" />
+    <Content Include="public\stylesheets\orderStyle.css" />
+    <Content Include="public\stylesheets\outRangeStyle.css" />
+    <Content Include="README.md" />
+    <Content Include="typings.json" />
+    <Content Include="views\index.jade" />
+    <Content Include="views\layout.jade" />
+    <Content Include="views\error.jade" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="public\" />
+    <Folder Include="public\javascripts\" />
+    <Folder Include="public\images\" />
+    <Folder Include="public\fonts\" />
+    <Folder Include="public\stylesheets\" />
+    <Folder Include="routes\" />
+    <Folder Include="typings\" />
+    <Folder Include="typings\globals\" />
+    <Folder Include="typings\globals\body-parser\" />
+    <Folder Include="typings\globals\cookie-parser\" />
+    <Folder Include="typings\globals\debug\" />
+    <Folder Include="typings\globals\express-serve-static-core\" />
+    <Folder Include="typings\globals\express\" />
+    <Folder Include="typings\globals\jade\" />
+    <Folder Include="typings\globals\mime\" />
+    <Folder Include="typings\globals\morgan\" />
+    <Folder Include="typings\globals\node\" />
+    <Folder Include="typings\globals\serve-favicon\" />
+    <Folder Include="typings\globals\serve-static\" />
+    <Folder Include="typings\globals\stylus\" />
+    <Folder Include="views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="typings\globals\body-parser\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\cookie-parser\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\debug\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\express-serve-static-core\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\express\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\jade\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\mime\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\morgan\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\serve-favicon\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\serve-static\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\stylus\index.d.ts" />
+    <TypeScriptCompile Include="typings\index.d.ts" />
+  </ItemGroup>
+  <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,105 @@
+html,body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+@font-face {
+    font-family: 'BladeRunner';
+    src: url('../fonts/BLADRMF_.TTF');
+}
+
+#title {
+    position: fixed;
+    font-family: 'BladeRunner';
+    left: 50%;
+    margin-left: -3em;
+    text-align: center;
+    top: -26px;
+    z-index: 4;
+    font-size: 3em;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#headerRect {
+    position: fixed;
+    top: -6px;
+    left: -6px;
+    width: calc(100% + 12px);
+    height: 4em;
+    background: rgba(255, 127, 1, .97);
+    border: solid;
+    border-width: 2px;
+    border-color: rgb(128, 128, 128);
+    z-index: 3;
+    overflow: hidden;
+}
+
+#settingButton:hover {
+    top: 4px;
+    width: 4em;
+    height: 4em;
+    right: 10px;
+}
+#settingButton {
+    position: fixed;
+    top: 8px;
+    right: 14px;
+    width: 3.5em;
+    height: 3.5em;
+    z-index: 4;
+    transition-duration: .1s;
+}
+
+#settings {
+    position: fixed;
+    top: -7em;
+    right: 10px;
+    height: 6em;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 0px;
+    background: rgba(200, 200, 200, .98);
+    border: solid;
+    border-width: 2px;
+    border-color: rgb(128, 128, 128);
+    z-index: 2;
+    transition-duration: .5s;
+    -webkit-transition-duration: .5s;
+}
+
+#order {
+    opacity: 1;
+    position: relative;
+    top: 5em;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: auto;
+    width: 98%;
+    background: rgba(255, 127, 1, .3);
+    border: solid;
+    border-width: 2px;
+    border-color: rgb(128, 0, 0);
+    padding: 4px;
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+.oElm {
+    text-align: center;
+    font-size: 2em;
+}
+
+.oElm2 {
+    text-align: center;
+}
+
+.down { 
+   top: calc(4em - 6px) !important;
+}
