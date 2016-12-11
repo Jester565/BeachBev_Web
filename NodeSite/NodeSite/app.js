@@ -4,7 +4,7 @@ var http = require('http');
 var express = require('express');
 var app = express();
 
-var localPort = 3000;
+var localPort = 80;
 var localAddress = "0.0.0.0";
 
 app.use('/', function (req, res, next) {
