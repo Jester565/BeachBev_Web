@@ -15,7 +15,14 @@ app.use('/', function (req, res, next) {
 
 app.use(express.static(__dirname + '/public'));
 
-app.listen(localPort, localAddress);
+var webServer = app.listen(localPort, localAddress, function () {
+  console.log("Running");
+});
 
-console.log("Running");
+webServer.on('error', function (err) {
+  console.log("ERROR: " + err);
+});
 
+webServer.on('uncaughtException', function (err) {
+  console.log("UNCAUGHT EXCEPTION: " + err);
+});

@@ -1,5 +1,4 @@
 html,body {
-    width: 100%;
     height: 100%;
     margin: 0px;
     padding: 0px;
@@ -9,43 +8,15 @@ html,body {
     font-family: 'Bernard';
     src: url('../fonts/BERNHC.TTF');
 }
+
 @font-face {
     font-family: 'Berlin';
     src: url('../fonts/Berlin.ttf');
 }
-#headerRect {
-    position: fixed;
-    top: -6px;
-    left: -6px;
-    width: calc(100% + 12px);
-    height: 4em;
-    background: rgba(255, 127, 1, .97);
-    border: solid;
-    border-width: 2px;
-    border-color: rgb(128, 128, 128);
-    z-index: 3;
-}
+
 body {
     background-color: rgb(255,255,255);
-}
-
-#title:first-letter {
-    font-size: 1.5em;
-}
-#title {
-    position: fixed;
-    font-family: 'Bernard';
-    right: 0;
-    left: 0;
-    margin-right: auto;
-    margin-left: auto;
-    width: 5em;
-    top: -26px;
-    z-index: 4;
-    font-size: 2.4em;
-}
-#titleB2 {
-    font-size: 1.5em;
+    overflow-x: hidden;
 }
 
 #slogan1 {
@@ -102,6 +73,7 @@ body {
     margin-top: 10px;
     width: 70%;
     left: 15%;
+    overflow: hidden;
 }
 
 #hdiw {
