@@ -27,11 +27,7 @@ app.use('/', function (req, res, next) {
 
 app.use(express.static(__dirname + '/public'));
 
-var httpServer = http.createServer(app);
-
-httpServer.listen(httpPort, localAddress, function () {
-  console.log("HTTP Running");
-});
+var httpServer;
 
 var httpsServer;
 
@@ -40,5 +36,12 @@ if (httpsEnabled) {
 
   httpsServer.listen(httpsPort, localAddress, function () {
     console.log("HTTPS Running");
+  });
+}
+else
+{
+  httpServer = http.createServer(app);
+  httpServer.listen(httpPort, localAddress, function() {
+    console.log("HTTP RUNNING");
   });
 }
