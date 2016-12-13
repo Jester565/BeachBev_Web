@@ -1,20 +1,17 @@
-﻿var httpsEnabled = true;
-var httpPort = 80;
+﻿var httpPort = 80;
 var httpsPort = 443;
 var localAddress = "0.0.0.0";
 
 var fs = require('fs');
 var http = require('http');
-var https;
+
+var https = require('https');
 var credentials;
-if (httpsEnabled) {
-  https = require('https');
-  var privateKey = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/privkey.pem');
-  var certificate = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/cert.pem');
-  credentials = {
-    key: privateKey, cert: certificate
-  };
-}
+var privateKey = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/privkey.pem');
+var certificate = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/cert.pem');
+var credentials = {
+  key: privateKey, cert: certificate
+};
 
 var express = require('express');
 var app = express();
@@ -27,21 +24,19 @@ app.use('/', function (req, res, next) {
 
 app.use(express.static(__dirname + '/public'));
 
-var httpServer;
 
-var httpsServer;
+var httpsServer = https.createServer(credentials, app);
 
-if (httpsEnabled) {
-  httpsServer = https.createServer(credentials, app);
+httpsServer.listen(httpsPort, localAddress, function () {
+  console.log("HTTPS Running");
+});
 
-  httpsServer.listen(httpsPort, localAddress, function () {
-    console.log("HTTPS Running");
-  });
-}
-else
-{
-  httpServer = http.createServer(app);
-  httpServer.listen(httpPort, localAddress, function() {
-    console.log("HTTP RUNNING");
-  });
-}
+var httpServer = http.createServer(app);
+
+httpServer.get('*', function (req, res) {
+  res.redirect('https://beachbevs.com' + req.url);
+});
+
+httpServer.listen(httpPort, localAddress, function () {
+  console.log("HTTP RUNNING");
+});
