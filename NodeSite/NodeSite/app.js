@@ -1,11 +1,23 @@
-﻿var fs = require('fs');
+﻿var httpsEnabled = true;
+var httpPort = 80;
+var httpsPort = 443;
+var localAddress = "0.0.0.0";
+
+var fs = require('fs');
 var http = require('http');
+var https;
+var credentials;
+if (httpsEnabled) {
+  https = require('https');
+  var privateKey = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/privkey.pem');
+  var certificate = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/cert.pem');
+  credentials = {
+    key: privateKey, cert: certificate
+  };
+}
 
 var express = require('express');
 var app = express();
-
-var localPort = 80;
-var localAddress = "0.0.0.0";
 
 app.use('/', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -15,14 +27,18 @@ app.use('/', function (req, res, next) {
 
 app.use(express.static(__dirname + '/public'));
 
-var webServer = app.listen(localPort, localAddress, function () {
-  console.log("Running");
+var httpServer = http.createServer(app);
+
+httpServer.listen(httpPort, localAddress, function () {
+  console.log("HTTP Running");
 });
 
-webServer.on('error', function (err) {
-  console.log("ERROR: " + err);
-});
+var httpsServer;
 
-webServer.on('uncaughtException', function (err) {
-  console.log("UNCAUGHT EXCEPTION: " + err);
-});
+if (httpsEnabled) {
+  httpsServer = https.createServer(credentials, app);
+
+  httpsServer.listen(httpsPort, localAddress, function () {
+    console.log("HTTPS Running");
+  });
+}

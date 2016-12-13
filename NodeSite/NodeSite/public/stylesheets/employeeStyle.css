@@ -1,4 +1,10 @@
-﻿body {
+﻿html, body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
   overflow-x: hidden;
 }
 
@@ -14,7 +20,7 @@
 #workerImg {
   position: absolute;
   min-height: 50vw;
-  height: 40%;
+  height: 300px;
   width: auto;
   display: block;
   position:absolute;
@@ -26,12 +32,8 @@
 
 #spaceDiv {
   width: 100%;
-  min-height: 50vw;
-  height: 40%;
-}
-
-#pitchDiv {
-  
+  min-height: calc(50vw);
+  height: calc(300px);
 }
 
 #pitch {
@@ -39,8 +41,92 @@
   margin-right: auto;
   text-align: center;
   display: block;
-  max-width: 70%;
-  width: 60vh;
+  width: 70%;
   font-family: 'Bitter', serif;
   font-size: 1.5em;
+}
+
+#applyDiv {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  left: 0;
+  right: 0;
+  height: auto;
+  padding: 5px;
+  background-color: rgba(100, 100, 100, 1);
+  border: solid;
+  border-color: black;
+  border-width: 2px;
+  border-radius: 7px;
+}
+
+input[type="text"], 
+input[type="password"]{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: -18px;
+  width: 94%;
+  margin-left: 0%;
+  font-family: sans-serif;
+  font-size: 18px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+  border: solid 1px #dcdcdc;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+
+input[type="text"]:focus, 
+input[type="password"]:focus{
+  outline: none;
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
+}
+
+ul {
+  list-style-type: none;
+}
+
+#applyButton {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  max-width: 40vh;
+  width: 60vw;
+  height: auto;
+  padding: 0px;
+  background: rgba(255, 127, 1, .97);
+  border-radius: 1vw;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border-color: black;
+  border: solid;
+  border-width: 2px;
+  transition: .25s ease-in-out;
+}
+
+#applyButton h2 {
+  font-family: 'Bitter', serif;
+  font-size: 3em;
+  color: black;
+}
+
+#applyButton:hover {
+  background-color: white;
+  border-color: orangered
+}
+
+#blankDiv {
+  height: 30px;
+}
+
+#msg {
+  text-align: center;
+  font-family: 'Bitter', serif;
+  font-size: 1em;
+  color: red;
 }
