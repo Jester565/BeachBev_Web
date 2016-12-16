@@ -1,6 +1,6 @@
 CC = g++ -std=c++11
 CC_FLAGS = -w -g
-LIBS = -lodbc 
+LIBS = -lodbc -lboost_system -lboost_serialization
 INCLUDES =
 
 EXEC = run

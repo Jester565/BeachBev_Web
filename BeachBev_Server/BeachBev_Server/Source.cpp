@@ -1,7 +1,4 @@
 #include <iostream>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <fstream>
 #include "DBManager.h"
 
 static const std::string& CONNECT_INFORMATION_PATH = "./mysql.coni";
@@ -33,24 +30,30 @@ int main()
 						}
 				}
 				{
-						try {
-								otl_stream otlStream(50, "SELECT top 1 * FROM Orders ORDER BY orderID desc;", *dbManager.getConnection());
-								dbManager.getConnection()->commit();
-								int orderID = 0;
-								if (!otlStream.eof())
-								{
-										otlStream >> orderID;
-								}
-						}
-						catch (otl_exception ex)
+					try {
+						std::string query;
+						#ifdef MS_SQL
+						query = "SELECT top 1 * FROM Orders ORDER BY orderID desc";
+						#else
+						query = "SELECT * from Orders ORDER BY orderID desc limit 1";
+						#endif
+						otl_stream otlStream(50, query.c_str(), *dbManager.getConnection());
+						dbManager.getConnection()->commit();
+						int orderID = 0;
+						if (!otlStream.eof())
 						{
-								std::cerr << "OTL EXCEPTION\nCode: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+						 	otlStream >> orderID;
+							std::cout << "OID: " << orderID;
 						}
+					}
+					catch (otl_exception ex)
+					{
+							std::cerr << "OTL EXCEPTION\nCode: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+					}
 				}
 		}
 		else
 		{
 				std::cerr << "Connection failed" << std::endl;
 		}
-		system("pause");
 }
