@@ -40,10 +40,7 @@ bool DBManager::connect(const std::string & driver)
 {
 		otl_connect::otl_initialize();
 		dbConnection = new otl_connect();
-		std::string connectStr = "Driver={";
-		connectStr += driver;
-		connectStr += "};";
-		connectStr += '\0';
+		std::string connectStr = "DSN=my-connector";
 		try
 		{
 				dbConnection->rlogon(connectStr.c_str());

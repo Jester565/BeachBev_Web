@@ -11,7 +11,7 @@ int main()
 		std::cout << "Enter password: ";
 		std::string pwd;
 		std::cin >> pwd;
-		if (dbManager.connect("LAPTOP-6SS7RV3H\\SQLEXPRESS", pwd, userName, "beach_bev", "SQL Server"))
+		if (dbManager.connect("my-connector"))
 		{
 				std::cout << "Connection successful" << std::endl;
 		}
