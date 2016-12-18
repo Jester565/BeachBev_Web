@@ -5,11 +5,11 @@ function Client(ip, port)
     this.builder = ProtoBuf.newBuilder();
     if (window.location.protocol != "https:")
     {
-        this.tcpConnection = new TCPConnection(this.builder, "192.168.1.17", "8000");
+        this.tcpConnection = new TCPConnection(this.builder, location.host, "8000");
     }
     else
     {
-        this.tcpConnection = new TCPConnection(this.builder, "192.168.1.17", "8443");
+        this.tcpConnection = new TCPConnection(this.builder, location.host, "8443");
     }
     this.packetManager = new PacketManager();
     this.tcpConnection.onmessage = function(iPack){client.packetManager.processPacket(iPack)};

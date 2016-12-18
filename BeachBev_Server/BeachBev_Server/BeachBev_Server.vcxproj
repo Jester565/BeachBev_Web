@@ -67,6 +67,12 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\Boost64_R.props" />
+    <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\Boost_WSS_Server64_R.props" />
+    <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\AsyncServerParent64_R.props" />
+    <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\Boost_WS_Server64_R.props" />
+    <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\HTML64_R.props" />
+    <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\Protobuf64_R.props" />
+    <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\OpenSSL.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -100,10 +106,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -111,10 +118,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BB_Client.cpp" />
+    <ClCompile Include="BB_Server.cpp" />
+    <ClCompile Include="CommandHandler.cpp" />
     <ClCompile Include="DBManager.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BB_Client.h" />
+    <ClInclude Include="BB_Server.h" />
+    <ClInclude Include="CommandHandler.h" />
     <ClInclude Include="DBManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="otlv4.h" />
