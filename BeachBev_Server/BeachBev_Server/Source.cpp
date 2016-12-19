@@ -7,7 +7,7 @@ static const int SERVER_PORT = 8443;
 static const std::string CERT_PATH = "C:\\Users\\ajcra\\Desktop\\aws\\SSL\\local.crt";
 static const std::string PEM_PATH = "C:\\Users\\ajcra\\Desktop\\aws\\SSL\\local.key";
 #else
-static const std::string CERT_PATH = "/etc/letsencrypt/live/beachbevs.com/fullcahin.pem";
+static const std::string CERT_PATH = "/etc/letsencrypt/live/beachbevs.com/fullchain.pem";
 static const std::string PEM_PATH = "/etc/letsencrypt/live/beachbevs.com/privkey.pem";
 #endif
 static const std::string& CONNECT_INFORMATION_PATH = "./mysql.coni";
