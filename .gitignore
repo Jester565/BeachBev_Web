@@ -4,6 +4,9 @@
 # Sensitive files
 *.coni
 
+# Linux files
+*.o
+
 # User-specific files
 *.suo
 *.user

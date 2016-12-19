@@ -8,7 +8,7 @@ var http = require('http');
 var https = require('https');
 var credentials;
 var privateKey = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/privkey.pem');
-var certificate = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/cert.pem');
+var certificate = fs.readFileSync('/etc/letsencrypt/live/beachbevs.com/fullchain.pem');
 var credentials = {
   key: privateKey, cert: certificate
 };
@@ -31,10 +31,9 @@ httpsServer.listen(httpsPort, localAddress, function () {
   console.log("HTTPS Running");
 });
 
-var httpServer = http.createServer(app);
-
-httpServer.get('*', function (req, res) {
-  res.redirect('https://beachbevs.com' + req.url);
+var httpServer = http.createServer(function (req, res) {
+  res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+  res.end();
 });
 
 httpServer.listen(httpPort, localAddress, function () {
