@@ -14,7 +14,7 @@ public:
 
 		bool setEmailTokenHash(IDType eID, DBManager* dbManager, BYTE* emailTokenHash);
 
-		bool sendEmail(const std::string& sendToAddress, const std::string& senderAddress, const std::string& senderName, const std::string& subject, const std::string& body);
+		bool sendEmail(const std::string& sendToAddress, const std::string& senderAddress, const std::string& senderName, const std::string& subject, const std::string& body, bool isHTML = false);
 
 		~EmailManager();
 };

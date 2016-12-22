@@ -46,7 +46,7 @@ bool EmailManager::setEmailTokenHash(IDType eID, DBManager * dbManager, BYTE * e
 		}
 }
 
-bool EmailManager::sendEmail(const std::string & sendToAddress, const std::string & senderAddress, const std::string& senderName, const std::string & subject, const std::string & body)
+bool EmailManager::sendEmail(const std::string & sendToAddress, const std::string & senderAddress, const std::string& senderName, const std::string & subject, const std::string & body, bool isHTML)
 {
 		std::string cmd = "echo \"";
 		cmd += body;
