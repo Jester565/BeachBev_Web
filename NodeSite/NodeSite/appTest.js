@@ -33,6 +33,7 @@ httpsServer.listen(httpsPort, localAddress, function () {
 
 /*
 var httpServer = http.createServer(app);
+
 httpServer.get('*', function (req, res) {
   res.redirect('https://localhost' + req.url);
 });

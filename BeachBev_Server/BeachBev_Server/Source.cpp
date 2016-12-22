@@ -3,6 +3,7 @@
 #include <iostream>
 
 static const int SERVER_PORT = 8443;
+
 #ifdef _WIN32
 static const std::string CERT_PATH = "C:\\Users\\ajcra\\Desktop\\aws\\SSL\\local.crt";
 static const std::string PEM_PATH = "C:\\Users\\ajcra\\Desktop\\aws\\SSL\\local.key";
@@ -21,6 +22,7 @@ int main()
 				BB_Server server(dbManager);
 				server.setCertPath(CERT_PATH);
 				server.setPemPath(PEM_PATH);
+				server.setDBConnectionInformation(ConnectionInformation(CONNECT_INFORMATION_PATH));
 				server.createManagers();
 				server.run(SERVER_PORT);
 		}

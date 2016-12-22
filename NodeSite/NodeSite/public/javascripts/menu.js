@@ -408,11 +408,10 @@ function MenuManager()
     };
 };
 
-var client = new Client("localhost", "24560");
+var client = new Client();
 
 var menuManager = new MenuManager();
 
-var client = new Client("localhost", "24560");
 client.tcpConnection.onopen = function()
 {
     if (navigator.geolocation)

@@ -88,6 +88,14 @@ input[type="password"]:focus{
 
 ul {
   list-style-type: none;
+  height: auto;
+  overflow: hidden;
+}
+
+#applyDiv ul.hidden {
+  transition: opacity .25s ease-out;
+  opacity: 0;
+  height: 0;
 }
 
 #applyButton {
@@ -115,9 +123,25 @@ ul {
   color: black;
 }
 
+#applyButton.error:hover {
+  background-color: red;
+  border-color: orangered
+}
+
 #applyButton:hover {
   background-color: white;
   border-color: orangered
+}
+
+#applyButton.load {
+  background-color: dimgray;
+  border-color: white;
+}
+
+#applyButton.hidden {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 #blankDiv {
@@ -129,4 +153,33 @@ ul {
   font-family: 'Bitter', serif;
   font-size: 1em;
   color: red;
+  padding-top: .2em;
+  padding-bottom: .2em;
+  background-color: rgba(0, 0, 0, .8);
+  transition: .25s ease-in-out;
+}
+
+#msg.invisible {
+  visibility: hidden;
+}
+
+#msg.success {
+  color: black;
+  font-size: 1em;
+  background-color: rgba(0, 0, 0, 0);
+  padding-left: .2em;
+  padding-right: .2em;
+}
+
+#successMsg {
+  display: block;
+  text-align: center;
+  font-family: 'Bitter', serif;
+  color: black;
+  font-size: 3em;
+  padding: .1em;
+}
+
+#successMsg.hidden {
+  display: none;
 }

@@ -1,4 +1,4 @@
-function Client(ip, port)
+function Client()
 {
     var client = this;
     var ProtoBuf = dcodeIO.ProtoBuf;

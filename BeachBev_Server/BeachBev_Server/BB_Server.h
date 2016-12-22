@@ -1,18 +1,21 @@
 #pragma once
+#include "DBManager.h"
 #include <WSS_Server.h>
 
-class DBManager;
 class CommandHandler;
+class EmployeeManager;
 
 class BB_Server : public WSS_Server
 {
 public:
 		BB_Server(DBManager* dbManager);
 
+		virtual void createManagers() override;
+
 		virtual Client* createClient(boost::shared_ptr<TCPConnection> tcpConnection, IDType id) override;
 
-		DBManager* getDBManager() {
-				return dbManager;
+		void setDBConnectionInformation(ConnectionInformation& conInformation) {
+				dbConInfo = conInformation;
 		}
 
 		void run(uint16_t port) override;
@@ -20,8 +23,8 @@ public:
 		~BB_Server();
 
 private:
-		
-		DBManager* dbManager;
 		CommandHandler* cmdHandler;
+		EmployeeManager* employeeManager;
+		ConnectionInformation dbConInfo;
 };
 

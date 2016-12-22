@@ -73,6 +73,7 @@
     <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\HTML64_R.props" />
     <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\Protobuf64_R.props" />
     <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\OpenSSL.props" />
+    <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\CryptoPP64_R.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -108,7 +109,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -120,15 +121,27 @@
   <ItemGroup>
     <ClCompile Include="BB_Client.cpp" />
     <ClCompile Include="BB_Server.cpp" />
+    <ClCompile Include="BB_ServicePool.cpp" />
     <ClCompile Include="CommandHandler.cpp" />
+    <ClCompile Include="CryptoManager.cpp" />
     <ClCompile Include="DBManager.cpp" />
+    <ClCompile Include="DebugManager.cpp" />
+    <ClCompile Include="EmailManager.cpp" />
+    <ClCompile Include="EmployeeManager.cpp" />
+    <ClCompile Include="Packets\BBPacks.pb.cc" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BB_Client.h" />
     <ClInclude Include="BB_Server.h" />
+    <ClInclude Include="BB_ServicePool.h" />
     <ClInclude Include="CommandHandler.h" />
+    <ClInclude Include="CryptoManager.h" />
     <ClInclude Include="DBManager.h" />
+    <ClInclude Include="DebugManager.h" />
+    <ClInclude Include="EmailManager.h" />
+    <ClInclude Include="EmployeeManager.h" />
+    <ClInclude Include="Packets\BBPacks.pb.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="otlv4.h" />
   </ItemGroup>

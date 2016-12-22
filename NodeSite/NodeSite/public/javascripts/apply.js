@@ -31,12 +31,18 @@ function ApplyManager()
               },
               {
                 "name": "PackE1",
-                  "fields": [
+                "fields": [
+                      {
+                        "rule": "optional",
+                        "type": "bool",
+                        "name": "success",
+                        "id": 1
+                      },
                       {
                           "rule": "optional",
                           "type": "string",
                           "name": "msg",
-                          "id": 1
+                          "id": 2
                       }
                   ] 
               }

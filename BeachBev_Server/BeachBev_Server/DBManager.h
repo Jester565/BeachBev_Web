@@ -35,6 +35,10 @@ struct ConnectionInformation {
 class DBManager
 {
 public:
+		static void InitOTL() {
+				otl_connect::otl_initialize(1);
+		}
+
 		DBManager();
 
 		bool connect(const ConnectionInformation& connectionInfo);

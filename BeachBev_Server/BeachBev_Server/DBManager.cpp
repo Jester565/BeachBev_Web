@@ -65,13 +65,12 @@ bool ConnectionInformation::saveToFile(const std::string & filePath)
 
 
 DBManager::DBManager()
+		:dbConnection(nullptr)
 {
 }
 
 bool DBManager::connect(const ConnectionInformation& connectionInfo)
 {
-		otl_connect::otl_initialize();
-		dbConnection = new otl_connect();
 		std::string connectStr;
 		if (connectionInfo.dsn != ConnectionInformation::UNUSED_INFO)
 		{
@@ -116,7 +115,6 @@ bool DBManager::connect(const ConnectionInformation& connectionInfo)
 
 bool DBManager::connect(const std::string & connectStr)
 {
-		otl_connect::otl_initialize();
 		dbConnection = new otl_connect();
 		try
 		{
@@ -134,6 +132,8 @@ bool DBManager::connect(const std::string & connectStr)
 
 DBManager::~DBManager()
 {
-		delete dbConnection;
-		dbConnection = nullptr;
+		if (dbConnection != nullptr) {
+				delete dbConnection;
+				dbConnection = nullptr;
+		}
 }
