@@ -77,6 +77,15 @@ extern PackG1DefaultTypeInternal _PackG1_default_instance_;
 class PackG2;
 class PackG2DefaultTypeInternal;
 extern PackG2DefaultTypeInternal _PackG2_default_instance_;
+class PackI0;
+class PackI0DefaultTypeInternal;
+extern PackI0DefaultTypeInternal _PackI0_default_instance_;
+class PackI2;
+class PackI2DefaultTypeInternal;
+extern PackI2DefaultTypeInternal _PackI2_default_instance_;
+class packI1;
+class packI1DefaultTypeInternal;
+extern packI1DefaultTypeInternal _packI1_default_instance_;
 }  // namespace ProtobufPackets
 
 namespace ProtobufPackets {
@@ -1183,11 +1192,23 @@ class PackE1 : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_msg();
   void set_allocated_msg(::std::string* msg);
 
+  // string creationToken = 3;
+  void clear_creationtoken();
+  static const int kCreationTokenFieldNumber = 3;
+  const ::std::string& creationtoken() const;
+  void set_creationtoken(const ::std::string& value);
+  void set_creationtoken(const char* value);
+  void set_creationtoken(const char* value, size_t size);
+  ::std::string* mutable_creationtoken();
+  ::std::string* release_creationtoken();
+  void set_allocated_creationtoken(::std::string* creationtoken);
+
   // @@protoc_insertion_point(class_scope:ProtobufPackets.PackE1)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr msg_;
+  ::google::protobuf::internal::ArenaStringPtr creationtoken_;
   bool success_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
@@ -1709,6 +1730,310 @@ class PackG2 : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::uint32 orderid_;
   ::google::protobuf::uint32 ostate_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
+  friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
+  friend const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto();
+  friend void protobuf_ShutdownFile_BBPacks_2eproto();
+
+};
+// -------------------------------------------------------------------
+
+class PackI0 : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ProtobufPackets.PackI0) */ {
+ public:
+  PackI0();
+  virtual ~PackI0();
+
+  PackI0(const PackI0& from);
+
+  inline PackI0& operator=(const PackI0& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PackI0& default_instance();
+
+  static inline const PackI0* internal_default_instance() {
+    return reinterpret_cast<const PackI0*>(
+               &_PackI0_default_instance_);
+  }
+
+  void Swap(PackI0* other);
+
+  // implements Message ----------------------------------------------
+
+  inline PackI0* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  PackI0* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const PackI0& from);
+  void MergeFrom(const PackI0& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(PackI0* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // string emailToken = 1;
+  void clear_emailtoken();
+  static const int kEmailTokenFieldNumber = 1;
+  const ::std::string& emailtoken() const;
+  void set_emailtoken(const ::std::string& value);
+  void set_emailtoken(const char* value);
+  void set_emailtoken(const char* value, size_t size);
+  ::std::string* mutable_emailtoken();
+  ::std::string* release_emailtoken();
+  void set_allocated_emailtoken(::std::string* emailtoken);
+
+  // string creationToken = 2;
+  void clear_creationtoken();
+  static const int kCreationTokenFieldNumber = 2;
+  const ::std::string& creationtoken() const;
+  void set_creationtoken(const ::std::string& value);
+  void set_creationtoken(const char* value);
+  void set_creationtoken(const char* value, size_t size);
+  ::std::string* mutable_creationtoken();
+  ::std::string* release_creationtoken();
+  void set_allocated_creationtoken(::std::string* creationtoken);
+
+  // @@protoc_insertion_point(class_scope:ProtobufPackets.PackI0)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr emailtoken_;
+  ::google::protobuf::internal::ArenaStringPtr creationtoken_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
+  friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
+  friend const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto();
+  friend void protobuf_ShutdownFile_BBPacks_2eproto();
+
+};
+// -------------------------------------------------------------------
+
+class packI1 : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ProtobufPackets.packI1) */ {
+ public:
+  packI1();
+  virtual ~packI1();
+
+  packI1(const packI1& from);
+
+  inline packI1& operator=(const packI1& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const packI1& default_instance();
+
+  static inline const packI1* internal_default_instance() {
+    return reinterpret_cast<const packI1*>(
+               &_packI1_default_instance_);
+  }
+
+  void Swap(packI1* other);
+
+  // implements Message ----------------------------------------------
+
+  inline packI1* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  packI1* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const packI1& from);
+  void MergeFrom(const packI1& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(packI1* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // string emailToken = 1;
+  void clear_emailtoken();
+  static const int kEmailTokenFieldNumber = 1;
+  const ::std::string& emailtoken() const;
+  void set_emailtoken(const ::std::string& value);
+  void set_emailtoken(const char* value);
+  void set_emailtoken(const char* value, size_t size);
+  ::std::string* mutable_emailtoken();
+  ::std::string* release_emailtoken();
+  void set_allocated_emailtoken(::std::string* emailtoken);
+
+  // string userName = 2;
+  void clear_username();
+  static const int kUserNameFieldNumber = 2;
+  const ::std::string& username() const;
+  void set_username(const ::std::string& value);
+  void set_username(const char* value);
+  void set_username(const char* value, size_t size);
+  ::std::string* mutable_username();
+  ::std::string* release_username();
+  void set_allocated_username(::std::string* username);
+
+  // string pwd = 3;
+  void clear_pwd();
+  static const int kPwdFieldNumber = 3;
+  const ::std::string& pwd() const;
+  void set_pwd(const ::std::string& value);
+  void set_pwd(const char* value);
+  void set_pwd(const char* value, size_t size);
+  ::std::string* mutable_pwd();
+  ::std::string* release_pwd();
+  void set_allocated_pwd(::std::string* pwd);
+
+  // @@protoc_insertion_point(class_scope:ProtobufPackets.packI1)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr emailtoken_;
+  ::google::protobuf::internal::ArenaStringPtr username_;
+  ::google::protobuf::internal::ArenaStringPtr pwd_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
+  friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
+  friend const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto();
+  friend void protobuf_ShutdownFile_BBPacks_2eproto();
+
+};
+// -------------------------------------------------------------------
+
+class PackI2 : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ProtobufPackets.PackI2) */ {
+ public:
+  PackI2();
+  virtual ~PackI2();
+
+  PackI2(const PackI2& from);
+
+  inline PackI2& operator=(const PackI2& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PackI2& default_instance();
+
+  static inline const PackI2* internal_default_instance() {
+    return reinterpret_cast<const PackI2*>(
+               &_PackI2_default_instance_);
+  }
+
+  void Swap(PackI2* other);
+
+  // implements Message ----------------------------------------------
+
+  inline PackI2* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  PackI2* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const PackI2& from);
+  void MergeFrom(const PackI2& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(PackI2* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // bool success = 1;
+  void clear_success();
+  static const int kSuccessFieldNumber = 1;
+  bool success() const;
+  void set_success(bool value);
+
+  // @@protoc_insertion_point(class_scope:ProtobufPackets.PackI2)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool success_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
   friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
@@ -2475,6 +2800,50 @@ inline void PackE1::set_allocated_msg(::std::string* msg) {
   // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackE1.msg)
 }
 
+// string creationToken = 3;
+inline void PackE1::clear_creationtoken() {
+  creationtoken_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PackE1::creationtoken() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackE1.creationToken)
+  return creationtoken_.GetNoArena();
+}
+inline void PackE1::set_creationtoken(const ::std::string& value) {
+  
+  creationtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackE1.creationToken)
+}
+inline void PackE1::set_creationtoken(const char* value) {
+  
+  creationtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.PackE1.creationToken)
+}
+inline void PackE1::set_creationtoken(const char* value, size_t size) {
+  
+  creationtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.PackE1.creationToken)
+}
+inline ::std::string* PackE1::mutable_creationtoken() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.PackE1.creationToken)
+  return creationtoken_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PackE1::release_creationtoken() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.PackE1.creationToken)
+  
+  return creationtoken_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PackE1::set_allocated_creationtoken(::std::string* creationtoken) {
+  if (creationtoken != NULL) {
+    
+  } else {
+    
+  }
+  creationtoken_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), creationtoken);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackE1.creationToken)
+}
+
 // -------------------------------------------------------------------
 
 // PackF0
@@ -2808,7 +3177,259 @@ inline void PackG2::set_ostate(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:ProtobufPackets.PackG2.oState)
 }
 
+// -------------------------------------------------------------------
+
+// PackI0
+
+// string emailToken = 1;
+inline void PackI0::clear_emailtoken() {
+  emailtoken_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PackI0::emailtoken() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackI0.emailToken)
+  return emailtoken_.GetNoArena();
+}
+inline void PackI0::set_emailtoken(const ::std::string& value) {
+  
+  emailtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackI0.emailToken)
+}
+inline void PackI0::set_emailtoken(const char* value) {
+  
+  emailtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.PackI0.emailToken)
+}
+inline void PackI0::set_emailtoken(const char* value, size_t size) {
+  
+  emailtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.PackI0.emailToken)
+}
+inline ::std::string* PackI0::mutable_emailtoken() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.PackI0.emailToken)
+  return emailtoken_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PackI0::release_emailtoken() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.PackI0.emailToken)
+  
+  return emailtoken_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PackI0::set_allocated_emailtoken(::std::string* emailtoken) {
+  if (emailtoken != NULL) {
+    
+  } else {
+    
+  }
+  emailtoken_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), emailtoken);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackI0.emailToken)
+}
+
+// string creationToken = 2;
+inline void PackI0::clear_creationtoken() {
+  creationtoken_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PackI0::creationtoken() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackI0.creationToken)
+  return creationtoken_.GetNoArena();
+}
+inline void PackI0::set_creationtoken(const ::std::string& value) {
+  
+  creationtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackI0.creationToken)
+}
+inline void PackI0::set_creationtoken(const char* value) {
+  
+  creationtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.PackI0.creationToken)
+}
+inline void PackI0::set_creationtoken(const char* value, size_t size) {
+  
+  creationtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.PackI0.creationToken)
+}
+inline ::std::string* PackI0::mutable_creationtoken() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.PackI0.creationToken)
+  return creationtoken_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PackI0::release_creationtoken() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.PackI0.creationToken)
+  
+  return creationtoken_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PackI0::set_allocated_creationtoken(::std::string* creationtoken) {
+  if (creationtoken != NULL) {
+    
+  } else {
+    
+  }
+  creationtoken_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), creationtoken);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackI0.creationToken)
+}
+
+// -------------------------------------------------------------------
+
+// packI1
+
+// string emailToken = 1;
+inline void packI1::clear_emailtoken() {
+  emailtoken_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& packI1::emailtoken() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.packI1.emailToken)
+  return emailtoken_.GetNoArena();
+}
+inline void packI1::set_emailtoken(const ::std::string& value) {
+  
+  emailtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.packI1.emailToken)
+}
+inline void packI1::set_emailtoken(const char* value) {
+  
+  emailtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.packI1.emailToken)
+}
+inline void packI1::set_emailtoken(const char* value, size_t size) {
+  
+  emailtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.packI1.emailToken)
+}
+inline ::std::string* packI1::mutable_emailtoken() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.packI1.emailToken)
+  return emailtoken_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* packI1::release_emailtoken() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.packI1.emailToken)
+  
+  return emailtoken_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void packI1::set_allocated_emailtoken(::std::string* emailtoken) {
+  if (emailtoken != NULL) {
+    
+  } else {
+    
+  }
+  emailtoken_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), emailtoken);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.packI1.emailToken)
+}
+
+// string userName = 2;
+inline void packI1::clear_username() {
+  username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& packI1::username() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.packI1.userName)
+  return username_.GetNoArena();
+}
+inline void packI1::set_username(const ::std::string& value) {
+  
+  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.packI1.userName)
+}
+inline void packI1::set_username(const char* value) {
+  
+  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.packI1.userName)
+}
+inline void packI1::set_username(const char* value, size_t size) {
+  
+  username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.packI1.userName)
+}
+inline ::std::string* packI1::mutable_username() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.packI1.userName)
+  return username_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* packI1::release_username() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.packI1.userName)
+  
+  return username_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void packI1::set_allocated_username(::std::string* username) {
+  if (username != NULL) {
+    
+  } else {
+    
+  }
+  username_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), username);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.packI1.userName)
+}
+
+// string pwd = 3;
+inline void packI1::clear_pwd() {
+  pwd_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& packI1::pwd() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.packI1.pwd)
+  return pwd_.GetNoArena();
+}
+inline void packI1::set_pwd(const ::std::string& value) {
+  
+  pwd_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.packI1.pwd)
+}
+inline void packI1::set_pwd(const char* value) {
+  
+  pwd_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.packI1.pwd)
+}
+inline void packI1::set_pwd(const char* value, size_t size) {
+  
+  pwd_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.packI1.pwd)
+}
+inline ::std::string* packI1::mutable_pwd() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.packI1.pwd)
+  return pwd_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* packI1::release_pwd() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.packI1.pwd)
+  
+  return pwd_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void packI1::set_allocated_pwd(::std::string* pwd) {
+  if (pwd != NULL) {
+    
+  } else {
+    
+  }
+  pwd_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pwd);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.packI1.pwd)
+}
+
+// -------------------------------------------------------------------
+
+// PackI2
+
+// bool success = 1;
+inline void PackI2::clear_success() {
+  success_ = false;
+}
+inline bool PackI2::success() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackI2.success)
+  return success_;
+}
+inline void PackI2::set_success(bool value) {
+  
+  success_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackI2.success)
+}
+
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

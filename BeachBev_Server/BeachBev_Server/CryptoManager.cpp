@@ -12,6 +12,23 @@ void CryptoManager::GenerateHash(BYTE * hash, uint32_t hashSize, const BYTE * da
 		pbkdf2.DeriveKey(hash, hashSize, 0, data, dataSize, salt, saltSize, 80020);
 }
 
+void CryptoManager::GenerateHash(BYTE * hash, uint32_t hashSize, const BYTE * data, size_t dataSize)
+{
+		CryptoPP::SHA512 hashFunc;
+		if (hashSize >= CryptoPP::SHA512::DIGESTSIZE)
+		{
+				hashFunc.CalculateDigest(hash, data, dataSize);
+		}
+		else
+		{
+				byte digest[CryptoPP::SHA512::DIGESTSIZE];
+				hashFunc.CalculateDigest(digest, data, dataSize);
+				for (int i = 0; i < hashSize; i++) {
+						hash[i] = digest[i];
+				}
+		}
+}
+
 void CryptoManager::GenerateRandomData(BYTE * rngData, uint32_t rngDataSize)
 {
 		CryptoPP::AutoSeededRandomPool rng;
@@ -27,5 +44,17 @@ void CryptoManager::UrlEncode(std::string & encoded, const BYTE * data, uint32_t
 		if (size) {
 				encoded.resize(size);
 				encoder.Get((byte*)encoded.data(), encoded.size());
+		}
+}
+
+void CryptoManager::UrlDecode(std::vector <BYTE>& decoded, const std::string& encoded)
+{
+		CryptoPP::Base64Decoder decoder;
+		decoder.Put((BYTE*)encoded.data(), encoded.size());
+		decoder.MessageEnd();
+		CryptoPP::word64 size = decoder.MaxRetrievable();
+		if (size) {
+				decoded.resize(size);
+				decoder.Get((byte*)decoded.data(), decoded.size());
 		}
 }

@@ -5,6 +5,7 @@
 #include "DBManager.h"
 #include "BB_Client.h"
 #include "CryptoManager.h"
+#include "EmailManager.h"
 #include "DebugManager.h"
 #include <WSS_TCPConnection.h>
 #include <WSOPacket.h>
@@ -17,7 +18,8 @@ EmployeeManager::EmployeeManager(BB_Server* bbServer)
 		:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
 {
 		addKey(new PKey("D0", this, &EmployeeManager::keyD0));
-		addKey(new PKey("E0", this, &EmployeeManager::keyE0)); 
+		addKey(new PKey("E0", this, &EmployeeManager::keyE0));
+		emailManager = new EmailManager(bbServer);
 }
 
 void EmployeeManager::keyD0(boost::shared_ptr<IPacket> iPack)
@@ -102,9 +104,17 @@ void EmployeeManager::keyE0(boost::shared_ptr<IPacket> iPack)
 								if (nextID != 0)
 								{
 										if (addEmployeeToDatabase(nextID, dbManager, packE0.username(), packE0.pwd(), packE0.email())) {
-												packE1.set_success(true);
-												packE1.set_msg("Verify Email");
-												DebugManager::PrintDebug("Employee account added");
+												if (emailManager->sendEmailVerification(nextID, dbManager, packE0.email()))
+												{
+														std::string urlEncodedCreationToken;
+														if (generateCreationToken(nextID, dbManager, urlEncodedCreationToken));
+														{
+																packE1.set_success(true);
+																packE1.set_msg("Verify Email");
+																packE1.set_creationtoken(urlEncodedCreationToken);
+																DebugManager::PrintDebug("Employee account added");
+														}
+												}
 										}
 										else
 										{
@@ -129,6 +139,15 @@ void EmployeeManager::keyE0(boost::shared_ptr<IPacket> iPack)
 				oPackE1->setData(boost::make_shared<std::string>(packE1.SerializeAsString()));
 				bbServer->getClientManager()->send(oPackE1);
 		}
+}
+
+bool EmployeeManager::generateCreationToken(IDType eID, DBManager* dbManager, std::string& urlEncodedCreationToken) {
+		BYTE creationToken[EmailManager::CREATION_TOKEN_SIZE];
+		CryptoManager::GenerateRandomData(creationToken, EmailManager::CREATION_TOKEN_SIZE);
+		CryptoManager::UrlEncode(urlEncodedCreationToken, creationToken, EmailManager::CREATION_TOKEN_SIZE);
+		BYTE creationTokenHash[EmailManager::CREATION_HASH_SIZE];
+		CryptoManager::GenerateHash(creationTokenHash, EmailManager::CREATION_HASH_SIZE, creationToken, EmailManager::CREATION_TOKEN_SIZE);
+		return emailManager->setCreationTokenHash(eID, dbManager, creationTokenHash);
 }
 
 bool EmployeeManager::addEmployeeToDatabase(IDType eID, DBManager* dbManager, const std::string & name, const std::string & pwdStr, const std::string & email)

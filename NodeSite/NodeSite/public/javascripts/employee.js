@@ -59,6 +59,12 @@ function ApplyManager() {
             "type": "string",
             "name": "msg",
             "id": 2
+          },
+          {
+            "rule": "optional",
+            "type": "string",
+            "name": "creationToken",
+            "id": 3
           }
         ]
       }
@@ -92,6 +98,7 @@ function ApplyManager() {
       $('#applyButton').click(function () {
         console.log("Resent email");
       });
+      Cookies.set('creationToken', packE1.creationToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
     }
   }, this, "Gets the success of the login"));
 
@@ -122,7 +129,7 @@ function ApplyManager() {
   $('#applyButton').click(this.submit);
 };
 
-var client = new Client("localhost", "24560");
+var client = new Client();
 
 client.tcpConnection.onclose = function () {
   alert("The Server Is Unavailible...");

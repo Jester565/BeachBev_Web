@@ -37,6 +37,7 @@
     <Compile Include="public\javascripts\aScore.js" />
     <Compile Include="public\javascripts\bytebuffer.min.js" />
     <Compile Include="public\javascripts\Client.js" />
+    <Compile Include="public\javascripts\email_confirm.js" />
     <Compile Include="public\javascripts\employee.js" />
     <Compile Include="public\javascripts\index.js" />
     <Compile Include="public\javascripts\jquery-1.12.0.js" />
@@ -54,6 +55,7 @@
     <Compile Include="routes\users.js" />
     <Content Include="package.json" />
     <Content Include="public\apply.html" />
+    <Content Include="public\email_confirm.html" />
     <Content Include="public\employee.html" />
     <Content Include="public\fonts\Berlin.ttf" />
     <Content Include="public\fonts\BERNHC.TTF" />

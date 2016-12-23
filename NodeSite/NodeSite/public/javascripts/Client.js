@@ -8,7 +8,7 @@ function Client()
         this.tcpConnection = new TCPConnection(this.builder, location.host, "8000");
     }
     else
-    {
+    { 
         this.tcpConnection = new TCPConnection(this.builder, location.host, "8443");
     }
     this.packetManager = new PacketManager();

@@ -9,6 +9,7 @@ class DBManager;
 class BB_Server;
 class BB_Client;
 class Client;
+class EmailManager;
 
 template <typename T>
 void CmdInjectProtect(T data, uint32_t dataSize) {
@@ -61,6 +62,8 @@ public:
 
 		bool getPwdData(IDType eID, DBManager* dbManager, BYTE* hash, BYTE* salt);
 
+		bool EmployeeManager::generateCreationToken(IDType eID, DBManager* dbManager, std::string& urlEncodedCreationToken);
+
 		BB_Client* getEmployee(IDType eID);
 
 		std::unordered_map<IDType, Client*> employees;
@@ -71,4 +74,6 @@ protected:
 		BB_Server* bbServer;
 		IDType nameToEID(const std::string & name, DBManager * dbManager);
 		IDType getNextEID(DBManager* dbManager);
+
+		EmailManager* emailManager;
 };
