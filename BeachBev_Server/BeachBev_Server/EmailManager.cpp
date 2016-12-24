@@ -28,7 +28,18 @@ bool EmailManager::sendEmailVerification(IDType eID, DBManager* dbManager, const
 				return false;
 		}
 
+		std::cout << "Email Token Non-URL: ";
+		for (int i = 0; i < EMAIL_TOKEN_SIZE; i++) {
+				std::cout << (int)emailToken[i] << " ";
+		}
+		std::cout << std::endl << std::endl;
 		CryptoManager::UrlEncode(emailTokenEncoded, emailToken, EMAIL_TOKEN_SIZE);
+		std::cout << "Email Token URL: ";
+		std::cout << "SIZE: " << emailTokenEncoded.size() << " ";
+		for (int i = 0; i < emailTokenEncoded.size(); i++) {
+				std::cout << (int)emailTokenEncoded[i] << " ";
+		}
+		std::cout << std::endl << std::endl;
 		std::string emailURL = EMAIL_CONFIRM_URL + "?" + emailTokenEncoded;
 
 		std::string bodyCmd = "(cat ";
@@ -74,9 +85,7 @@ bool EmailManager::setEmailTokenHash(IDType eID, DBManager * dbManager, BYTE * e
 				otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
 				for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
 						emailTokenHashStr[i] = emailTokenHash[i];
-						std::cout << (int)emailTokenHash[i];
 				}
-				std::cout << std::endl << std::endl;
 				emailTokenHashStr.set_len(EMAIL_HASH_SIZE);
 				otlStream << emailTokenHashStr;
 				otlStream << static_cast<OTL_BIGINT>(std::time(nullptr));
@@ -114,7 +123,17 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 		packI0.ParseFromString(*iPack->getData());
 		
 		std::vector <BYTE> emailTokenDecoded;
+		std::cout << "Email Token URL: ";
+		std::cout << " SIZE: " << packI0.emailtoken().size() + " ";
+		for (int i = 0; i < packI0.emailtoken().size(); i++) {
+				std::cout << (int)packI0.emailtoken()[i] << " ";
+		}
+		std::cout << std::endl << std::endl;
 		CryptoManager::UrlDecode(emailTokenDecoded, packI0.emailtoken());
+		std::cout << "Email Token Non-URL: ";
+		for (int i = 0; i < EMAIL_TOKEN_SIZE; i++) {
+				std::cout << (int)emailTokenDecoded[i] << " ";
+		}
 		BYTE emailTokenHash[EMAIL_HASH_SIZE];
 		CryptoManager::GenerateHash(emailTokenHash, EMAIL_HASH_SIZE, emailTokenDecoded.data(), EMAIL_TOKEN_SIZE);
 		
@@ -140,14 +159,10 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 				query += "]>";
 				try {
 						otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
-					  
 						otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
 						for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
 								emailTokenHashStr[i] = emailTokenHash[i];
-								std::cout << (int)emailTokenHash[i];
-								
 						}
-						std::cout << std::endl;
 						emailTokenHashStr.set_len(EMAIL_HASH_SIZE);
 						otlStream << emailTokenHashStr;
 						if (!otlStream.eof()) {
@@ -165,7 +180,7 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 				{
 						std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
 				}
-				boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("I2", 0, iPack->getSentFromID());
+				boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("E1", 0, iPack->getSentFromID());
 				oPackI2->setData(boost::make_shared<std::string>(packI2.SerializeAsString()));
 				bbServer->getClientManager()->send(oPackI2);
 		}
