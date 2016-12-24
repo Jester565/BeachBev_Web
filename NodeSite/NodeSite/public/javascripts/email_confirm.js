@@ -7,7 +7,7 @@ var emailConfirmManager = new EmailConfirmManager();
 client.tcpConnection.onopen = function () {
   emailConfirmManager.initPacks();
   var url = window.location.href;
-  var questionI = url.search('?');
+  var questionI = url.indexOf('?');
   if (questionI != -1) {
     var emailToken = url.substring(++questionI);
     var creationToken = Cookies.get('creationToken');

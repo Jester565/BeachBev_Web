@@ -74,7 +74,9 @@ bool EmailManager::setEmailTokenHash(IDType eID, DBManager * dbManager, BYTE * e
 				otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
 				for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
 						emailTokenHashStr[i] = emailTokenHash[i];
+						std::cout << (int)emailTokenHash[i];
 				}
+				std::cout << std::endl << std::endl;
 				emailTokenHashStr.set_len(EMAIL_HASH_SIZE);
 				otlStream << emailTokenHashStr;
 				otlStream << static_cast<OTL_BIGINT>(std::time(nullptr));
@@ -133,23 +135,19 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 				packI2.set_msg("An unknown error occured");
 
 				DBManager* dbManager = sender->getDBManager();
-				std::string query = "SELECT name FROM Employees WHERE creationToken=:f1<raw[";
-				query += std::to_string(CREATION_HASH_SIZE);
-				query += "]> AND emailToken=:f2<raw[";
+				std::string query = "SELECT name FROM Employees WHERE emailToken=:f1<raw[";
 				query += std::to_string(EMAIL_HASH_SIZE);
 				query += "]>";
 				try {
 						otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
-						otl_long_string creationTokenHashStr(CREATION_HASH_SIZE);
-						for (int i = 0; i < CREATION_HASH_SIZE; i++) {
-								creationTokenHashStr[i] = creationTokenHash[i];
-						}
-						creationTokenHashStr.set_len(CREATION_HASH_SIZE);
-						otlStream << creationTokenHashStr;
+					  
 						otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
 						for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
 								emailTokenHashStr[i] = emailTokenHash[i];
+								std::cout << (int)emailTokenHash[i];
+								
 						}
+						std::cout << std::endl;
 						emailTokenHashStr.set_len(EMAIL_HASH_SIZE);
 						otlStream << emailTokenHashStr;
 						if (!otlStream.eof()) {
@@ -167,7 +165,7 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 				{
 						std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
 				}
-				boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("E1", 0, iPack->getSentFromID());
+				boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("I2", 0, iPack->getSentFromID());
 				oPackI2->setData(boost::make_shared<std::string>(packI2.SerializeAsString()));
 				bbServer->getClientManager()->send(oPackI2);
 		}
