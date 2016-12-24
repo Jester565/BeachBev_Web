@@ -62,7 +62,7 @@ public:
 
 		bool getPwdData(IDType eID, DBManager* dbManager, BYTE* hash, BYTE* salt);
 
-		bool EmployeeManager::generateCreationToken(IDType eID, DBManager* dbManager, std::string& urlEncodedCreationToken);
+		bool generateCreationToken(IDType eID, DBManager* dbManager, std::string& urlEncodedCreationToken);
 
 		BB_Client* getEmployee(IDType eID);
 

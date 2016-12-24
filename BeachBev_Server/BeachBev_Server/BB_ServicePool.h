@@ -11,7 +11,7 @@ class BB_ServicePool : public WSS_ServicePool
 public:
 		BB_ServicePool(const std::string& certFile, const std::string& keyFile, const std::string& dbConfigFile, int numUsedCores = 1);
 
-		BB_ServicePool(const std::string& certFile, const std::string& keyFile, ConnectionInformation& dbConfig, int numUsedCores = 1);
+		BB_ServicePool(const std::string& certFile, const std::string& keyFile, ConnectionInformation dbConfig, int numUsedCores = 1);
 
 		DBManager* getNextDBManager() {
 				if (dbManagerIter >= dbManagers.end()) {

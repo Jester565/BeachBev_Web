@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 typedef unsigned char BYTE;
 
@@ -9,7 +10,7 @@ class CryptoManager
 public:
 		static void GenerateHash(BYTE* hash, uint32_t hashSize, const BYTE* data, size_t dataSize, const BYTE* salt, uint32_t saltSize);
 
-		static void CryptoManager::GenerateHash(BYTE * hash, uint32_t hashSize, const BYTE * data, size_t dataSize);
+		static void GenerateHash(BYTE * hash, uint32_t hashSize, const BYTE * data, size_t dataSize);
 
 		static void GenerateRandomData(BYTE* rngData, uint32_t rngDataSize);
 

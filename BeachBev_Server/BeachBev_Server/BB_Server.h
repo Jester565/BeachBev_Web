@@ -8,7 +8,7 @@ class EmployeeManager;
 class BB_Server : public WSS_Server
 {
 public:
-		BB_Server(DBManager* dbManager);
+		BB_Server();
 
 		virtual void createManagers() override;
 

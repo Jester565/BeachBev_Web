@@ -15,20 +15,12 @@ static const std::string& CONNECT_INFORMATION_PATH = "./mysql.coni";
 
 int main()
 {
-		DBManager* dbManager = new DBManager();
-		
-		if (dbManager->connect(ConnectionInformation(CONNECT_INFORMATION_PATH)))
-		{
-				BB_Server server(dbManager);
-				server.setCertPath(CERT_PATH);
-				server.setPemPath(PEM_PATH);
-				server.setDBConnectionInformation(ConnectionInformation(CONNECT_INFORMATION_PATH));
-				server.createManagers();
-				server.run(SERVER_PORT);
-		}
-		else
-		{
-				std::cerr << "Connection failed" << std::endl;
-		}
+		BB_Server server;
+		server.setCertPath(CERT_PATH);
+		server.setPemPath(PEM_PATH);
+		ConnectionInformation conInfo(CONNECT_INFORMATION_PATH);
+	  server.setDBConnectionInformation(conInfo);
+		server.createManagers();
+		server.run(SERVER_PORT);
 		system("pause");
 }

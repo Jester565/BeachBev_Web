@@ -7,7 +7,7 @@ BB_ServicePool::BB_ServicePool(const std::string & certFile, const std::string &
 		
 }
 
-BB_ServicePool::BB_ServicePool(const std::string & certFile, const std::string & keyFile, ConnectionInformation & dbConfig, int numUsedCores)
+BB_ServicePool::BB_ServicePool(const std::string & certFile, const std::string & keyFile, ConnectionInformation dbConfig, int numUsedCores)
 		:WSS_ServicePool(certFile, keyFile, numUsedCores)
 {
 		DBManager::InitOTL();

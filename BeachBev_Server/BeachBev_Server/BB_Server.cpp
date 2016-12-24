@@ -6,7 +6,7 @@
 #include <PacketManager.h>
 #include <ClientManager.h>
 
-BB_Server::BB_Server(DBManager* dbManager)
+BB_Server::BB_Server()
 		:WSS_Server(boost::asio::ip::tcp::v4())
 {
 		cmdHandler = new CommandHandler(this);
