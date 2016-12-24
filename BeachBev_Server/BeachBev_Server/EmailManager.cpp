@@ -13,6 +13,7 @@ const std::string EmailManager::EMAIL_HTML_DIR = "/home/ubuntu/BeachBev_Web/";
 EmailManager::EmailManager(BB_Server* bbServer)
 		:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
 {
+	
 }
 
 bool EmailManager::sendEmailVerification(IDType eID, DBManager* dbManager, const std::string& emailAddress) {
@@ -41,7 +42,7 @@ bool EmailManager::sendEmailVerification(IDType eID, DBManager* dbManager, const
 
 bool EmailManager::setCreationTokenHash(IDType eID, DBManager * dbManager, BYTE * creationTokenHash)
 {
-		std::string query = "UDPATE Employees SET creationToken=:f1<raw[";
+		std::string query = "UPDATE Employees SET creationToken=:f1<raw[";
 		query += std::to_string(CREATION_HASH_SIZE);
 		query += "]> WHERE eID=:f2<int>";
 		try {
