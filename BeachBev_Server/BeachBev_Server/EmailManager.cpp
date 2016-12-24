@@ -43,7 +43,7 @@ bool EmailManager::sendEmailVerification(IDType eID, DBManager* dbManager, const
 
 bool EmailManager::setCreationTokenHash(IDType eID, DBManager * dbManager, BYTE * creationTokenHash)
 {
-		std::string query = "UDPATE Employees SET creationToken=:f1<raw[";
+		std::string query = "UPDATE Employees SET creationToken=:f1<raw[";
 		query += std::to_string(CREATION_HASH_SIZE);
 		query += "]> WHERE eID=:f2<int>";
 		try {

@@ -275,7 +275,7 @@ IDType EmployeeManager::getNextEID(DBManager* dbManager)
 				std::string query;
 #ifdef _WIN32
 				query = "SELECT top 1 * FROM Employees ORDER BY eID desc";
-#elif
+#else
 				query = "SELECT * FROM Employees ORDER BY eID desc limit 1";
 #endif
 				otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
