@@ -272,7 +272,13 @@ IDType EmployeeManager::getNextEID(DBManager* dbManager)
 {
 		try
 		{
-				otl_stream otlStream(50, "SELECT top 1 * FROM Employees ORDER BY eID desc", *dbManager->getConnection());
+				std::string query;
+#ifdef _WIN32
+				query = "SELECT top 1 * FROM Employees ORDER BY eID desc";
+#elif
+				query = "SELECT * FROM Employees ORDER BY eID desc limit 1";
+#endif
+				otl_stream otlStream(50, , *dbManager->getConnection());
 				dbManager->getConnection()->commit();
 				int eID = 0;
 				if (!otlStream.eof())
