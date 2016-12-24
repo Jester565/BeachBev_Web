@@ -278,7 +278,7 @@ IDType EmployeeManager::getNextEID(DBManager* dbManager)
 #elif
 				query = "SELECT * FROM Employees ORDER BY eID desc limit 1";
 #endif
-				otl_stream otlStream(50, , *dbManager->getConnection());
+				otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
 				dbManager->getConnection()->commit();
 				int eID = 0;
 				if (!otlStream.eof())
