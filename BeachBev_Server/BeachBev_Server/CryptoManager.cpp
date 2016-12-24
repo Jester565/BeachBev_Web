@@ -49,8 +49,8 @@ void CryptoManager::UrlEncode(std::string & encoded, const BYTE * data, uint32_t
 
 void CryptoManager::UrlDecode(std::vector <BYTE>& decoded, const std::string& encoded)
 {
-		CryptoPP::Base64Decoder decoder;
-		decoder.Put((BYTE*)encoded.data(), encoded.size());
+		CryptoPP::Base64URLDecoder decoder;
+		decoder.Put((byte*)encoded.data(), encoded.size());
 		decoder.MessageEnd();
 		CryptoPP::word64 size = decoder.MaxRetrievable();
 		if (size) {

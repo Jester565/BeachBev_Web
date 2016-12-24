@@ -28,18 +28,8 @@ bool EmailManager::sendEmailVerification(IDType eID, DBManager* dbManager, const
 				return false;
 		}
 
-		std::cout << "Email Token Non-URL: ";
-		for (int i = 0; i < EMAIL_TOKEN_SIZE; i++) {
-				std::cout << (int)emailToken[i] << " ";
-		}
-		std::cout << std::endl << std::endl;
 		CryptoManager::UrlEncode(emailTokenEncoded, emailToken, EMAIL_TOKEN_SIZE);
-		std::cout << "Email Token URL: ";
-		std::cout << "SIZE: " << emailTokenEncoded.size() << " ";
-		for (int i = 0; i < emailTokenEncoded.size(); i++) {
-				std::cout << (int)emailTokenEncoded[i] << " ";
-		}
-		std::cout << std::endl << std::endl;
+
 		std::string emailURL = EMAIL_CONFIRM_URL + "?" + emailTokenEncoded;
 
 		std::string bodyCmd = "(cat ";
@@ -123,17 +113,7 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 		packI0.ParseFromString(*iPack->getData());
 		
 		std::vector <BYTE> emailTokenDecoded;
-		std::cout << "Email Token URL: ";
-		std::cout << " SIZE: " << packI0.emailtoken().size() + " ";
-		for (int i = 0; i < packI0.emailtoken().size(); i++) {
-				std::cout << (int)packI0.emailtoken()[i] << " ";
-		}
-		std::cout << std::endl << std::endl;
 		CryptoManager::UrlDecode(emailTokenDecoded, packI0.emailtoken());
-		std::cout << "Email Token Non-URL: ";
-		for (int i = 0; i < EMAIL_TOKEN_SIZE; i++) {
-				std::cout << (int)emailTokenDecoded[i] << " ";
-		}
 		BYTE emailTokenHash[EMAIL_HASH_SIZE];
 		CryptoManager::GenerateHash(emailTokenHash, EMAIL_HASH_SIZE, emailTokenDecoded.data(), EMAIL_TOKEN_SIZE);
 		
@@ -154,11 +134,19 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 				packI2.set_msg("An unknown error occured");
 
 				DBManager* dbManager = sender->getDBManager();
-				std::string query = "SELECT name FROM Employees WHERE emailToken=:f1<raw[";
+				std::string query = "SELECT name FROM Employees WHERE creationToken=:f1<raw[";
+				query += std::to_string(CREATION_HASH_SIZE);
+				query += "]> AND emailToken=:f2<raw[";
 				query += std::to_string(EMAIL_HASH_SIZE);
 				query += "]>";
 				try {
 						otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
+						otl_long_string creationTokenHashStr(CREATION_HASH_SIZE);
+						for (int i = 0; i < CREATION_HASH_SIZE; i++) {
+								creationTokenHashStr[i] = creationTokenHash[i];
+						}
+						creationTokenHashStr.set_len(CREATION_HASH_SIZE);
+						otlStream << creationTokenHashStr;
 						otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
 						for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
 								emailTokenHashStr[i] = emailTokenHash[i];
