@@ -27,8 +27,6 @@ public:
 
 		void keyI0(boost::shared_ptr <IPacket> iPack);
 
-		bool checkEmailTokenHash(IDType eID, DBManager* dbManager, BYTE* emailTokenHash);
-
 		~EmailManager();
 
 private:

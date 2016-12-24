@@ -2029,10 +2029,22 @@ class PackI2 : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   bool success() const;
   void set_success(bool value);
 
+  // string msg = 2;
+  void clear_msg();
+  static const int kMsgFieldNumber = 2;
+  const ::std::string& msg() const;
+  void set_msg(const ::std::string& value);
+  void set_msg(const char* value);
+  void set_msg(const char* value, size_t size);
+  ::std::string* mutable_msg();
+  ::std::string* release_msg();
+  void set_allocated_msg(::std::string* msg);
+
   // @@protoc_insertion_point(class_scope:ProtobufPackets.PackI2)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr msg_;
   bool success_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
@@ -3421,6 +3433,50 @@ inline void PackI2::set_success(bool value) {
   
   success_ = value;
   // @@protoc_insertion_point(field_set:ProtobufPackets.PackI2.success)
+}
+
+// string msg = 2;
+inline void PackI2::clear_msg() {
+  msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PackI2::msg() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackI2.msg)
+  return msg_.GetNoArena();
+}
+inline void PackI2::set_msg(const ::std::string& value) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackI2.msg)
+}
+inline void PackI2::set_msg(const char* value) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.PackI2.msg)
+}
+inline void PackI2::set_msg(const char* value, size_t size) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.PackI2.msg)
+}
+inline ::std::string* PackI2::mutable_msg() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.PackI2.msg)
+  return msg_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PackI2::release_msg() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.PackI2.msg)
+  
+  return msg_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PackI2::set_allocated_msg(::std::string* msg) {
+  if (msg != NULL) {
+    
+  } else {
+    
+  }
+  msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackI2.msg)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
