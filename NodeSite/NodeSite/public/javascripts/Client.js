@@ -1,7 +1,7 @@
 function Client()
 {
     var client = this;
-    var ProtoBuf = dcodeIO.ProtoBuf;
+    var ProtoBuf = protobuf.ProtoBuf;
     this.builder = ProtoBuf.newBuilder();
     if (window.location.protocol != "https:")
     {
