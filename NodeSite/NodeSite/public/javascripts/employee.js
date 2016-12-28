@@ -1,87 +1,31 @@
 "use strict";
 
-console.log("loaded");
+function setErrorMsg (str) {
+  $('#msg').removeClass('invisible');
+  $('#msg').text(str);
+  $('#applyButton').addClass('error');
+  $('#applyButton').removeClass('load');
+  $('#applyButton h2').text('ERROR');
+}
 
-function ApplyManager() {
-  $('#userName, #pwd, #pwdConfirm, #email').focus(function () {
-    if ($('#applyButton').hasClass('error')) {
-      $('#applyButton').removeClass('error');
-      $('#msg').addClass('invisible');
-      $('#applyButton h2').text('APPLY NOW');
-    }
-  });
-
-  this.setErrorMsg = function (str) {
-    $('#msg').removeClass('invisible');
-    $('#msg').text(str);
-    $('#applyButton').addClass('error');
-    $('#applyButton').removeClass('load');
-    $('#applyButton h2').text('ERROR');
+$('#userName, #pwd, #pwdConfirm, #email').focus(function () {
+  if ($('#applyButton').hasClass('error')) {
+    $('#applyButton').removeClass('error');
+    $('#msg').addClass('invisible');
+    $('#applyButton h2').text('APPLY NOW');
   }
+});
 
-  this.initPacks = function () {
-    client.builder.define("ApplyPacks");
-    client.builder.create([
-      {
-        "name": "PackE0",
-        "fields": [
-          {
-            "rule": "optional",
-            "type": "string",
-            "name": "username",
-            "id": 1
-          },
-          {
-            "rule": "optional",
-            "type": "string",
-            "name": "pwd",
-            "id": 2
-          },
-          {
-            "rule": "optional",
-            "type": "string",
-            "name": "email",
-            "id": 3
-          }
-        ]
-      },
-      {
-        "name": "PackE1",
-        "fields": [
-          {
-            "rule": "optional",
-            "type": "bool",
-            "name": "success",
-            "id": 1
-          },
-          {
-            "rule": "optional",
-            "type": "string",
-            "name": "msg",
-            "id": 2
-          },
-          {
-            "rule": "optional",
-            "type": "string",
-            "name": "creationToken",
-            "id": 3
-          }
-        ]
-      }
-    ]);
-    client.builder.reset();
-    var packSetup = client.builder.build("ApplyPacks");
-    this.PackE0 = packSetup.PackE0;
-    this.PackE1 = packSetup.PackE1;
-  };
-
-  this.initPacks();
+function ApplyManager(root) {
+  
+  this.PackE0 = root.lookup("ProtobufPackets.PackE0");
+  this.PackE1 = root.lookup("ProtobufPackets.PackE1");
 
   client.packetManager.addPKey(new PKey("E1", function (iPack) {
     var packE1 = applyManager.PackE1.decode(iPack.packData);
     if (!packE1.success) {
       $('#applyButton').click(applyManager.submit);
-      applyManager.setErrorMsg(packE1.msg);
+      setErrorMsg(packE1.msg);
     }
     else {
       var fadeTime = 400;
@@ -105,20 +49,20 @@ function ApplyManager() {
   this.submit = function () {
     console.log("submit called");
     if ($('#userName').val().length === 0) {
-      applyManager.setErrorMsg("No username was entered");
+      setErrorMsg("No username was entered");
     }
     else if ($('#pwd').val().length < 8) {
-      applyManager.setErrorMsg("Password must be longer than 8 characters");
+      setErrorMsg("Password must be longer than 8 characters");
     }
     else if ($('#pwd').val() != $('#pwdConfirm').val()) {
-      applyManager.setErrorMsg("Confirm password does not match password");
+      setErrorMsg("Confirm password does not match password");
     }
     else if (!String($('#email').val()).includes('@')) {
-      applyManager.setErrorMsg("Invalid email");
+      setErrorMsg("Invalid email");
     }
     else {
-      var packE0 = new applyManager.PackE0($('#userName').val(), $('#pwd').val(), $('#email').val());
-      client.tcpConnection.sendPack(new OPacket("E0", true, [0], packE0));
+      var packE0 = applyManager.PackE0.create({ userName: $('#userName').val(), pwd: $('#pwd').val(), email: $('#email').val() });
+      client.tcpConnection.sendPack(new OPacket("E0", true, [0], packE0, applyManager.PackE0));
       $('#msg').addClass('invisible');
       $('#applyButton').removeClass('error');
       $('#applyButton').addClass('load');
@@ -129,10 +73,12 @@ function ApplyManager() {
   $('#applyButton').click(this.submit);
 };
 
-var client = new Client();
+var applyManager;
 
-client.tcpConnection.onclose = function () {
-  alert("The Server Is Unavailible...");
-};
-
-var applyManager = new ApplyManager();
+var client = new Client(function (root) {
+  console.log("ON LOAD CALLED");
+  applyManager = new ApplyManager(root);
+  client.tcpConnection.onclose = function () {
+    alert("The Server Is Unavailible...");
+  };
+});

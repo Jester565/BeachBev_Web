@@ -111,7 +111,7 @@ void EmployeeManager::keyE0(boost::shared_ptr<IPacket> iPack)
 														{
 																packE1.set_success(true);
 																packE1.set_msg("Verify Email");
-																packE1.set_creationtoken(urlEncodedCreationToken);
+																packE1.set_creationtoken(urlEncodedCreationToken );
 																DebugManager::PrintDebug("Employee account added");
 														}
 												}

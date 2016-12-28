@@ -1,18 +1,20 @@
-function Client()
+
+function Client(protoInitCallback)
 {
-    var client = this;
-    var ProtoBuf = protobuf.ProtoBuf;
-    this.builder = ProtoBuf.newBuilder();
-    if (window.location.protocol != "https:")
-    {
-        this.tcpConnection = new TCPConnection(this.builder, location.host, "8000");
+  var client = this;
+  protobuf.load("PackFW.proto", function (err, root) {
+    if (err) {
+      throw err;
     }
-    else
-    { 
-        this.tcpConnection = new TCPConnection(this.builder, location.host, "8443");
+    if (window.location.protocol != "https:") {
+      client.tcpConnection = new TCPConnection(root, location.host, "8000");
     }
-    this.packetManager = new PacketManager();
-    this.tcpConnection.onmessage = function(iPack){client.packetManager.processPacket(iPack)};
-    this.setupManager = new SetupManager();
-    this.setupManager.initPacks(this);
+    else {
+      client.tcpConnection = new TCPConnection(root, location.host, "8443");
+    }
+    client.packetManager = new PacketManager();
+    client.tcpConnection.onmessage = function (iPack) { client.packetManager.processPacket(iPack) };
+    console.log("CALLED");
+    protoInitCallback(root);
+  });
 }

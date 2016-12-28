@@ -1,6 +1,6 @@
 'use strict';
 
-function OPacket(locKey, serverRead, sendToIDs, pack)
+function OPacket(locKey, serverRead, sendToIDs, pack, packBuilder)
 {
     this.locKey = locKey;
     if(serverRead !== undefined)
@@ -13,6 +13,7 @@ function OPacket(locKey, serverRead, sendToIDs, pack)
     }
     this.sendToIDs = sendToIDs;
     this.pack = pack;
+    this.packBuilder = packBuilder;
     this.toString = function()
     {
         var str = "locKey: " + this.locKey + " serverRead: ";

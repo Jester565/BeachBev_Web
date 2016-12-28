@@ -10,14 +10,14 @@ this.CONNECTION_STATES = {
     CLOSED : {val: 4, err: true, msg: "The connection was closed"}
 };
 
-function TCPConnection(builder, ip, port)
+function TCPConnection(root, ip, port)
 {
     var tcpConnect = this;
     this.connectionState = CONNECTION_STATES.SEARCHING;
-    if(builder === undefined)
+    if(root === undefined)
     {
         this.connectionState = CONNECTION_STATES.INVALID_ARGS;
-        throw (new Error("builder is undefined"));
+        throw (new Error("root is undefined"));
     }
     
     if(typeof ip !== 'string' || typeof port !== 'string')
@@ -26,60 +26,8 @@ function TCPConnection(builder, ip, port)
         throw (new Error("IP and Port must both be strings"));
     }
     
-    if(this.definePackHeader !== undefined)
-    {
-        this.PackHeader = this.definePackHeader(builder);
-    }
-    else
-    {
-        builder.define("PackFW");
-        builder.create([
-            {
-                "name": "PackHeaderOut",
-                "fields": [
-                    {
-                        "rule": "optional",
-                        "type": "bool",
-                        "name": "serverRead",
-                        "id":1
-                    },
-                    {
-                        "rule": "optional",
-                        "type": "string",
-                        "name": "locKey",
-                        "id": 2
-                    },
-                    {
-                        "rule": "repeated",
-                        "type": "uint32",
-                        "name": "sendToIDs",
-                        "id": 3
-                    }
-                ] 
-            },
-            {
-                "name": "PackHeaderIn",
-                "fields": [
-                    {
-                        "rule": "optional",
-                        "type": "string",
-                        "name": "locKey",
-                        "id": 1
-                    },
-                    {
-                        "rule": "optional",
-                        "type": "uint32",
-                        "name": "sentFromID",
-                        "id": 2
-                    }
-                ]
-            }
-        ]);
-        builder.reset();
-        this.PackFW = builder.build("PackFW");
-        this.PackHeaderOut = this.PackFW.PackHeaderOut;
-        this.PackHeaderIn = this.PackFW.PackHeaderIn;
-    }
+    this.PackHeaderIn = root.lookup("ProtobufPackets.PackHeaderOut");
+    this.PackHeaderOut = root.lookup("ProtobufPackets.PackHeaderIn");
     
     this.bigEndian = isBigEndian();
     var connectPrefix = "ws://";
@@ -154,15 +102,11 @@ function TCPConnection(builder, ip, port)
     this.sendPack = function (oPack)
     {
         console.log(this.connectionState.val);
-        var packBuf = oPack.pack.encode();
-        var packArrBuf = packBuf.toArrayBuffer();
-        var packUintArr = new Uint8Array(packArrBuf);
+        var packUintArr = oPack.packBuilder.encode(oPack.pack).finish();
         var packSize = packUintArr.length;
 
-        var headerPack = new this.PackHeaderOut(oPack.serverRead, oPack.locKey, oPack.sendToIDs);
-        var headerPackBuf = headerPack.encode();
-        var headerPackArrBuf = headerPackBuf.toArrayBuffer();
-        var headerPackUintArr = new Uint8Array(headerPackArrBuf);
+        var headerPack = this.PackHeaderOut.create({ serverRead: oPack.serverRead, locKey: oPack.locKey, sendToIDs: oPack.sendToIDs } );
+        var headerPackUintArr = this.PackHeaderOut.encode(headerPack).finish();
         var headerPackSize = headerPackUintArr.length;
         console.log("HEADER_PACK_SIZE: " + headerPackSize);
         if(headerPackSize%1 !== 0)
