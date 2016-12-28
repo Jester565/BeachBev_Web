@@ -168,7 +168,7 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 				{
 						std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
 				}
-				boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("E1", 0, iPack->getSentFromID());
+				boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("I2", 0, iPack->getSentFromID());
 				oPackI2->setData(boost::make_shared<std::string>(packI2.SerializeAsString()));
 				bbServer->getClientManager()->send(oPackI2);
 		}
