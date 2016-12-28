@@ -32,6 +32,8 @@ bool EmailManager::sendEmailVerification(IDType eID, DBManager* dbManager, const
 
 		std::string emailURL = EMAIL_CONFIRM_URL + "?" + emailTokenEncoded;
 
+		std::cout << "EMAIL URL: " << emailURL << std::endl;
+
 		std::string bodyCmd = "(cat ";
 		bodyCmd += EMAIL_HTML_DIR + "emailPt1.html";
 		bodyCmd += "; echo -n \"";
@@ -117,6 +119,7 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 		BYTE emailTokenHash[EMAIL_HASH_SIZE];
 		CryptoManager::GenerateHash(emailTokenHash, EMAIL_HASH_SIZE, emailTokenDecoded.data(), EMAIL_TOKEN_SIZE);
 		
+		std::cout << "URL CREATION TOKEN: " << packI0.creationtoken() << std::endl;
 		std::vector <BYTE> creationTokenDecoded;
 		CryptoManager::UrlDecode(creationTokenDecoded, packI0.creationtoken());
 		BYTE creationTokenHash[CREATION_HASH_SIZE];
