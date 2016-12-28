@@ -16,18 +16,18 @@ function EmailConfirmManager(root) {
   }, this, "Gets the success of the login"));
 }
 
+var emailConfirmManager;
 
 var client = new Client(function (root) {
-  var emailConfirmManager = new EmailConfirmManager(root);
+  emailConfirmManager = new EmailConfirmManager(root);
   client.tcpConnection.onopen = function () {
-    emailConfirmManager.initPacks();
     var url = window.location.href;
     var questionI = url.indexOf('?');
     if (questionI != -1) {
       var emailToken = url.substring(++questionI);
       var creationToken = Cookies.get('creationToken');
       if (creationToken !== undefined) {
-        var packI0 = new emailConfirmManager.PackI0({ emailToken: emailToken, creationToken: creationToken });
+        var packI0 = emailConfirmManager.PackI0.create({ emailToken: emailToken, creationToken: creationToken });
         client.tcpConnection.sendPack(new OPacket("I0", true, [0], packI0, emailConfirmManager.PackI0));
       }
     }
