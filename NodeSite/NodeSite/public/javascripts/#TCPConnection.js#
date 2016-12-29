@@ -126,9 +126,7 @@ function TCPConnection(root, ip, port)
         }
         totalArr.set(headerPackUintArr, MAX_SIZE_BYTES);
         totalArr.set(packUintArr, MAX_SIZE_BYTES + headerPackSize);
-				console.log("Total size: " + totalArr.length);
-				console.log("Pack size: " + packUintArr.length);
-        this.socket.send(totalArr.buffer);
+				var packI0 = oPack.packBuilder.d
     }
 }
 
