@@ -111,6 +111,7 @@ bool EmailManager::sendEmail(const std::string & sendToAddress, const std::strin
 
 void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 {
+	std::cout << "Pack size: " << iPack->getData()->size() << std::endl;
 		ProtobufPackets::PackI0 packI0;
 		packI0.ParseFromString(*iPack->getData());
 		
