@@ -14,8 +14,9 @@ public:
 		static const std::string EMAIL_CONFIRM_URL;
 		static const std::string EMAIL_HTML_DIR;
 		static const std::string EMAIL_VERIFY_BODY_CMD;
+		static const OTL_BIGINT EMAIL_EXPIRE_TIME = 7200;
 
-		EmailManager(BB_Server* bbServer);
+		EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager);
 
 		bool sendEmailVerification(IDType eID, DBManager* dbManager, const std::string& emailAddress);
 
@@ -27,8 +28,12 @@ public:
 
 		void keyI0(boost::shared_ptr <IPacket> iPack);
 
+		void keyI1(boost::shared_ptr <IPacket> iPack);
+
 		~EmailManager();
 
 private:
 		BB_Server* bbServer;
+
+		EmployeeManager* employeeManager;
 };

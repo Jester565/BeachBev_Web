@@ -19,7 +19,7 @@ EmployeeManager::EmployeeManager(BB_Server* bbServer)
 {
 		addKey(new PKey("D0", this, &EmployeeManager::keyD0));
 		addKey(new PKey("E0", this, &EmployeeManager::keyE0));
-		emailManager = new EmailManager(bbServer);
+		emailManager = new EmailManager(bbServer, this);
 }
 
 void EmployeeManager::keyD0(boost::shared_ptr<IPacket> iPack)

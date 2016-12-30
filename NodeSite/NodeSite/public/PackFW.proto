@@ -124,7 +124,7 @@ message PackI0
 		string creationToken = 2;
 }
 
-message packI1
+message PackI1
 {
 		string emailToken = 1;
 		string userName = 2;

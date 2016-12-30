@@ -64,6 +64,8 @@ public:
 
 		bool generateCreationToken(IDType eID, DBManager* dbManager, std::string& urlEncodedCreationToken);
 
+		IDType nameToEID(const std::string & name, DBManager * dbManager);
+
 		BB_Client* getEmployee(IDType eID);
 
 		std::unordered_map<IDType, Client*> employees;
@@ -72,7 +74,6 @@ public:
 
 protected:
 		BB_Server* bbServer;
-		IDType nameToEID(const std::string & name, DBManager * dbManager);
 		IDType getNextEID(DBManager* dbManager);
 
 		EmailManager* emailManager;

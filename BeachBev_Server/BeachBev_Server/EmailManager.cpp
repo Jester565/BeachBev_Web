@@ -2,6 +2,7 @@
 #include "DBManager.h"
 #include "CryptoManager.h"
 #include "BB_Client.h"
+#include "EmployeeManager.h"
 #include "Packets/BBPacks.pb.h"
 #include <WSIPacket.h>
 #include <WSOPacket.h>
@@ -11,10 +12,11 @@
 const std::string EmailManager::EMAIL_CONFIRM_URL = "https://beachbevs.com/email_confirm.html";
 const std::string EmailManager::EMAIL_HTML_DIR = "/home/ubuntu/BeachBev_Web/";
 
-EmailManager::EmailManager(BB_Server* bbServer)
+EmailManager::EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager)
 		:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
 {
 		addKey(new PKey("I0", this, &EmailManager::keyI0));
+		addKey(new PKey("I1", this, &EmailManager::keyI1));
 }
 
 bool EmailManager::sendEmailVerification(IDType eID, DBManager* dbManager, const std::string& emailAddress) {
@@ -111,7 +113,7 @@ bool EmailManager::sendEmail(const std::string & sendToAddress, const std::strin
 
 void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 {
-	std::cout << "Pack size: " << iPack->getData()->size() << std::endl;
+	 std::cout << "Pack size: " << iPack->getData()->size() << std::endl;
 		ProtobufPackets::PackI0 packI0;
 		packI0.ParseFromString(*iPack->getData());
 		
@@ -138,7 +140,7 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 				packI2.set_msg("An unknown error occured");
 
 				DBManager* dbManager = sender->getDBManager();
-				std::string query = "SELECT name FROM Employees WHERE creationToken=:f1<raw[";
+				std::string query = "SELECT name, emailTokenTime FROM Employees WHERE creationToken=:f1<raw[";
 				query += std::to_string(CREATION_HASH_SIZE);
 				query += "]> AND emailToken=:f2<raw[";
 				query += std::to_string(EMAIL_HASH_SIZE);
@@ -160,8 +162,17 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 						if (!otlStream.eof()) {
 								std::string name;
 								otlStream >> name;
-								packI2.set_success(true);
-								packI2.set_msg("Thank you for confirming your email " + name);
+								OTL_BIGINT emailTokenTime;
+								otlStream >> emailTokenTime;
+								if (emailTokenTime + EMAIL_EXPIRE_TIME < static_cast<OTL_BIGINT>(std::time(nullptr)))
+								{
+										packI2.set_success(true);
+										packI2.set_msg("Thank you for confirming your email " + name);
+								}
+								else
+								{
+										packI2.set_msg("This email confirmation link has expired");
+								}
 						}
 						else
 						{
@@ -176,6 +187,76 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 				oPackI2->setData(boost::make_shared<std::string>(packI2.SerializeAsString()));
 				bbServer->getClientManager()->send(oPackI2);
 		}
+}
+
+void EmailManager::keyI1(boost::shared_ptr<IPacket> iPack)
+{
+		BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+		if (sender == nullptr) {
+				return;
+		}
+		DBManager* dbManager = sender->getDBManager();
+		ProtobufPackets::PackI1 packI1;
+		packI1.ParseFromString(*iPack->getData());
+		
+		ProtobufPackets::PackI2 packI2;
+		packI2.set_msg("An internal error occured");
+		packI2.set_success(false);
+		IDType eID = employeeManager->nameToEID(packI1.username(), dbManager);
+		if (eID != 0)
+		{
+				if (employeeManager->checkPwd(eID, packI1.pwd(), dbManager))
+				{
+						std::vector <BYTE> emailTokenDecoded;
+						CryptoManager::UrlDecode(emailTokenDecoded, packI1.emailtoken());
+						BYTE emailTokenHash[EMAIL_HASH_SIZE];
+						CryptoManager::GenerateHash(emailTokenHash, EMAIL_HASH_SIZE, emailTokenDecoded.data(), EMAIL_TOKEN_SIZE);
+						
+						std::string query = "SELECT name, emailTokenTime FROM Employees WHERE eID=:f1<int> AND emailToken=:f2<raw[";
+						query += std::to_string(EMAIL_HASH_SIZE);
+						query += "]>";
+						try {
+								otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
+								otlStream << (int)eID;
+								otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
+								for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
+										emailTokenHashStr[i] = emailTokenHash[i];
+								}
+								emailTokenHashStr.set_len(EMAIL_HASH_SIZE);
+								otlStream << emailTokenHashStr;
+								if (!otlStream.eof()) {
+										std::string name;
+										otlStream >> name;
+										OTL_BIGINT emailTokenTime;
+										otlStream >> emailTokenTime;
+										if (emailTokenTime + EMAIL_EXPIRE_TIME < static_cast<OTL_BIGINT>(std::time(nullptr)))
+										{
+												packI2.set_success(true);
+												packI2.set_msg("Thank you for confirming your email " + name);
+										}
+										else
+										{
+												packI2.set_msg("This email confirmation link has expired");
+										}
+								}
+						}
+						catch (otl_exception ex)
+						{
+								std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
+						}
+				}
+				else
+				{
+						packI2.set_msg("Invalid username and password combination");
+				}
+		}
+		else
+		{
+				packI2.set_msg("Invalid username and password combination");
+		}
+		boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("I2", 0, iPack->getSentFromID());
+		oPackI2->setData(boost::make_shared<std::string>(packI2.SerializeAsString()));
+		bbServer->getClientManager()->send(oPackI2);
 }
 
 EmailManager::~EmailManager()

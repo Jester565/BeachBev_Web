@@ -88,6 +88,7 @@
     <Content Include="public\noGeo.html" />
     <Content Include="public\noServer.html" />
     <Content Include="public\orders.html" />
+    <Content Include="public\stylesheets\email_confirmStyle.css" />
     <Content Include="public\stylesheets\employeeStyle.css" />
     <Content Include="public\stylesheets\indexStyle.css" />
     <Content Include="public\stylesheets\mBarStyle.css" />
