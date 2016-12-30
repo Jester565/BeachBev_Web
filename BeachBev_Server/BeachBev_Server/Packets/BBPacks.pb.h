@@ -2040,12 +2040,19 @@ class PackI2 : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_msg();
   void set_allocated_msg(::std::string* msg);
 
+  // bool requestI1 = 3;
+  void clear_requesti1();
+  static const int kRequestI1FieldNumber = 3;
+  bool requesti1() const;
+  void set_requesti1(bool value);
+
   // @@protoc_insertion_point(class_scope:ProtobufPackets.PackI2)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr msg_;
   bool success_;
+  bool requesti1_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
   friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
@@ -3477,6 +3484,20 @@ inline void PackI2::set_allocated_msg(::std::string* msg) {
   }
   msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
   // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackI2.msg)
+}
+
+// bool requestI1 = 3;
+inline void PackI2::clear_requesti1() {
+  requesti1_ = false;
+}
+inline bool PackI2::requesti1() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackI2.requestI1)
+  return requesti1_;
+}
+inline void PackI2::set_requesti1(bool value) {
+  
+  requesti1_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackI2.requestI1)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS

@@ -135,4 +135,5 @@ message PackI2
 {
 		bool success = 1;
 		string msg = 2;
+		bool requestI1 = 3;
 }

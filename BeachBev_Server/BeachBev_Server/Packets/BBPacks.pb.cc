@@ -188,6 +188,7 @@ const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto() {
     ~0u,  // no _oneof_case_
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackI2, success_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackI2, msg_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackI2, requesti1_),
   };
   return offsets;
 }
@@ -356,11 +357,11 @@ void protobuf_AddDesc_BBPacks_2eproto_impl() {
       "\030\002 \001(\r\"3\n\006PackI0\022\022\n\nemailToken\030\001 \001(\t\022\025\n\r"
       "creationToken\030\002 \001(\t\";\n\006PackI1\022\022\n\nemailTo"
       "ken\030\001 \001(\t\022\020\n\010userName\030\002 \001(\t\022\013\n\003pwd\030\003 \001(\t"
-      "\"&\n\006PackI2\022\017\n\007success\030\001 \001(\010\022\013\n\003msg\030\002 \001(\t"
-      "b\006proto3"
+      "\"9\n\006PackI2\022\017\n\007success\030\001 \001(\010\022\013\n\003msg\030\002 \001(\t"
+      "\022\021\n\trequestI1\030\003 \001(\010b\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1008);
+      descriptor, 1027);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "BBPacks.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_BBPacks_2eproto);
@@ -6829,6 +6830,7 @@ void PackI1::set_allocated_pwd(::std::string* pwd) {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int PackI2::kSuccessFieldNumber;
 const int PackI2::kMsgFieldNumber;
+const int PackI2::kRequestI1FieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PackI2::PackI2()
@@ -6848,13 +6850,16 @@ PackI2::PackI2(const PackI2& from)
   if (from.msg().size() > 0) {
     msg_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.msg_);
   }
-  success_ = from.success_;
+  ::memcpy(&success_, &from.success_,
+    reinterpret_cast<char*>(&requesti1_) -
+    reinterpret_cast<char*>(&success_) + sizeof(requesti1_));
   // @@protoc_insertion_point(copy_constructor:ProtobufPackets.PackI2)
 }
 
 void PackI2::SharedCtor() {
   msg_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  success_ = false;
+  ::memset(&success_, 0, reinterpret_cast<char*>(&requesti1_) -
+    reinterpret_cast<char*>(&success_) + sizeof(requesti1_));
   _cached_size_ = 0;
 }
 
@@ -6893,7 +6898,8 @@ PackI2* PackI2::New(::google::protobuf::Arena* arena) const {
 void PackI2::Clear() {
 // @@protoc_insertion_point(message_clear_start:ProtobufPackets.PackI2)
   msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  success_ = false;
+  ::memset(&success_, 0, reinterpret_cast<char*>(&requesti1_) -
+    reinterpret_cast<char*>(&success_) + sizeof(requesti1_));
 }
 
 bool PackI2::MergePartialFromCodedStream(
@@ -6928,6 +6934,19 @@ bool PackI2::MergePartialFromCodedStream(
             this->msg().data(), this->msg().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "ProtobufPackets.PackI2.msg"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bool requestI1 = 3;
+      case 3: {
+        if (tag == 24u) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &requesti1_)));
         } else {
           goto handle_unusual;
         }
@@ -6973,6 +6992,11 @@ void PackI2::SerializeWithCachedSizes(
       2, this->msg(), output);
   }
 
+  // bool requestI1 = 3;
+  if (this->requesti1() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->requesti1(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:ProtobufPackets.PackI2)
 }
 
@@ -6996,6 +7020,11 @@ void PackI2::SerializeWithCachedSizes(
         2, this->msg(), target);
   }
 
+  // bool requestI1 = 3;
+  if (this->requesti1() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->requesti1(), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:ProtobufPackets.PackI2)
   return target;
 }
@@ -7013,6 +7042,11 @@ size_t PackI2::ByteSizeLong() const {
 
   // bool success = 1;
   if (this->success() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // bool requestI1 = 3;
+  if (this->requesti1() != 0) {
     total_size += 1 + 1;
   }
 
@@ -7049,6 +7083,9 @@ void PackI2::MergeFrom(const PackI2& from) {
   if (from.success() != 0) {
     set_success(from.success());
   }
+  if (from.requesti1() != 0) {
+    set_requesti1(from.requesti1());
+  }
 }
 
 void PackI2::CopyFrom(const ::google::protobuf::Message& from) {
@@ -7076,6 +7113,7 @@ void PackI2::Swap(PackI2* other) {
 void PackI2::InternalSwap(PackI2* other) {
   msg_.Swap(&other->msg_);
   std::swap(success_, other->success_);
+  std::swap(requesti1_, other->requesti1_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
@@ -7143,6 +7181,20 @@ void PackI2::set_allocated_msg(::std::string* msg) {
   }
   msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
   // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackI2.msg)
+}
+
+// bool requestI1 = 3;
+void PackI2::clear_requesti1() {
+  requesti1_ = false;
+}
+bool PackI2::requesti1() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackI2.requestI1)
+  return requesti1_;
+}
+void PackI2::set_requesti1(bool value) {
+  
+  requesti1_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackI2.requestI1)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

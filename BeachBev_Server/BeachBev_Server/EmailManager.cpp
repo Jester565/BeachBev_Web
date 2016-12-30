@@ -137,6 +137,7 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 		{
 				ProtobufPackets::PackI2 packI2;
 				packI2.set_success(false);
+				packI2.set_requesti1(true);
 				packI2.set_msg("An unknown error occured");
 
 				DBManager* dbManager = sender->getDBManager();
@@ -164,13 +165,14 @@ void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
 								otlStream >> name;
 								OTL_BIGINT emailTokenTime;
 								otlStream >> emailTokenTime;
-								if (emailTokenTime + EMAIL_EXPIRE_TIME < static_cast<OTL_BIGINT>(std::time(nullptr)))
+								if (emailTokenTime + EMAIL_EXPIRE_TIME > static_cast<OTL_BIGINT>(std::time(nullptr)))
 								{
 										packI2.set_success(true);
 										packI2.set_msg("Thank you for confirming your email " + name);
 								}
 								else
 								{
+										packI2.set_requesti1(false);
 										packI2.set_msg("This email confirmation link has expired");
 								}
 						}
@@ -201,6 +203,7 @@ void EmailManager::keyI1(boost::shared_ptr<IPacket> iPack)
 		
 		ProtobufPackets::PackI2 packI2;
 		packI2.set_msg("An internal error occured");
+		packI2.set_requesti1(true);
 		packI2.set_success(false);
 		IDType eID = employeeManager->nameToEID(packI1.username(), dbManager);
 		if (eID != 0)
