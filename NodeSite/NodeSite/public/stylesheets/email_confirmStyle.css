@@ -118,8 +118,8 @@ ul {
 
 #checkmark.animate {
     display:inline-block;
-    width: 22px;
-    height:22px;
+    width:30vh;
+    height:30vh;
     -ms-transform: rotate(45deg); /* IE 9 */
     -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
     transform: rotate(45deg);
@@ -127,30 +127,30 @@ ul {
 
 #checkmark_circle {
     position: absolute;
-    width:22px;
-    height:22px;
+    width:30vh;
+    height:30vh;
     background-color: green;
-    border-radius:11px;
-    left:0;
-    top:0;
+    border-radius:15vh;
+    left:calc(50% - 15vh);
+    top:calc(50% - 15vh);
 }
 
 #checkmark_stem {
     position: absolute;
-    width:3px;
-    height:9px;
+    width:4vh;
+    height:12.3vh;
     background-color:#fff;
-    left:11px;
-    top:6px;
+    left:calc(50%);
+    top:calc(50% - 15vh + 8.2vh);
 }
 
 #checkmark_kick {
     position: absolute;
-    width:3px;
-    height:3px;
+    width:4vh;
+    height:4vh;
     background-color:#fff;
-    left:8px;
-    top:12px;
+    left:calc(50% - 15vh + 10.9vh);
+    top:calc(50% - 15vh + 16.4vh);
 }
 
 #loading {
