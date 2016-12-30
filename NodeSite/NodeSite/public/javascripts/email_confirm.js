@@ -25,7 +25,7 @@ function EmailConfirmManager(root) {
       $('#msg').text(packI2.msg);
     }
     else {
-      $('login').removeClass('hidden');
+      $('#login').removeClass('hidden');
       setErrorMsg(packI2.msg);
     }
   }, this, "Gets the success of the login"));
