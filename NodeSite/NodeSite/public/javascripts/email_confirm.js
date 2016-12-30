@@ -20,7 +20,7 @@ function EmailConfirmManager(root) {
       console.log("Success!");
       $('#login').addClass('hidden');
       $('#checkmark').removeClass('hidden');
-      $('#checkmark').addClass('animate');
+      $('#msg').removeClass('hidden');
       $('#msg').addClass('success');
       $('#msg').text(packI2.msg);
     }

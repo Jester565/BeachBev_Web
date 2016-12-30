@@ -116,51 +116,14 @@ ul {
   padding-right: .2em;
 }
 
-#checkmark.animate {
-    display:inline-block;
-    width:30vh;
-    height:30vh;
-    -ms-transform: rotate(45deg); /* IE 9 */
-    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-    transform: rotate(45deg);
-}
-
-#checkmark_circle {
-    position: absolute;
-    width:30vh;
-    height:30vh;
-    background-color: green;
-    border-radius:15vh;
-    left:calc(50% - 15vh);
-    top:calc(50% - 15vh);
-}
-
-#checkmark_stem {
-    position: absolute;
-    width:4vh;
-    height:12.3vh;
-    background-color:#fff;
-    left:calc(50%);
-    top:calc(50% - 15vh + 8.2vh);
-}
-
-#checkmark_kick {
-    position: absolute;
-    width:4vh;
-    height:4vh;
-    background-color:#fff;
-    left:calc(50% - 15vh + 10.9vh);
-    top:calc(50% - 15vh + 16.4vh);
-}
-
 #loading {
     position: fixed;
     width: 400px;
     height: 262px;
     top: 50%;
     left: 50%;
-    margin-top: -200px;
-    margin-left: -130px;
+    margin-left: -200px;
+    margin-top: -131px;
 }
 
 #login.hidden {
@@ -177,4 +140,61 @@ ul {
 
 #loading.hidden {
   display: none;
+}
+
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #7ac142;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+#checkmark {
+  animation-play-state: running;
+  -webkit-animation-play-state: running;
+  width: 30vh;
+  height: 30vh;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 1.07vh;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  margin: 5.4vh auto;
+  box-shadow: inset 0px 0px 0px #7ac142;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 25.7vh;
+  stroke-dashoffset: 25.7vh;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+#checkmark.hidden {
+  display: none;
+  animation-play-state: paused;
+  -webkit-animation-play-state: paused;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes scale {
+  0%, 100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}
+@keyframes fill {
+  100% {
+    box-shadow: inset 0px 0px 0px 16vh #7ac142;
+  }
 }
