@@ -300,8 +300,16 @@ bool EmployeeManager::getPwdData(IDType eID, DBManager * dbManager, BYTE * hash,
 				otl_stream otlStream(50, "SELECT hashPwd, salt FROM dbo.Employees WHERE eID = :f1<int>", *dbManager->getConnection());
 				otlStream << (int)eID;
 				if (!otlStream.eof()) {
-						otlStream >> hash;
-						otlStream >> salt;
+						otl_long_string hashStr(HASH_SIZE);
+						otlStream >> hashStr;
+						for (int i = 0; i < HASH_SIZE; i++) {
+								hash[i] = hashStr[i];
+						}
+						otl_long_string saltStr(SALT_SIZE);
+						otlStream >> saltStr;
+						for (int i = 0; i < SALT_SIZE; i++) {
+								salt[i] = saltStr[i];
+						}
 						return true;
 				}
 		}

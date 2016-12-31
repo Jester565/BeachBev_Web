@@ -232,7 +232,7 @@ void EmailManager::keyI1(boost::shared_ptr<IPacket> iPack)
 										otlStream >> name;
 										OTL_BIGINT emailTokenTime;
 										otlStream >> emailTokenTime;
-										if (emailTokenTime + EMAIL_EXPIRE_TIME < static_cast<OTL_BIGINT>(std::time(nullptr)))
+										if (emailTokenTime + EMAIL_EXPIRE_TIME > static_cast<OTL_BIGINT>(std::time(nullptr)))
 										{
 												packI2.set_success(true);
 												packI2.set_msg("Thank you for confirming your email " + name);
@@ -250,12 +250,12 @@ void EmailManager::keyI1(boost::shared_ptr<IPacket> iPack)
 				}
 				else
 				{
-						packI2.set_msg("Invalid username and password combination");
+						packI2.set_msg("Invalid password");
 				}
 		}
 		else
 		{
-				packI2.set_msg("Invalid username and password combination");
+				packI2.set_msg("Invalid username");
 		}
 		boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("I2", 0, iPack->getSentFromID());
 		oPackI2->setData(boost::make_shared<std::string>(packI2.SerializeAsString()));
