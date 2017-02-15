@@ -162,24 +162,3 @@ ul {
 #msg.invisible {
   visibility: hidden;
 }
-
-#msg.success {
-  color: black;
-  font-size: 1em;
-  background-color: rgba(0, 0, 0, 0);
-  padding-left: .2em;
-  padding-right: .2em;
-}
-
-#successMsg {
-  display: block;
-  text-align: center;
-  font-family: 'Bitter', serif;
-  color: black;
-  font-size: 3em;
-  padding: .1em;
-}
-
-#successMsg.hidden {
-  display: none;
-}

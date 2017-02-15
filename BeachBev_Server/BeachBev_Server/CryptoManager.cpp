@@ -58,3 +58,22 @@ void CryptoManager::UrlDecode(std::vector <BYTE>& decoded, const std::string& en
 				decoder.Get((byte*)decoded.data(), decoded.size());
 		}
 }
+
+void CryptoManager::OutputBytes(otl_stream & stream, BYTE * data, uint16_t size)
+{
+		otl_long_string otlStr(size);
+		for (int i = 0; i < size; i++) {
+			 otlStr[i] = data[i];
+		}
+		otlStr.set_len(size);
+	 stream << otlStr;
+}
+
+void CryptoManager::InputBytes(otl_stream & stream, BYTE * data, uint16_t size)
+{
+		otl_long_string otlStr(size);
+		stream >> otlStr;
+		for (int i = 0; i < size; i++) {
+				data[i] = otlStr[i];
+		}
+}

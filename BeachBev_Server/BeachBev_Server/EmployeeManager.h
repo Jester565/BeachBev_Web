@@ -10,6 +10,14 @@ class BB_Server;
 class BB_Client;
 class Client;
 class EmailManager;
+typedef uint16_t DeviceID;
+
+static const int TOKEN_SIZE = 64;
+static const int HASH_SIZE = 64;
+static const int SALT_SIZE = 32;
+static const int NAME_SIZE = 50;
+static const int EMAIL_SIZE = 254;
+static const int MAX_TOKEN_HOURS = 24;
 
 template <typename T>
 void CmdInjectProtect(T data, uint32_t dataSize) {
@@ -38,33 +46,39 @@ bool CmdInjectSafe(T data, uint32_t dataSize) {
 		return true;
 }
 
+bool CheckInTimeRange(OTL_BIGINT& time, int numHours) {
+		OTL_BIGINT now = std::time(NULL);
+		if (now - time <= numHours * 60 * 60) {
+				return true;
+		}
+		return false;
+}
+
 class EmployeeManager : public PKeyOwner
 {
 public:
-		static const int TOKEN_SIZE = 64;
-		static const int HASH_SIZE = 64;
-		static const int SALT_SIZE = 32;
-		static const int NAME_SIZE = 50;
-		static const int EMAIL_SIZE = 50;
-		static const int INITIAL_A_STATE = 0;
-
 		EmployeeManager(BB_Server* server);
 
-		void keyD0(boost::shared_ptr<IPacket> iPack);
+		/// <summary>
+		/// Adds a new employee to the database, replies with A1
+		/// </summary>
+		/// <param name="iPack">The input packet containing data
+		/// for protobuf packet A0.</param>
+		void handleA0(boost::shared_ptr<IPacket> iPack);
 
-		void keyE0(boost::shared_ptr<IPacket> iPack);
-
-		bool addEmployeeToDatabase(IDType eID, DBManager* dbManager, const std::string& name, const std::string& pwd, const std::string& email);
-
-		bool checkPwd(IDType eID, const std::string& pwd, DBManager* dbManager);
-
-		bool setToken(IDType eID, DBManager* dbManager, BYTE* token);
-
-		bool getPwdData(IDType eID, DBManager* dbManager, BYTE* hash, BYTE* salt);
-
-		bool generateCreationToken(IDType eID, DBManager* dbManager, std::string& urlEncodedCreationToken);
-
-		IDType nameToEID(const std::string & name, DBManager * dbManager);
+		/// <summary>
+		/// Logs in an employee using the pwdToken, replies with A1
+		/// </summary>
+		/// <param name="iPack">The input packet containing data
+		/// for protobuf packet A2.</param>
+		void handleA2(boost::shared_ptr<IPacket> iPack);
+		
+		/// <summary>
+		/// Logs in an employee using the username and pwd, replies with A1
+		/// </summary>
+		/// <param name="iPack">The input packet containing data
+		/// for protobuf packet A3.</param>
+		void handleA3(boost::shared_ptr<IPacket> iPack);
 
 		BB_Client* getEmployee(IDType eID);
 
@@ -73,8 +87,19 @@ public:
 		~EmployeeManager();
 
 protected:
-		BB_Server* bbServer;
+		IDType addEmployeeToDatabase(const std::string& name, DBManager* dbManager);
+		bool setPwd(IDType eID, const std::string& pwd, DBManager* dbManager);
+		bool setPwdToken(IDType eID, std::string& urlEncodedPwdToken, DeviceID deviceID, DBManager* dbManager);
+		bool clearPwdTokens(IDType eID, DBManager* dbManager);
+		DeviceID addPwdToken(IDType eID, std::string& urlEncodedPwdToken, DBManager* dbManager);
+		DeviceID getNextDeviceID(IDType eID, DBManager* dbManager);
+		IDType nameToEID(const std::string & name, DBManager * dbManager);
 		IDType getNextEID(DBManager* dbManager);
 
+		bool getPwdData(IDType eID, BYTE* hash, BYTE* salt, DBManager* dbManager);
+		bool getPwdToken(IDType eID, BYTE* databaseTokenHash, OTL_BIGINT& tokenTime, DeviceID devID, DBManager* dbManager);
+
+		void loginClient(BB_Client* bbClient, IDType eID);
 		EmailManager* emailManager;
+		BB_Server* bbServer;
 };

@@ -17,207 +17,168 @@
 EmployeeManager::EmployeeManager(BB_Server* bbServer)
 		:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
 {
-		addKey(new PKey("D0", this, &EmployeeManager::keyD0));
-		addKey(new PKey("E0", this, &EmployeeManager::keyE0));
+		addKey(new PKey("A0", this, &EmployeeManager::handleA0));
+		addKey(new PKey("A2", this, &EmployeeManager::handleA2));
+		addKey(new PKey("A3", this, &EmployeeManager::handleA3));
 		emailManager = new EmailManager(bbServer, this);
 }
 
-void EmployeeManager::keyD0(boost::shared_ptr<IPacket> iPack)
+void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 {
-		ProtobufPackets::PackD0 packD0;
-		packD0.ParseFromString(*iPack->getData());
-		ProtobufPackets::PackD1 packD1;
-		packD1.set_success(false);
+		ProtobufPackets::PackA0 packA0;
+		packA0.ParseFromString(*iPack->getData());
+		ProtobufPackets::PackA1 replyPacket;
 		BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
-		if (sender != nullptr) {
-				DBManager* dbManager = sender->getDBManager();
-				IDType eID = nameToEID(packD0.username(), dbManager);
-				if (eID != 0)
-				{
-						if (employees.find(eID) == employees.end())
-						{
-								if (checkPwd(eID, packD0.pwd(), dbManager))
-								{
-										otl_stream otlStream(50, "SELECT aState FROM Employees WHERE eID = :f1<int>", *dbManager->getConnection());
-										otlStream << (int)eID;
-										int aState = 0;
-										otlStream >> aState;
-										if (aState != 0)
-										{
-												BYTE genToken[TOKEN_SIZE];
-												CryptoManager::GenerateRandomData(genToken, TOKEN_SIZE);
-												if (setToken(eID, dbManager, genToken)) {
-														sender->setEmpID(eID);
-														employees.emplace(eID, sender);
-														packD1.set_success(true);
-														packD1.set_token(std::string(reinterpret_cast<char*>(genToken), TOKEN_SIZE));
-														DebugManager::PrintDebug("Employee logged in");
-												}
-												else
-												{
-														packD1.set_error("Could not set token");
-												}
-										}
-										else
-										{
-												packD1.set_error("Waiting for Approval");
-										}
-								}
-								else
-								{
-										packD1.set_error("Incorrect Password");
-								}
-						}
-						else
-						{
-								packD1.set_error("Someone is already logged in on this account");
-						}
+		if (sender == nullptr) {
+				return;
+		}
+		DBManager* dbManager = sender->getDBManager();
+		IDType eID = nameToEID(packA0.name(), dbManager);
+		if (eID == 0) {
+				eID = emailManager->emailToEID(packA0.email(), dbManager);
+				if (eID == 0) {
+						eID = addEmployeeToDatabase(packA0.name(), dbManager);
+						setPwd(eID, packA0.pwd, dbManager);
+						std::string urlEncodedPwdToken;
+						DeviceID devID = addPwdToken(eID, urlEncodedPwdToken, dbManager);
+						std::string urlEncodedEmailToken;
+						emailManager->setUnverifiedEmail(eID, packA0.email(), urlEncodedEmailToken, dbManager);
+						emailManager->sendVerificationEmail(packA0.email(), urlEncodedEmailToken);
+						loginClient(sender, eID);
+
+						replyPacket.set_pwdtoken(urlEncodedPwdToken);
+						replyPacket.set_deviceid(devID);
+						replyPacket.set_eid(eID);
+						replyPacket.set_msg("Account Added");
 				}
 				else
 				{
-						packD1.set_error("Nonexistant Username");
+						replyPacket.set_msg("Email already used");
 				}
 		}
 		else
 		{
-				packD1.set_error("Could not link client to database connection");
+				replyPacket.set_msg("Name already used");
 		}
-		boost::shared_ptr<OPacket> oPackD1 = boost::make_shared<WSOPacket>("D1", 0, iPack->getSentFromID());
-		oPackD1->setData(boost::make_shared<std::string>(packD1.SerializeAsString()));
-		bbServer->getClientManager()->send(oPackD1);
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("A1");
+		oPack->setSenderID(0);
+		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+		bbServer->getClientManager()->send(oPack, sender);
 }
 
-void EmployeeManager::keyE0(boost::shared_ptr<IPacket> iPack)
+void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 {
-		BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
-		if (sender != nullptr) {
-				DBManager* dbManager = sender->getDBManager();
-				ProtobufPackets::PackE0 packE0;
-				packE0.ParseFromString(*iPack->getData());
-				ProtobufPackets::PackE1 packE1;
-				packE1.set_success(false);
-				if (CmdInjectSafe(packE0.email(), packE0.email().size())) {
-						IDType eID = nameToEID(packE0.username(), dbManager);
-						if (eID == 0)
+		ProtobufPackets::PackA2 packA2;
+		packA2.ParseFromString(*iPack->getData());
+		ProtobufPackets::PackA1 replyPacket;
+		BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+		if (sender == nullptr) {
+				return;
+		}
+		DBManager* dbManager = sender->getDBManager();
+		BYTE dbTokenHash[TOKEN_SIZE];
+		OTL_BIGINT tokenTime;
+		if (getPwdToken(packA2.eid(), dbTokenHash, tokenTime, packA2.deviceid(), dbManager)) {
+				if (CheckInTimeRange(tokenTime, MAX_TOKEN_HOURS)) {
+						std::vector<BYTE> packToken;
+						packToken.reserve(TOKEN_SIZE);
+						CryptoManager::UrlDecode(packToken, packA2.pwdtoken());
+						BYTE packTokenHash[TOKEN_SIZE];
+						CryptoManager::GenerateHash(packTokenHash, TOKEN_SIZE, packToken.data(), packToken.size());
+						bool match = true;
+						for (int i = 0; i < TOKEN_SIZE; i++)		//Iterate through all to prevent time-based attacks
 						{
-								IDType nextID = getNextEID(dbManager);
-								if (nextID != 0)
-								{
-										if (addEmployeeToDatabase(nextID, dbManager, packE0.username(), packE0.pwd(), packE0.email())) {
-												if (emailManager->sendEmailVerification(nextID, dbManager, packE0.email()))
-												{
-														std::string urlEncodedCreationToken;
-														if (generateCreationToken(nextID, dbManager, urlEncodedCreationToken));
-														{
-																packE1.set_success(true);
-																packE1.set_msg("Verify Email");
-																packE1.set_creationtoken(urlEncodedCreationToken );
-																DebugManager::PrintDebug("Employee account added");
-														}
-												}
-										}
-										else
-										{
-												packE1.set_msg("An error occured: Failed to add to database");
-										}
+								if (packTokenHash[i] != dbTokenHash[i]) {
+										match = false;
 								}
-								else
-								{
-										packE1.set_msg("An error occured: Could not assign empID");
-								}
+						}
+						if (match) {
+								std::string urlEncodedPwdToken;
+								setPwdToken(packA2.eid(), urlEncodedPwdToken, packA2.deviceid(), dbManager);
+								replyPacket.set_pwdtoken(urlEncodedPwdToken);
+								replyPacket.set_eid(packA2.eid());
+								replyPacket.set_deviceid(packA2.deviceid());
+								replyPacket.set_msg("Login successful");
+								loginClient(sender, packA2.eid());
 						}
 						else
 						{
-								packE1.set_msg("The username already exists");
+								replyPacket.set_msg("Tokens did not match");
 						}
 				}
 				else
 				{
-						packE1.set_msg("Email cannot contain \' or \" characters");
+						replyPacket.set_msg("Token expired");
 				}
-				boost::shared_ptr<WSOPacket> oPackE1 = boost::make_shared<WSOPacket>("E1", 0, iPack->getSentFromID());
-				oPackE1->setData(boost::make_shared<std::string>(packE1.SerializeAsString()));
-				bbServer->getClientManager()->send(oPackE1);
 		}
-}
-
-bool EmployeeManager::generateCreationToken(IDType eID, DBManager* dbManager, std::string& urlEncodedCreationToken) {
-		BYTE creationToken[EmailManager::CREATION_TOKEN_SIZE];
-		CryptoManager::GenerateRandomData(creationToken, EmailManager::CREATION_TOKEN_SIZE);
-		CryptoManager::UrlEncode(urlEncodedCreationToken, creationToken, EmailManager::CREATION_TOKEN_SIZE);
-		BYTE creationTokenHash[EmailManager::CREATION_HASH_SIZE];
-		CryptoManager::GenerateHash(creationTokenHash, EmailManager::CREATION_HASH_SIZE, creationToken, EmailManager::CREATION_TOKEN_SIZE);
-		return emailManager->setCreationTokenHash(eID, dbManager, creationTokenHash);
-}
-
-bool EmployeeManager::addEmployeeToDatabase(IDType eID, DBManager* dbManager, const std::string & name, const std::string & pwdStr, const std::string & email)
-{
-		std::vector <BYTE> pwd(pwdStr.begin(), pwdStr.end());
-		BYTE genSalt[SALT_SIZE];
-		CryptoManager::GenerateRandomData(genSalt, SALT_SIZE);
-		BYTE genHash[HASH_SIZE];
-		CryptoManager::GenerateHash(genHash, HASH_SIZE, pwd.data(), pwdStr.size(), genSalt, SALT_SIZE);
-		std::string query = "INSERT INTO Employees (eID, name, email, aState, hashPwd, salt)\
-						VALUES (:f1<int>, :f2<char[";
-		query += std::to_string(NAME_SIZE);
-		query += "]>, :f3<char[";
-		query += std::to_string(EMAIL_SIZE);
-		query += "]>, :f4<int>, :f5<raw[";
-		query += std::to_string(HASH_SIZE);
-		query += "]>, :f6<raw[";
-		query += std::to_string(SALT_SIZE);
-		query += "]>)";
-		try {
-				otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
-				otlStream << (int)eID;
-				otlStream << name;
-				otlStream << email;
-				otlStream << INITIAL_A_STATE;
-				otl_long_string genHashStr(HASH_SIZE);
-				for (int i = 0; i < HASH_SIZE; i++) {
-						genHashStr[i] = genHash[i];
-				}
-				genHashStr.set_len(HASH_SIZE);
-				otlStream << genHashStr;
-				otl_long_string genSaltStr(SALT_SIZE);
-				for (int i = 0; i < SALT_SIZE; i++) {
-						genSaltStr[i] = genSalt[i];
-				}
-				genSaltStr.set_len(SALT_SIZE);
-				otlStream << genSaltStr;
-				return true;
-		}
-		catch (otl_exception ex)
+		else
 		{
-				std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
+				replyPacket.set_msg("Could not aquire a token");
 		}
-		return false;
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("A1");
+		oPack->setSenderID(0);
+		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+		bbServer->getClientManager()->send(oPack, sender);
 }
 
-bool EmployeeManager::checkPwd(IDType eID, const std::string & pwdStr, DBManager* dbManager)
+void EmployeeManager::handleA3(boost::shared_ptr<IPacket> iPack)
 {
-		try
-		{
-				std::vector <BYTE> pwd(pwdStr.begin(), pwdStr.end());
-				BYTE dbHash[HASH_SIZE];
-				BYTE dbSalt[SALT_SIZE];
-				getPwdData(eID, dbManager, dbHash, dbSalt);
-				BYTE genHash[HASH_SIZE];
-				CryptoManager::GenerateHash(genHash, HASH_SIZE, pwd.data(), pwdStr.size(), dbSalt, SALT_SIZE);
-				for (int i = 0; i < HASH_SIZE; i++)
-				{
-						if (genHash[i] != dbHash[i])
+		ProtobufPackets::PackA3 packA3;
+		packA3.ParseFromString(*iPack->getData());
+		ProtobufPackets::PackA1 replyPacket;
+		BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+		if (sender == nullptr) {
+				return;
+		}
+		DBManager* dbManager = sender->getDBManager();
+		IDType eID = nameToEID(packA3.name(), dbManager);
+		if (eID != 0) {
+				BYTE dbPwdHash[HASH_SIZE];
+				BYTE dbPwdSalt[SALT_SIZE];
+				if (getPwdData(eID, dbPwdHash, dbPwdSalt, dbManager)) {
+						BYTE packPwdHash[HASH_SIZE];
+						CryptoManager::GenerateHash(packPwdHash, HASH_SIZE, 
+								(BYTE*)packA3.pwd().data(), packA3.pwd().size(),
+								dbPwdSalt, SALT_SIZE);
+						bool match = true;
+						for (int i = 0; i < HASH_SIZE; i++) {
+								if (packPwdHash[i] != dbPwdHash[i]) {
+										match = false;
+								}
+						}
+						if (match) {
+								std::string urlEncodedPwdToken;
+								DeviceID devID = packA3.deviceid();
+								if (devID != 0) {
+										setPwdToken(eID, urlEncodedPwdToken, packA3.deviceid(), dbManager);
+								}
+								else {
+										devID = addPwdToken(eID, urlEncodedPwdToken, dbManager);
+								}
+								replyPacket.set_pwdtoken(urlEncodedPwdToken);
+								replyPacket.set_eid(eID);
+								replyPacket.set_deviceid(devID);
+								replyPacket.set_msg("Login successful");
+								loginClient(sender, eID);
+						}
+						else
 						{
-								return false;
+								replyPacket.set_msg("Invalid login");
 						}
 				}
-				return true;
+				else
+				{
+						replyPacket.set_msg("Could not get pwd data from database");
+				}
 		}
-		catch (otl_exception ex)
+		else
 		{
-				std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
+				replyPacket.set_msg("Invalid login");
 		}
-		return false;
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("A1");
+		oPack->setSenderID(0);
+		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+		bbServer->getClientManager()->send(oPack, sender);
 }
 
 BB_Client* EmployeeManager::getEmployee(IDType eID)
@@ -230,95 +191,208 @@ BB_Client* EmployeeManager::getEmployee(IDType eID)
 		return nullptr;
 }
 
-bool EmployeeManager::setToken(IDType eID, DBManager * dbManager, BYTE * token)
+IDType EmployeeManager::addEmployeeToDatabase(const std::string & name, DBManager * dbManager)
 {
-		std::string query = "UPDATE Employees SET token=:f1<char[";
-		query += std::to_string(TOKEN_SIZE);
-		query += "]> WHERE eID=:f2<int>";
+		IDType eID = getNextEID(dbManager);
+		std::string query = "INSERT INTO Employees (eID, name) VALUES (:f1<int>, :f2<char[";
+		query += std::to_string(NAME_SIZE);
+		query += "]>)";
 		try {
-				otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
-				otlStream << token, eID;
-				return true;
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+				otlStream << name;
 		}
 		catch (otl_exception ex)
 		{
 				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
 		}
-		return false;
+		return eID;
+}
+
+bool EmployeeManager::setPwd(IDType eID, const std::string & pwd, DBManager * dbManager)
+{
+		clearPwdTokens(eID, dbManager);
+		BYTE genSalt[SALT_SIZE];
+		CryptoManager::GenerateRandomData(genSalt, SALT_SIZE);
+		BYTE genHash[HASH_SIZE];
+		CryptoManager::GenerateHash(genHash, HASH_SIZE, (BYTE*)pwd.data(), pwd.size(), genSalt, SALT_SIZE);
+		
+		std::string query = "UPDATE Employees SET pwdHash=:f1<raw[";
+		query += std::to_string(HASH_SIZE);
+		query += "]>, pwdSalt=:f2<raw[";
+		query += std::to_string(SALT_SIZE);
+		query += "]> WHERE eID = :f3<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				CryptoManager::OutputBytes(otlStream, genHash, HASH_SIZE);
+				CryptoManager::OutputBytes(otlStream, genSalt, HASH_SIZE);
+				otlStream << (int)eID;
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+				return false;
+		}
+		return true;
+}
+
+bool EmployeeManager::setPwdToken(IDType eID, std::string& urlEncodedPwdToken, DeviceID devID, DBManager * dbManager)
+{
+		BYTE genToken[TOKEN_SIZE];
+		CryptoManager::GenerateRandomData(genToken, TOKEN_SIZE);
+		BYTE genTokenHash[TOKEN_SIZE];
+		CryptoManager::GenerateHash(genTokenHash, TOKEN_SIZE, genToken, TOKEN_SIZE);
+		std::string query = "REPLACE INTO PwdTokens (:f1<int>, :f2<int>, :f3<raw[";
+		query += std::to_string(TOKEN_SIZE);
+		query += "]>, :f4<bigint>)";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+				otlStream << (int)devID;
+				CryptoManager::OutputBytes(otlStream, genTokenHash, TOKEN_SIZE);
+				otlStream << (OTL_BIGINT)(std::time(NULL));
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		CryptoManager::UrlEncode(urlEncodedPwdToken, genToken, TOKEN_SIZE);
+		return true;
+}
+
+bool EmployeeManager::clearPwdTokens(IDType eID, DBManager * dbManager)
+{
+		std::string query = "DELETE FROM PwdTokens WHERE eID=:f1<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+}
+
+DeviceID EmployeeManager::addPwdToken(IDType eID, std::string & urlEncodedPwdToken, DBManager * dbManager)
+{
+		DeviceID devID = getNextDeviceID(eID, dbManager);
+		setPwdToken(eID, urlEncodedPwdToken, devID, dbManager);
+		return devID;
+}
+
+DeviceID EmployeeManager::getNextDeviceID(IDType eID, DBManager * dbManager)
+{
+		DeviceID devID = 0;
+		std::string query = "SELECT deviceID FROM PwdTokens ORDER BY deviceID desc limit 1 WHERE eID = :f1<int>";
+		try
+		{
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+				if (!otlStream.eof())
+				{
+						int devInt = 0;
+						otlStream >> devInt;
+						devID = devInt;
+				}
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return devID + 1;
 }
 
 IDType EmployeeManager::nameToEID(const std::string& name, DBManager* dbManager)
 {
-		std::string query = "SELECT * FROM Employees WHERE name = :f1<char[";
+		IDType eID = 0;
+		std::string query = "SELECT eID FROM Employees WHERE name = :f1<char[";
 		query += std::to_string((int)NAME_SIZE);
 		query += "]>";
 		try
 		{
-				otl_stream otlStream(1, query.c_str(), *dbManager->getConnection());
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << name;
-				dbManager->getConnection()->commit();
-				int eID = 0;
-				otlStream >> eID;
-				return (IDType)eID;
+				if (!otlStream.eof()) {
+						int eIDInt = 0;
+						otlStream >> eIDInt;
+						eID = eIDInt;
+				}
 		}
 		catch (otl_exception ex)
 		{
 				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
 		}
-		return 0;
+		return eID;
 }
 
 IDType EmployeeManager::getNextEID(DBManager* dbManager)
 {
+		IDType eID = 0;
+		std::string query = "SELECT * FROM Employees ORDER BY eID desc limit 1";
 		try
 		{
-				std::string query;
-#ifdef _WIN32
-				query = "SELECT top 1 * FROM Employees ORDER BY eID desc";
-#else
-				query = "SELECT * FROM Employees ORDER BY eID desc limit 1";
-#endif
-				otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				dbManager->getConnection()->commit();
-				int eID = 0;
 				if (!otlStream.eof())
 				{
-						otlStream >> eID;
+						int eIDInt = 0;
+						otlStream >> eIDInt;
+						eID = eIDInt;
 				}
-				return (IDType)(eID + 1);
 		}
 		catch (otl_exception ex)
 		{
 				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
 		}
-		return 0;
+		return eID + 1;
 }
 
-bool EmployeeManager::getPwdData(IDType eID, DBManager * dbManager, BYTE * hash, BYTE * salt)
+bool EmployeeManager::getPwdData(IDType eID, BYTE * hash, BYTE * salt, DBManager * dbManager)
 {
+		std::string query = "SELECT pwdHash, pwdSalt FROM Employees WHERE eID = :f1<int>";
 		try {
-				otl_stream otlStream(50, "SELECT hashPwd, salt FROM dbo.Employees WHERE eID = :f1<int>", *dbManager->getConnection());
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << (int)eID;
 				if (!otlStream.eof()) {
-						otl_long_string hashStr(HASH_SIZE);
-						otlStream >> hashStr;
-						for (int i = 0; i < HASH_SIZE; i++) {
-								hash[i] = hashStr[i];
-						}
-						otl_long_string saltStr(SALT_SIZE);
-						otlStream >> saltStr;
-						for (int i = 0; i < SALT_SIZE; i++) {
-								salt[i] = saltStr[i];
-						}
+						CryptoManager::InputBytes(otlStream, hash, HASH_SIZE);
+						CryptoManager::InputBytes(otlStream, salt, SALT_SIZE);
 						return true;
 				}
 		}
-		catch (otl_exception ex) {
-				std::cerr << "getSalt failed\nCode: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
 		}
 		return false;
 }
 
+bool EmployeeManager::getPwdToken(IDType eID, BYTE * databaseTokenHash, OTL_BIGINT& tokenTime, DeviceID devID, DBManager * dbManager)
+{
+		std::string query = "SELECT tokenHash, tokenTime FROM PwdTokens WHERE eID = :f1<int> AND deviceID = :f2<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+				otlStream << (int)devID;
+				if (!otlStream.eof()) {
+						CryptoManager::InputBytes(otlStream, databaseTokenHash, TOKEN_SIZE);
+						otlStream >> tokenTime;
+						return true;
+				}
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return false;
+}
+
+void EmployeeManager::loginClient(BB_Client * bbClient, IDType eID)
+{
+		bbClient->setEmpID(eID);
+		employees.emplace(std::make_pair(eID, bbClient));
+}
+
 EmployeeManager::~EmployeeManager()
 {
+		
 }

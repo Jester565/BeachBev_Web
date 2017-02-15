@@ -7,32 +7,34 @@
 class EmailManager : public PKeyOwner
 {
 public:
-		static const int EMAIL_TOKEN_SIZE = 64;
-		static const int EMAIL_HASH_SIZE = 64;
-		static const int CREATION_TOKEN_SIZE = 64;
-		static const int CREATION_HASH_SIZE = 64;
 		static const std::string EMAIL_CONFIRM_URL;
 		static const std::string EMAIL_HTML_DIR;
 		static const std::string EMAIL_VERIFY_BODY_CMD;
-		static const OTL_BIGINT EMAIL_EXPIRE_TIME = 7200;
 
 		EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager);
 
-		bool sendEmailVerification(IDType eID, DBManager* dbManager, const std::string& emailAddress);
+		void handleB0(boost::shared_ptr<IPacket> iPack);
 
-		bool setCreationTokenHash(IDType id, DBManager* dbManager, BYTE* creationTokenHash);
+		void handleB2(boost::shared_ptr<IPacket> iPack);
 
-		bool setEmailTokenHash(IDType eID, DBManager* dbManager, BYTE* emailTokenHash);
+		void handleB4(boost::shared_ptr<IPacket> iPack);
+
+		bool setUnverifiedEmail(IDType eID, const std::string& email, std::string& urlEncodedEmailToken, DBManager* dbManager);
 
 		bool sendEmail(const std::string& sendToAddress, const std::string& senderAddress, const std::string& senderName, const std::string& subject, const std::string& bodyCmd, bool isHTML = false);
 
-		void keyI0(boost::shared_ptr <IPacket> iPack);
+		IDType emailToEID(const std::string& email, DBManager* dbManager);
+		IDType verifiedEmailToEID(const std::string& email, DBManager* dbManager);
+		IDType unverifiedEmailToEID(const std::string& email, DBManager* dbManager);
 
-		void keyI1(boost::shared_ptr <IPacket> iPack);
-
+		bool sendVerificationEmail(const std::string& sendToAddress, const std::string& urlEncodedEmailToken);
 		~EmailManager();
 
 private:
+		bool verifyEmail(IDType eID, DBManager* dbManager);
+		bool getEmailToken(IDType eID, BYTE* dbEmailTokenHash, OTL_BIGINT& tokenTime, DBManager* dbManager);
+		bool getVerifiedEmail(IDType eID, std::string& email, DBManager* dbManager);
+		bool getUnverifiedEmail(IDType eID, std::string& email, DBManager* dbManager);
 		BB_Server* bbServer;
 
 		EmployeeManager* employeeManager;

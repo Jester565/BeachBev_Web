@@ -15,82 +15,162 @@ const std::string EmailManager::EMAIL_HTML_DIR = "/home/ubuntu/BeachBev_Web/";
 EmailManager::EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager)
 		:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
 {
-		addKey(new PKey("I0", this, &EmailManager::keyI0));
-		addKey(new PKey("I1", this, &EmailManager::keyI1));
+		addKey(new PKey("B0", this, &EmailManager::handleB0));
+		addKey(new PKey("B2", this, &EmailManager::handleB2));
+		addKey(new PKey("B4", this, &EmailManager::handleB4));
 }
 
-bool EmailManager::sendEmailVerification(IDType eID, DBManager* dbManager, const std::string& emailAddress) {
-		BYTE emailToken[EMAIL_TOKEN_SIZE];
-		CryptoManager::GenerateRandomData(emailToken, EMAIL_TOKEN_SIZE);
-		std::string emailTokenEncoded;
-
-		BYTE emailTokenHash[EMAIL_HASH_SIZE];
-		CryptoManager::GenerateHash(emailTokenHash, EMAIL_HASH_SIZE, emailToken, EMAIL_TOKEN_SIZE);
-		if (!setEmailTokenHash(eID, dbManager, emailTokenHash)) {
-				return false;
-		}
-
-		CryptoManager::UrlEncode(emailTokenEncoded, emailToken, EMAIL_TOKEN_SIZE);
-
-		std::string emailURL = EMAIL_CONFIRM_URL + "?" + emailTokenEncoded;
-
-		std::cout << "EMAIL URL: " << emailURL << std::endl;
-
-		std::string bodyCmd = "(cat ";
-		bodyCmd += EMAIL_HTML_DIR + "emailPt1.html";
-		bodyCmd += "; echo -n \"";
-		bodyCmd += emailURL;
-		bodyCmd += "\"; cat ";
-		bodyCmd += EMAIL_HTML_DIR + "emailPt2.html";
-		bodyCmd += ")";
-		return sendEmail(emailAddress, "management@beachbevs.com", "BeachBevs", "Email Verification",	bodyCmd, true);
-}
-
-bool EmailManager::setCreationTokenHash(IDType eID, DBManager * dbManager, BYTE * creationTokenHash)
+void EmailManager::handleB0(boost::shared_ptr<IPacket> iPack)
 {
-		std::string query = "UPDATE Employees SET creationToken=:f1<raw[";
-		query += std::to_string(CREATION_HASH_SIZE);
-		query += "]> WHERE eID=:f2<int>";
-		try {
-				otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
-				otl_long_string creationTokenHashStr(CREATION_HASH_SIZE);
-				for (int i = 0; i < CREATION_HASH_SIZE; i++) {
-						creationTokenHashStr[i] = creationTokenHash[i];
+		ProtobufPackets::PackB0 packB0;
+		packB0.ParseFromString(*iPack->getData());
+		ProtobufPackets::PackB1 replyPacket;
+		replyPacket.set_success(false);
+		BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+		if (sender == nullptr) {
+				return;
+		}
+		DBManager* dbManager = sender->getDBManager();
+		if (sender->getEmpID() > 0) {
+				IDType emailEID = verifiedEmailToEID(packB0.email(), dbManager);
+				if (emailEID == 0) {
+						emailEID = unverifiedEmailToEID(packB0.email(), dbManager);
+						if (emailEID == 0 || emailEID == sender->getEmpID()) {
+								std::string urlEncodedEmailToken;
+								if (setUnverifiedEmail(sender->getEmpID(), packB0.email(), urlEncodedEmailToken, dbManager)) {
+										sendVerificationEmail(packB0.email(), urlEncodedEmailToken);
+										replyPacket.set_success(true);
+										replyPacket.set_msg("Email sent");
+								}
+								else
+								{
+										replyPacket.set_msg("Failed to set unverified email");
+								}
+						}
+						else
+						{
+								replyPacket.set_msg("This email is already used");
+						}
 				}
-				creationTokenHashStr.set_len(CREATION_HASH_SIZE);
-				otlStream << creationTokenHashStr;
+				else
+				{
+						replyPacket.set_msg("This email is already used");
+				}
+		}
+		else
+		{
+				replyPacket.set_msg("Not logged in");
+		}
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("B1");
+		oPack->setSenderID(0);
+		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+		bbServer->getClientManager()->send(oPack, sender);
+}
+
+void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
+{
+		ProtobufPackets::PackB2 packB2;
+		packB2.ParseFromString(*iPack->getData());
+		ProtobufPackets::PackB3 replyPacket;
+		replyPacket.set_success(false);
+		BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+		if (sender == nullptr) {
+				return;
+		}
+		DBManager* dbManager = sender->getDBManager();
+		if (sender->getEmpID() > 0) {
+				BYTE dbEmailTokenHash[TOKEN_SIZE];
+				OTL_BIGINT tokenTime;
+				if (getEmailToken(sender->getEmpID(), dbEmailTokenHash, tokenTime, dbManager)) {
+						if (CheckInTimeRange(tokenTime, MAX_TOKEN_HOURS)) {
+								std::vector<BYTE> packEmailToken;
+								packEmailToken.reserve(TOKEN_SIZE);
+								CryptoManager::UrlDecode(packEmailToken, packB2.emailtoken());
+								BYTE packEmailTokenHash[TOKEN_SIZE];
+								CryptoManager::GenerateHash(packEmailTokenHash, TOKEN_SIZE, packEmailToken.data(), packEmailToken.size());
+								bool match = true;
+								for (int i = 0; i < TOKEN_SIZE; i++) {
+										if (dbEmailTokenHash[i] != packEmailTokenHash[i]) {
+												match = false;
+										}
+								}
+								if (match) {
+										verifyEmail(sender->getEmpID(), dbManager);
+										replyPacket.set_success(true);
+										replyPacket.set_msg("Email verified");
+								}
+								else
+								{
+										replyPacket.set_msg("Invalid token");
+								}
+						}
+						else
+						{
+								replyPacket.set_msg("Token expired");
+						}
+				}
+				else
+				{
+						replyPacket.set_msg("Failed to get token from database");
+				}
+		}
+		else
+		{
+				replyPacket.set_msg("Not logged in");
+		}
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("B3");
+		oPack->setSenderID(0);
+		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+		bbServer->getClientManager()->send(oPack, sender);
+}
+
+void EmailManager::handleB4(boost::shared_ptr<IPacket> iPack) {
+		ProtobufPackets::PackB4 packB4;
+		packB4.ParseFromString(*iPack->getData());
+		ProtobufPackets::PackB5 replyPacket;
+		BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+		if (sender == nullptr) {
+				return;
+		}
+		DBManager* dbManager = sender->getDBManager();
+		if (sender->getEmpID() > 0) {
+				std::string verifiedEmail;
+				getVerifiedEmail(sender->getEmpID(), verifiedEmail, dbManager);
+				std::string unverifiedEmail;
+				getUnverifiedEmail(sender->getEmpID(), unverifiedEmail, dbManager);
+				replyPacket.set_verifiedemail(verifiedEmail);
+				replyPacket.set_unverifiedemail(verifiedEmail);
+		}
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("B5");
+		oPack->setSenderID(0);
+		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+		bbServer->getClientManager()->send(oPack, sender);
+}
+
+bool EmailManager::setUnverifiedEmail(IDType eID, const std::string & email, std::string& urlEncodedEmailToken, DBManager * dbManager)
+{
+		BYTE genToken[TOKEN_SIZE];
+		CryptoManager::GenerateRandomData(genToken, TOKEN_SIZE);
+		BYTE genTokenHash[TOKEN_SIZE];
+		CryptoManager::GenerateHash(genTokenHash, TOKEN_SIZE, genToken, TOKEN_SIZE);
+		std::string query = "REPLACE INTO UnverifiedEmails (:f1<int>, :f2<char[";
+		query += std::to_string(EMAIL_SIZE);
+		query += "]>, :f3<raw[";
+		query += std::to_string(TOKEN_SIZE);
+		query += "]>, :f4<bigint>)";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << (int)eID;
-				return true;
+				otlStream << email;
+				CryptoManager::OutputBytes(otlStream, genTokenHash, TOKEN_SIZE);
+				otlStream << (OTL_BIGINT)(std::time(NULL));
 		}
 		catch (otl_exception ex)
 		{
-				std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
 		}
-		return false;
-}
-
-bool EmailManager::setEmailTokenHash(IDType eID, DBManager * dbManager, BYTE * emailTokenHash)
-{
-		std::string query = "UPDATE Employees SET emailToken=:f1<raw[";
-		query += std::to_string(EMAIL_HASH_SIZE);
-		query += "]>, emailTokenTime=:f2<bigint> WHERE eID=:f3<int>";
-		try {
-				otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
-				otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
-				for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
-						emailTokenHashStr[i] = emailTokenHash[i];
-				}
-				emailTokenHashStr.set_len(EMAIL_HASH_SIZE);
-				otlStream << emailTokenHashStr;
-				otlStream << static_cast<OTL_BIGINT>(std::time(nullptr));
-				otlStream << (int)eID;
-				return true;
-		}
-		catch (otl_exception ex)
-		{
-				std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
-		}
-		return false;
+		CryptoManager::UrlEncode(urlEncodedEmailToken, genToken, TOKEN_SIZE);
+		return true;
 }
 
 bool EmailManager::sendEmail(const std::string & sendToAddress, const std::string & senderAddress, const std::string& senderName, const std::string & subject, const std::string & bodyCmd, bool isHTML)
@@ -111,157 +191,154 @@ bool EmailManager::sendEmail(const std::string & sendToAddress, const std::strin
 		return true;
 }
 
-void EmailManager::keyI0(boost::shared_ptr<IPacket> iPack)
+IDType EmailManager::emailToEID(const std::string & email, DBManager * dbManager)
 {
-	 std::cout << "Pack size: " << iPack->getData()->size() << std::endl;
-		ProtobufPackets::PackI0 packI0;
-		packI0.ParseFromString(*iPack->getData());
-		
-		std::vector <BYTE> emailTokenDecoded;
-		CryptoManager::UrlDecode(emailTokenDecoded, packI0.emailtoken());
-		BYTE emailTokenHash[EMAIL_HASH_SIZE];
-		CryptoManager::GenerateHash(emailTokenHash, EMAIL_HASH_SIZE, emailTokenDecoded.data(), EMAIL_TOKEN_SIZE);
-		
-		std::cout << "URL CREATION TOKEN: " << packI0.creationtoken() << std::endl;
-		std::vector <BYTE> creationTokenDecoded;
-		CryptoManager::UrlDecode(creationTokenDecoded, packI0.creationtoken());
-		BYTE creationTokenHash[CREATION_HASH_SIZE];
-		CryptoManager::GenerateHash(creationTokenHash, CREATION_HASH_SIZE, creationTokenDecoded.data(), CREATION_TOKEN_SIZE);
-		
-		BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
-		if (sender == nullptr)
-		{
-				std::cerr << "packI0 could not identify the sender" << std::endl;
+		IDType eID = verifiedEmailToEID(email, dbManager);
+		if (eID == 0) {
+				return unverifiedEmailToEID(email, dbManager);
 		}
-		else
-		{
-				ProtobufPackets::PackI2 packI2;
-				packI2.set_success(false);
-				packI2.set_requesti1(true);
-				packI2.set_msg("An unknown error occured");
-
-				DBManager* dbManager = sender->getDBManager();
-				std::string query = "SELECT name, emailTokenTime FROM Employees WHERE creationToken=:f1<raw[";
-				query += std::to_string(CREATION_HASH_SIZE);
-				query += "]> AND emailToken=:f2<raw[";
-				query += std::to_string(EMAIL_HASH_SIZE);
-				query += "]>";
-				try {
-						otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
-						otl_long_string creationTokenHashStr(CREATION_HASH_SIZE);
-						for (int i = 0; i < CREATION_HASH_SIZE; i++) {
-								creationTokenHashStr[i] = creationTokenHash[i];
-						}
-						creationTokenHashStr.set_len(CREATION_HASH_SIZE);
-						otlStream << creationTokenHashStr;
-						otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
-						for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
-								emailTokenHashStr[i] = emailTokenHash[i];
-						}
-						emailTokenHashStr.set_len(EMAIL_HASH_SIZE);
-						otlStream << emailTokenHashStr;
-						if (!otlStream.eof()) {
-								std::string name;
-								otlStream >> name;
-								OTL_BIGINT emailTokenTime;
-								otlStream >> emailTokenTime;
-								if (emailTokenTime + EMAIL_EXPIRE_TIME > static_cast<OTL_BIGINT>(std::time(nullptr)))
-								{
-										packI2.set_success(true);
-										packI2.set_msg("Thank you for confirming your email " + name);
-								}
-								else
-								{
-										packI2.set_requesti1(false);
-										packI2.set_msg("This email confirmation link has expired");
-								}
-						}
-						else
-						{
-								packI2.set_msg("Could not link tokens to account");
-						}
-				}
-				catch (otl_exception ex)
-				{
-						std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
-				}
-				boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("I2", 0, iPack->getSentFromID());
-				oPackI2->setData(boost::make_shared<std::string>(packI2.SerializeAsString()));
-				bbServer->getClientManager()->send(oPackI2);
-		}
+		return eID;
 }
 
-void EmailManager::keyI1(boost::shared_ptr<IPacket> iPack)
+IDType EmailManager::verifiedEmailToEID(const std::string & email, DBManager * dbManager)
 {
-		BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
-		if (sender == nullptr) {
-				return;
-		}
-		DBManager* dbManager = sender->getDBManager();
-		ProtobufPackets::PackI1 packI1;
-		packI1.ParseFromString(*iPack->getData());
-		
-		ProtobufPackets::PackI2 packI2;
-		packI2.set_msg("An internal error occured");
-		packI2.set_requesti1(true);
-		packI2.set_success(false);
-		IDType eID = employeeManager->nameToEID(packI1.username(), dbManager);
-		if (eID != 0)
+		IDType eID = 0;
+		std::string query = "SELECT eID FROM Employees WHERE email = :f1<char[";
+		query += std::to_string((int)EMAIL_SIZE);
+		query += "]>";
+		try
 		{
-				if (employeeManager->checkPwd(eID, packI1.pwd(), dbManager))
-				{
-						std::vector <BYTE> emailTokenDecoded;
-						CryptoManager::UrlDecode(emailTokenDecoded, packI1.emailtoken());
-						BYTE emailTokenHash[EMAIL_HASH_SIZE];
-						CryptoManager::GenerateHash(emailTokenHash, EMAIL_HASH_SIZE, emailTokenDecoded.data(), EMAIL_TOKEN_SIZE);
-						
-						std::string query = "SELECT name, emailTokenTime FROM Employees WHERE eID=:f1<int> AND emailToken=:f2<raw[";
-						query += std::to_string(EMAIL_HASH_SIZE);
-						query += "]>";
-						try {
-								otl_stream otlStream(50, query.c_str(), *dbManager->getConnection());
-								otlStream << (int)eID;
-								otl_long_string emailTokenHashStr(EMAIL_HASH_SIZE);
-								for (int i = 0; i < EMAIL_HASH_SIZE; i++) {
-										emailTokenHashStr[i] = emailTokenHash[i];
-								}
-								emailTokenHashStr.set_len(EMAIL_HASH_SIZE);
-								otlStream << emailTokenHashStr;
-								if (!otlStream.eof()) {
-										std::string name;
-										otlStream >> name;
-										OTL_BIGINT emailTokenTime;
-										otlStream >> emailTokenTime;
-										if (emailTokenTime + EMAIL_EXPIRE_TIME > static_cast<OTL_BIGINT>(std::time(nullptr)))
-										{
-												packI2.set_success(true);
-												packI2.set_msg("Thank you for confirming your email " + name);
-										}
-										else
-										{
-												packI2.set_msg("This email confirmation link has expired");
-										}
-								}
-						}
-						catch (otl_exception ex)
-						{
-								std::cerr << "Code: " << ex.code << std::endl << " MSG: " << ex.msg << " VAR INFO: " << ex.var_info << std::endl;
-						}
-				}
-				else
-				{
-						packI2.set_msg("Invalid password");
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << email;
+				if (!otlStream.eof()) {
+						int eIDInt = 0;
+						otlStream >> eIDInt;
+						eID = eIDInt;
 				}
 		}
-		else
+		catch (otl_exception ex)
 		{
-				packI2.set_msg("Invalid username");
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
 		}
-		boost::shared_ptr<WSOPacket> oPackI2 = boost::make_shared<WSOPacket>("I2", 0, iPack->getSentFromID());
-		oPackI2->setData(boost::make_shared<std::string>(packI2.SerializeAsString()));
-		bbServer->getClientManager()->send(oPackI2);
+		return eID;
+}
+
+IDType EmailManager::unverifiedEmailToEID(const std::string & email, DBManager * dbManager)
+{
+		IDType eID = 0;
+		std::string query = "SELECT * FROM UnverifiedEmails WHERE email = :f1<char[";
+		query += std::to_string((int)EMAIL_SIZE);
+		query += "]>";
+		try
+		{
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << email;
+				if (!otlStream.eof()) {
+						int eIDInt = 0;
+						otlStream >> eIDInt;
+						eID = eIDInt;
+				}
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return eID;
 }
 
 EmailManager::~EmailManager()
 {
+}
+
+bool EmailManager::verifyEmail(IDType eID, DBManager * dbManager)
+{
+		std::string unverifiedEmail;
+		if (!getUnverifiedEmail(eID, unverifiedEmail, dbManager)) {
+				return false;
+		}
+		std::string query = "UPDATE Employees SET email = :f1<char[";
+		query += std::to_string(EMAIL_SIZE);
+		query += "]> WHERE eID = :f2<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << unverifiedEmail;
+				otlStream << (int)eID;
+				return true;
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return false;
+}
+
+bool EmailManager::getEmailToken(IDType eID, BYTE * dbEmailTokenHash, OTL_BIGINT& tokenTime, DBManager * dbManager)
+{
+		std::string query = "SELECT tokenHash, tokenTime FROM UnverifiedEmails WHERE eID = :f1<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+				if (!otlStream.eof()) {
+						CryptoManager::InputBytes(otlStream, dbEmailTokenHash, TOKEN_SIZE);
+						otlStream >> tokenTime;
+						return true;
+				}
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return false;
+}
+
+bool EmailManager::getVerifiedEmail(IDType eID, std::string & email, DBManager * dbManager)
+{
+		std::string query = "SELECT email FROM Employees WHERE eID = :f1<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+				if (!otlStream.eof()) {
+						otlStream >> email;
+						return true;
+				}
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return false;
+}
+
+bool EmailManager::getUnverifiedEmail(IDType eID, std::string & email, DBManager * dbManager)
+{
+		std::string query = "SELECT email FROM UnverifiedEmails WHERE eID = :f1<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+				if (!otlStream.eof()) {
+						otlStream >> email;
+						return true;
+				}
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return false;
+}
+
+bool EmailManager::sendVerificationEmail(const std::string& sendToAddress, const std::string& urlEncodedEmailToken)
+{
+		std::string emailURL = EMAIL_CONFIRM_URL + "?" + urlEncodedEmailToken;
+
+		std::cout << "EMAIL URL: " << emailURL << std::endl;
+
+		std::string bodyCmd = "(cat ";
+		bodyCmd += EMAIL_HTML_DIR + "emailPt1.html";
+		bodyCmd += "; echo -n \"";
+		bodyCmd += emailURL;
+		bodyCmd += "\"; cat ";
+		bodyCmd += EMAIL_HTML_DIR + "emailPt2.html";
+		bodyCmd += ")";
+		return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Email Verification", bodyCmd, true);
 }

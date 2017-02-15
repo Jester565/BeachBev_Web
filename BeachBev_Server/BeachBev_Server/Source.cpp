@@ -19,7 +19,7 @@ int main()
 		server.setCertPath(CERT_PATH);
 		server.setPemPath(PEM_PATH);
 		ConnectionInformation conInfo(CONNECT_INFORMATION_PATH);
-	  server.setDBConnectionInformation(conInfo);
+	 server.setDBConnectionInformation(conInfo);
 		server.createManagers();
 		server.run(SERVER_PORT);
 		system("pause");

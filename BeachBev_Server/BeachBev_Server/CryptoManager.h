@@ -17,4 +17,8 @@ public:
 		static void UrlEncode(std::string& encoded, const BYTE* data, uint32_t dataSize);
 
 		static void UrlDecode(std::vector <BYTE>& decoded, const std::string& encoded);
+
+		static void OutputBytes(otl_stream& stream, BYTE* data, uint16_t size);
+
+		static void InputBytes(otl_stream& stream, BYTE* data, uint16_t size);
 };

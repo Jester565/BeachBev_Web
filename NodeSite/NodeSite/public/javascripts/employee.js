@@ -28,20 +28,7 @@ function ApplyManager(root) {
       setErrorMsg(packE1.msg);
     }
     else {
-      var fadeTime = 400;
-      $('#applyDiv ul').addClass('hidden');
-      $('#successMsg').removeClass('hidden');
-      $('#successMsg').text(packE1.msg);
-      $('#msg').removeClass('invisible');
-      $('#msg').addClass('success');
-      $('#msg').text("To verify your email you must click the link in the email sent by management@beachbevs.com\
-        If this is not done in 2 hours, your account will be deleted. During the 2 hour period, you can log into your account\
-        to access a limited number of services.");
-      $('#applyButton').removeClass('load');
-      $('#applyButton h2').text("Resend email");
-      $('#applyButton').click(function () {
-        console.log("Resent email");
-      });
+
       Cookies.set('creationToken', packE1.creationToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
     }
   }, this, "Gets the success of the login"));
