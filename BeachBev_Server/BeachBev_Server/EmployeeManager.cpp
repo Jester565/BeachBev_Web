@@ -239,7 +239,7 @@ bool EmployeeManager::setPwd(IDType eID, const std::string & pwd, DBManager * db
 		query += std::to_string(HASH_SIZE);
 		query += "]>, pwdSalt=:f2<raw[";
 		query += std::to_string(SALT_SIZE);
-		query += "]> WHERE eID = :f3<int>";
+		query += "]> WHERE eID=:f3<int>";
 		try {
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				CryptoManager::OutputBytes(otlStream, genHash, HASH_SIZE);
@@ -301,7 +301,7 @@ DeviceID EmployeeManager::addPwdToken(IDType eID, std::string & urlEncodedPwdTok
 DeviceID EmployeeManager::getNextDeviceID(IDType eID, DBManager * dbManager)
 {
 		DeviceID devID = 0;
-		std::string query = "SELECT deviceID FROM PwdTokens ORDER BY deviceID desc limit 1 WHERE eID = :f1<int>";
+		std::string query = "SELECT deviceID FROM PwdTokens ORDER BY deviceID desc limit 1 WHERE eID=:f1<int>";
 		try
 		{
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
@@ -323,7 +323,7 @@ DeviceID EmployeeManager::getNextDeviceID(IDType eID, DBManager * dbManager)
 IDType EmployeeManager::nameToEID(const std::string& name, DBManager* dbManager)
 {
 		IDType eID = 0;
-		std::string query = "SELECT eID FROM Employees WHERE name = :f1<char[";
+		std::string query = "SELECT eID FROM Employees WHERE name=:f1<char[";
 		query += std::to_string((int)NAME_SIZE);
 		query += "]>";
 		try
