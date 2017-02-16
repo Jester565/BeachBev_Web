@@ -61,7 +61,7 @@ void EmailManager::handleB0(boost::shared_ptr<IPacket> iPack)
 		{
 				replyPacket.set_msg("Not logged in");
 		}
-		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("B1");
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
 		bbServer->getClientManager()->send(oPack, sender);
@@ -118,7 +118,7 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 		{
 				replyPacket.set_msg("Not logged in");
 		}
-		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("B3");
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B3");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
 		bbServer->getClientManager()->send(oPack, sender);
@@ -131,15 +131,17 @@ void EmailManager::handleB4(boost::shared_ptr<IPacket> iPack) {
 				return;
 		}
 		DBManager* dbManager = sender->getDBManager();
+		std::cout << "B4 handle called" << std::endl;
 		if (sender->getEmpID() > 0) {
 				std::string verifiedEmail;
 				getVerifiedEmail(sender->getEmpID(), verifiedEmail, dbManager);
 				std::string unverifiedEmail;
 				getUnverifiedEmail(sender->getEmpID(), unverifiedEmail, dbManager);
 				replyPacket.set_verifiedemail(verifiedEmail);
-				replyPacket.set_unverifiedemail(verifiedEmail);
+				replyPacket.set_unverifiedemail(unverifiedEmail);
+				std::cout << "Unverified email: " << unverifiedEmail << std::endl;
 		}
-		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("B5");
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B5");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
 		bbServer->getClientManager()->send(oPack, sender);
@@ -151,7 +153,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, const std::string & email, std
 		CryptoManager::GenerateRandomData(genToken, TOKEN_SIZE);
 		BYTE genTokenHash[TOKEN_SIZE];
 		CryptoManager::GenerateHash(genTokenHash, TOKEN_SIZE, genToken, TOKEN_SIZE);
-		std::string query = "REPLACE INTO UnverifiedEmails (:f1<int>, :f2<char[";
+		std::string query = "REPLACE INTO UnverifiedEmails VALUES (:f1<int>, :f2<char[";
 		query += std::to_string(EMAIL_SIZE);
 		query += "]>, :f3<raw[";
 		query += std::to_string(TOKEN_SIZE);
@@ -201,7 +203,7 @@ IDType EmailManager::emailToEID(const std::string & email, DBManager * dbManager
 IDType EmailManager::verifiedEmailToEID(const std::string & email, DBManager * dbManager)
 {
 		IDType eID = 0;
-		std::string query = "SELECT eID FROM Employees WHERE email = :f1<char[";
+		std::string query = "SELECT eID FROM Employees WHERE email=:f1<char[";
 		query += std::to_string((int)EMAIL_SIZE);
 		query += "]>";
 		try
@@ -224,7 +226,7 @@ IDType EmailManager::verifiedEmailToEID(const std::string & email, DBManager * d
 IDType EmailManager::unverifiedEmailToEID(const std::string & email, DBManager * dbManager)
 {
 		IDType eID = 0;
-		std::string query = "SELECT * FROM UnverifiedEmails WHERE email = :f1<char[";
+		std::string query = "SELECT * FROM UnverifiedEmails WHERE email=:f1<char[";
 		query += std::to_string((int)EMAIL_SIZE);
 		query += "]>";
 		try
@@ -255,9 +257,9 @@ bool EmailManager::verifyEmail(IDType eID, DBManager * dbManager)
 				return false;
 		}
 		removeUnverifiedEmail(eID, dbManager);
-		std::string query = "UPDATE Employees SET email = :f1<char[";
+		std::string query = "UPDATE Employees SET email=:f1<char[";
 		query += std::to_string(EMAIL_SIZE);
-		query += "]> WHERE eID = :f2<int>";
+		query += "]> WHERE eID=:f2<int>";
 		try {
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << unverifiedEmail;
@@ -288,7 +290,7 @@ bool EmailManager::removeUnverifiedEmail(IDType eID, DBManager * dbManager)
 
 bool EmailManager::getEmailToken(IDType eID, BYTE * dbEmailTokenHash, OTL_BIGINT& tokenTime, DBManager * dbManager)
 {
-		std::string query = "SELECT tokenHash, tokenTime FROM UnverifiedEmails WHERE eID = :f1<int>";
+		std::string query = "SELECT tokenHash, tokenTime FROM UnverifiedEmails WHERE eID=:f1<int>";
 		try {
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << (int)eID;
@@ -307,7 +309,7 @@ bool EmailManager::getEmailToken(IDType eID, BYTE * dbEmailTokenHash, OTL_BIGINT
 
 bool EmailManager::getVerifiedEmail(IDType eID, std::string & email, DBManager * dbManager)
 {
-		std::string query = "SELECT email FROM Employees WHERE eID = :f1<int>";
+		std::string query = "SELECT email FROM Employees WHERE eID=:f1<int>";
 		try {
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << (int)eID;
@@ -325,7 +327,7 @@ bool EmailManager::getVerifiedEmail(IDType eID, std::string & email, DBManager *
 
 bool EmailManager::getUnverifiedEmail(IDType eID, std::string & email, DBManager * dbManager)
 {
-		std::string query = "SELECT email FROM UnverifiedEmails WHERE eID = :f1<int>";
+		std::string query = "SELECT email FROM UnverifiedEmails WHERE eID=:f1<int>";
 		try {
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << (int)eID;

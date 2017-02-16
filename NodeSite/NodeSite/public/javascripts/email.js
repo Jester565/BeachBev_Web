@@ -13,7 +13,7 @@ function EmailManager(root) {
     if (packB5.verifiedEmail !== null && packB5.verifiedEmail.length > 0) {
 						emailManager.verifiedEmail = packB5.verifiedEmail;
 				}
-				else {
+			if (packB5.unverifiedEmail !== null && packB5.unverifiedEmail.length > 0) {
 						emailManager.unverifiedEmail = packB5.unverifiedEmail;
 				}
 				emailManager.updateEmailDisplay();
@@ -86,12 +86,11 @@ function EmailManager(root) {
 								emailManager.setErrorMsg("No unverified email");
 						}
 						else {
-								var packB0 = emailManager.Packet.create({
+								var packB0 = emailManager.PacketB0.create({
 										email: emailManager.unverifiedEmail
 								});
 								emailManager.requestEmail = emailManager.unverifiedEmail;
 								client.tcpConnection.sendPack(new OPacket("B0", true, [0], packB0, emailManager.PacketB0));
-								$('#resendText').text('PROCESSING');
 								$('#resendButton').unbind('click');
 								emailManager.unbindButtons();
 						}
@@ -105,11 +104,11 @@ function EmailManager(root) {
 								$('#cancelButton').removeClass('hidden');
 						}
 						else {
-								if ($('#emailChanageField').val().length <= 0) {
+								if ($('#emailChangeField').val().length <= 0) {
 										emailManager.setErrorMsg("Email not entered");
 								}
 								else {
-										var packB0 = emailManager.Packet.create({
+										var packB0 = emailManager.PacketB0.create({
 												email: emailManager.unverifiedEmail
 										});
 										emailManager.requestEmail = $('#emailChangeField').val();
@@ -135,10 +134,10 @@ function EmailManager(root) {
 						scrollTop: $("#errorMsg").offset().top
     }, 100);
 		};
-		var packB5 = emailManager.Packet.create({
+		var packB4 = emailManager.PacketB4.create({
 
 		});
-		client.tcpConnection.sendPack(new OPacket("B5", true, [0], packB5, emailManager.PacketB5));
+		client.tcpConnection.sendPack(new OPacket("B4", true, [0], packB4, emailManager.PacketB4));
 };
 
 var emailManager;
@@ -148,7 +147,7 @@ var client = new Client(function (root) {
   console.log("ON LOAD CALLED");
   innerLoginManager = new InnerLoginManager(client, root,
 				function () {
-						Console.log("LOGGED IN");
+						console.log("LOGGED IN");
 						emailManager = new EmailManager(client.root);
 				});
   client.tcpConnection.onclose = function () {

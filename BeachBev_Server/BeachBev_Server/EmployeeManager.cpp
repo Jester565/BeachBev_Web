@@ -31,7 +31,6 @@ EmployeeManager::EmployeeManager(BB_Server* bbServer)
 
 void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 {
-	std::raise(SIGINT);
 	std::cout << "A0 called" << std::endl;
 		ProtobufPackets::PackA0 packA0;
 		packA0.ParseFromString(*iPack->getData());
@@ -56,13 +55,15 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 						std::string urlEncodedPwdToken;
 						DeviceID devID = addPwdToken(eID, urlEncodedPwdToken, dbManager);
 						std::string urlEncodedEmailToken;
-						std::cout << "pwdToken set" << std::endl;
+						std::cout << "DEVICE ID: " << devID << std::endl;
 						emailManager->setUnverifiedEmail(eID, packA0.email(), urlEncodedEmailToken, dbManager);
 						emailManager->sendVerificationEmail(packA0.email(), urlEncodedEmailToken);
 						loginClient(sender, eID);
 
 						replyPacket.set_pwdtoken(urlEncodedPwdToken);
+						std::cout << "url enoced pwd token: " << urlEncodedPwdToken << std::endl;
 						replyPacket.set_deviceid(devID);
+						std::cout << "EID: " << eID << std::endl;
 						replyPacket.set_eid(eID);
 						replyPacket.set_msg("Account Added");
 				}
@@ -76,8 +77,7 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 				replyPacket.set_msg("Name already used");
 		}
 		std::cout << "Sending..." << std::endl;
-		replyPacket.set_eid(0);
-		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("A1");
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 		oPack->setSenderID(0);
 		oPack->addSendToID(sender->getID());
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
@@ -96,6 +96,8 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 		DBManager* dbManager = sender->getDBManager();
 		BYTE dbTokenHash[TOKEN_SIZE];
 		OTL_BIGINT tokenTime;
+		std::cout << "EID: " << packA2.eid() << std::endl;
+		std::cout << "DevID: " << packA2.deviceid() << std::endl;
 		if (getPwdToken(packA2.eid(), dbTokenHash, tokenTime, packA2.deviceid(), dbManager)) {
 				if (CheckInTimeRange(tokenTime, MAX_TOKEN_HOURS)) {
 						std::vector<BYTE> packToken;
@@ -111,6 +113,7 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 								}
 						}
 						if (match) {
+							std::cout << "login successful" << std::endl;
 								std::string urlEncodedPwdToken;
 								setPwdToken(packA2.eid(), urlEncodedPwdToken, packA2.deviceid(), dbManager);
 								replyPacket.set_pwdtoken(urlEncodedPwdToken);
@@ -133,7 +136,7 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 		{
 				replyPacket.set_msg("Could not aquire a token");
 		}
-		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("A1");
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
 		bbServer->getClientManager()->send(oPack, sender);
@@ -193,7 +196,7 @@ void EmployeeManager::handleA3(boost::shared_ptr<IPacket> iPack)
 		{
 				replyPacket.set_msg("Invalid login");
 		}
-		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("A1");
+		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
 		bbServer->getClientManager()->send(oPack, sender);
@@ -301,7 +304,7 @@ DeviceID EmployeeManager::addPwdToken(IDType eID, std::string & urlEncodedPwdTok
 DeviceID EmployeeManager::getNextDeviceID(IDType eID, DBManager * dbManager)
 {
 		DeviceID devID = 0;
-		std::string query = "SELECT deviceID FROM PwdTokens ORDER BY deviceID desc limit 1 WHERE eID=:f1<int>";
+		std::string query = "SELECT deviceID FROM PwdTokens WHERE eID=:f1<int> ORDER BY deviceID desc limit 1";
 		try
 		{
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
