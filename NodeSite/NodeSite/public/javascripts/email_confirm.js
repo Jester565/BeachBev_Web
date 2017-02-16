@@ -48,6 +48,6 @@ var client = new Client(function (root) {
 						emailManager = new EmailConfirmManager(client.root);
 				});
   client.tcpConnection.onclose = function () {
-    window.location = './noServer.html';
+    document.location.href = './noServer.html';
   };
 });

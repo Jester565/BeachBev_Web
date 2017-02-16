@@ -16,13 +16,13 @@ function LoginManager(root) {
 						Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
 						Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: 'beachbevs.com', secure: true });
 						Cookies.set('eID', packA1.eID, { path: '/', domain: 'beachbevs.com', secure: true });
-						var url = window.location.href;
+						var url = document.location.href;
 						var questionI = url.indexOf('?');
 						if (questionI !== -1) {
-								window.location = url.substring(++questionI);
+								document.location.href = url.substring(++questionI);
 						}
 						else {
-								window.location = './employee.html';
+								document.location.href = './employee.html';
 						}
 				}
   }, loginManager, "Gets the success of the login"));
@@ -79,7 +79,7 @@ var client = new Client(function (root) {
 				loginManager = new LoginManager(client.root);
 		}
   client.tcpConnection.onclose = function () {
-    window.location = './noServer.html';
+    document.location.href = './noServer.html';
   };
 });
 

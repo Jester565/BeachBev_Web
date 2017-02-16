@@ -59,7 +59,7 @@ function EmailManager(root) {
 				}
 				else if (emailManager.verifiedEmail !== null && emailManager.unverifiedEmail === null) {
 						$('#emailTitle').text('EMAIL SETTINGS');
-						$('#emailBody').text('Email: \"' + emailManager.verifiedEmail);
+						$('#emailBody').text('Email: ' + emailManager.verifiedEmail);
 						$('#emailDiv').removeClass('hidden');
 				}
 				$('#loading').addClass('hidden');
@@ -151,6 +151,6 @@ var client = new Client(function (root) {
 						emailManager = new EmailManager(client.root);
 				});
   client.tcpConnection.onclose = function () {
-    window.location = './noServer.html';
+    document.location.href = './noServer.html';
   };
 });
