@@ -6,97 +6,6 @@
   height: 4em;
 }
 
-#login {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
-  left: 0;
-  right: 0;
-  height: auto;
-  padding: 5px;
-  background-color: rgba(100, 100, 100, 1);
-  border: solid;
-  border-color: black;
-  border-width: 2px;
-  border-radius: 7px;
-}
-
-#login p {
-  text-align: center;
-  font-family: sans-serif;
-  font-size: 19px;
-}
-
-input[type="text"], 
-input[type="password"]{
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  margin-top: -18px;
-  width: 94%;
-  margin-left: 0%;
-  font-family: sans-serif;
-  font-size: 18px;
-  appearance: none;
-  box-shadow: none;
-  border-radius: none;
-  border: solid 1px #dcdcdc;
-  transition: box-shadow 0.3s, border 0.3s;
-}
-
-input[type="text"]:focus, 
-input[type="password"]:focus{
-  outline: none;
-  border: solid 1px #707070;
-  box-shadow: 0 0 5px 1px #969696;
-}
-
-ul {
-  list-style-type: none;
-  height: auto;
-  overflow: hidden;
-}
-
-#confirmButton {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  width: 40vw;
-  height: auto;
-  padding: 0px;
-  background: rgba(255, 127, 1, .97);
-  border-radius: 1vw;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  border-color: black;
-  border: solid;
-  border-width: 2px;
-  transition: .25s ease-in-out;
-}
-
-#confirmButton h2 {
-  font-family: 'Bitter', serif;
-  font-size: 3vw;
-  color: black;
-}
-
-#confirmButton:hover {
-  background-color: white;
-  border-color: orangered
-}
-
-#confirmButton.load {
-  background-color: dimgray;
-  border-color: white;
-}
-
-#applyButton.error:hover {
-  background-color: red;
-  border-color: orangered
-}
-
 #msg {
   text-align: center;
   font-family: 'Bitter', serif;
@@ -126,20 +35,8 @@ ul {
     margin-top: -131px;
 }
 
-#login.hidden {
-  display: none;
-}
-
-#msg.hidden {
-  display: none;
-}
-
-#checkmark.hidden {
-  display: none;
-}
-
-#loading.hidden {
-  display: none;
+.hidden {
+		display: none !important;
 }
 
 .checkmark__circle {
