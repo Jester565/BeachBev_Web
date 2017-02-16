@@ -16,124 +16,122 @@ message PackHeaderOut
 		uint32 dataSize = 3;
 }
 
-message PackA0
-{
-		double longitude = 1;
-		double latitude = 2;
-		repeated uint32 menuItems = 3;
-		string name = 4;
-}
-
-message PackA1
-{
-		uint32 aScore = 1;
-}
-
-message PackA2
-{
-	 bool confirm = 1;
-}
-
-message PackA3
-{
-		bool confirm = 1;
-}
-
-message PackA4
-{
-		bool success = 1;
-		string orderToken = 2;
-}
-
-message PackB0
-{
-		bool confirm = 1;
-}
-
-message PackB1
-{
-		repeated uint32 itemID = 1;
-		repeated string itemName = 2;
-		repeated float itemPrice = 3;
-}
-
-message PackD0
-{
-		string userName = 1;
-		string pwd = 2;
-}
-
-message PackD1
-{
-		bool success = 1;
-		string error = 2;
-		string token = 3;
-}
-
-message PackE0
-{
-		string userName = 1;
+/*
+Packet to create a new account
+*/
+message PackA0 {
+		string name = 1;
 		string pwd = 2;
 		string email = 3;
 }
 
-message PackE1
-{
+/*
+Packet response to logging into account
+*/
+message PackA1 {
+		string pwdToken = 1;
+		uint32 eID = 2;
+		uint32 deviceID = 3;
+		string msg = 4;
+}
+
+/*
+Packet to login using token
+*/
+message PackA2 {
+		uint32 eID = 1;
+		string pwdToken = 2;
+		int32 deviceID = 3;
+}
+
+/*
+Packet used to login using normal user and password
+*/
+message PackA3 {
+		string name = 1;
+		string pwd = 2;
+		uint32 deviceID = 3;
+}
+
+/*
+Packet to request password request
+*/
+message PackA4 {
+		string email = 1;
+}
+
+/*
+Reply to password reset request
+*/
+message PackA5 {
 		bool success = 1;
 		string msg = 2;
-		string creationToken = 3;
 }
 
-message PackF0
-{
-		string userName = 1;
-		string token = 2;
+/*
+Sent from password change page to check if the token is valid
+*/
+message PackA6 {
+		string pwdResetToken = 1;
 }
 
-message PackF1
-{
-		bool success = 1;
-}
-
-message PackG0
-{
-		bool confirm = 1;
-}
-
-message PackG1
-{
-		bool success = 1;
-		repeated string itemNames = 2;
-		repeated uint32 itemAmounts = 3;
-		float totalCost = 4;
-		double longitude = 5;
-		double latitude = 6;
-		uint32 orderID = 7;
-		int32 orderTime = 8;
-}
-
-message PackG2
-{
-		uint32 orderID = 1;
-		uint32 oState = 2;
-}
-
-message PackI0
-{
-		string emailToken = 1;
-		string creationToken = 2;
-}
-
-message PackI1
-{
-		string emailToken = 1;
-		string userName = 2;
-		string pwd = 3;
-}
-
-message PackI2
-{
+/*
+Response to PackA6
+*/
+message PackA7 {
 		bool success = 1;
 		string msg = 2;
-		bool requestI1 = 3;
+}
+
+/*
+The new password to be used
+*/
+message PackA8 {
+		string pwdResetToken = 1;
+		string pwd = 2;
+}
+
+/*
+Request to set or change unverified email
+*/
+message PackB0 {
+		string email = 1;
+}
+
+/*
+Response to PackB0
+*/
+message PackB1 {
+		bool success = 1;
+		string msg = 2;
+}
+
+/*
+Sent from email verification page to verify email
+*/
+message PackB2 {
+		string emailToken = 1;
+}
+
+/*
+Response to PackB2
+*/
+message PackB3 {
+		bool success = 1;
+		string msg = 2;
+}
+
+/*
+Request for email information
+*/
+message PackB4 {
+		
+}
+
+/*
+Response to PackB4
+*/
+message PackB5 {
+		string verifiedEmail = 1;
+		string unverifiedEmail = 2;
 }

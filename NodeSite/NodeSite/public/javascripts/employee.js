@@ -17,20 +17,25 @@ $('#userName, #pwd, #pwdConfirm, #email').focus(function () {
 });
 
 function ApplyManager(root) {
-  
-  this.PackE0 = root.lookup("ProtobufPackets.PackE0");
-  this.PackE1 = root.lookup("ProtobufPackets.PackE1");
+		$('#loading').addClass('hidden');
+		$('#workerImg').removeClass('hidden');
+		$('#pitch').removeClass('hidden');
+  $('#applyDiv').removeClass('hidden');
+  this.PacketA0 = root.lookup("ProtobufPackets.PackA0");
+  this.PacketA1 = root.lookup("ProtobufPackets.PackA1");
 
-  client.packetManager.addPKey(new PKey("E1", function (iPack) {
-    var packE1 = applyManager.PackE1.decode(iPack.packData);
-    if (!packE1.success) {
+  client.packetManager.addPKey(new PKey("A1", function (iPack) {
+    var packA1 = applyManager.PacketA1.decode(iPack.packData);
+    if (packA1.pwdToken === null) {
       $('#applyButton').click(applyManager.submit);
-      setErrorMsg(packE1.msg);
+      setErrorMsg(packA1.msg);
     }
     else {
-
-      Cookies.set('creationToken', packE1.creationToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
-    }
+						Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
+						Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: 'beachbevs.com', secure: true });
+						Cookies.set('eID', packA1.eID, { path: '/', domain: 'beachbevs.com', secure: true });
+						window.location = './email.html';
+				}
   }, this, "Gets the success of the login"));
 
   this.submit = function () {
@@ -48,8 +53,8 @@ function ApplyManager(root) {
       setErrorMsg("Invalid email");
     }
     else {
-      var packE0 = applyManager.PackE0.create({ userName: $('#userName').val(), pwd: $('#pwd').val(), email: $('#email').val() });
-      client.tcpConnection.sendPack(new OPacket("E0", true, [0], packE0, applyManager.PackE0));
+      var packA0 = applyManager.PacketA0.create({ name: $('#userName').val(), pwd: $('#pwd').val(), email: $('#email').val() });
+      client.tcpConnection.sendPack(new OPacket("A0", true, [0], packA0, applyManager.PacketA0));
       $('#msg').addClass('invisible');
       $('#applyButton').removeClass('error');
       $('#applyButton').addClass('load');
@@ -64,8 +69,11 @@ var applyManager;
 
 var client = new Client(function (root) {
   console.log("ON LOAD CALLED");
-  applyManager = new ApplyManager(root);
+		client.tcpConnection.onopen = function () {
+				applyManager = new ApplyManager(client.root);
+		}
   client.tcpConnection.onclose = function () {
-    alert("The Server Is Unavailible...");
+    window.location = './noServer.html';
   };
 });
+

@@ -6,15 +6,19 @@ function Client(protoInitCallback)
     if (err) {
       throw err;
     }
-    if (window.location.protocol != "https:") {
-      client.tcpConnection = new TCPConnection(root, location.host, "8000");
+				client.root = root;
+				client.tcpConnection = new TCPConnection(root);
+
+				client.packetManager = new PacketManager();
+    client.tcpConnection.onmessage = function (iPack) { client.packetManager.processPacket(iPack) };
+
+				protoInitCallback(root);
+
+				if (window.location.protocol != "https:") {
+      client.tcpConnection.connect(location.host, "8000");
     }
     else {
-      client.tcpConnection = new TCPConnection(root, location.host, "8443");
+      client.tcpConnection.connect(location.host, "8443");
     }
-    client.packetManager = new PacketManager();
-    client.tcpConnection.onmessage = function (iPack) { client.packetManager.processPacket(iPack) };
-    console.log("CALLED");
-    protoInitCallback(root);
   });
 }

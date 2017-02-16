@@ -125,8 +125,6 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 }
 
 void EmailManager::handleB4(boost::shared_ptr<IPacket> iPack) {
-		ProtobufPackets::PackB4 packB4;
-		packB4.ParseFromString(*iPack->getData());
 		ProtobufPackets::PackB5 replyPacket;
 		BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
 		if (sender == nullptr) {
@@ -256,12 +254,28 @@ bool EmailManager::verifyEmail(IDType eID, DBManager * dbManager)
 		if (!getUnverifiedEmail(eID, unverifiedEmail, dbManager)) {
 				return false;
 		}
+		removeUnverifiedEmail(eID, dbManager);
 		std::string query = "UPDATE Employees SET email = :f1<char[";
 		query += std::to_string(EMAIL_SIZE);
 		query += "]> WHERE eID = :f2<int>";
 		try {
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << unverifiedEmail;
+				otlStream << (int)eID;
+				return true;
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return false;
+}
+
+bool EmailManager::removeUnverifiedEmail(IDType eID, DBManager * dbManager)
+{
+		std::string query = "DELETE FROM UnverifiedEmails WHERE eID = :f1<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				otlStream << (int)eID;
 				return true;
 		}

@@ -92,6 +92,16 @@ ul {
   overflow: hidden;
 }
 
+#loading {
+		position: fixed;
+  width: 35vw;
+  height: 30vw;
+  top: 50%;
+  left: 50%;
+  margin-top: -15vw;
+  margin-left: -17.5vw;
+}
+
 #applyDiv ul.hidden {
   transition: opacity .25s ease-out;
   opacity: 0;
@@ -138,12 +148,6 @@ ul {
   border-color: white;
 }
 
-#applyButton.hidden {
-  opacity: 0;
-  height: 0;
-  overflow: hidden;
-}
-
 #blankDiv {
   height: 30px;
 }
@@ -161,4 +165,8 @@ ul {
 
 #msg.invisible {
   visibility: hidden;
+}
+
+.hidden {
+		display:none !important;
 }
