@@ -82,7 +82,7 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 				BYTE dbEmailTokenHash[TOKEN_SIZE];
 				OTL_BIGINT tokenTime;
 				if (getEmailToken(sender->getEmpID(), dbEmailTokenHash, tokenTime, dbManager)) {
-					if (EmployeeManager::CheckInTimeRange(tokenTime, MAX_TOKEN_HOURS)) {
+						if (EmployeeManager::CheckInTimeRange(tokenTime, MAX_TOKEN_HOURS)) {
 								std::vector<BYTE> packEmailToken;
 								packEmailToken.reserve(TOKEN_SIZE);
 								CryptoManager::UrlDecode(packEmailToken, packB2.emailtoken());
@@ -95,6 +95,10 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 										}
 								}
 								if (match) {
+										std::string prevEmail;
+										if (getVerifiedEmail(sender->getEmpID(), prevEmail, dbManager)) {
+												sendChangeEmail(prevEmail);
+										}
 										verifyEmail(sender->getEmpID(), dbManager);
 										replyPacket.set_success(true);
 										replyPacket.set_msg("Email verified");
@@ -131,7 +135,6 @@ void EmailManager::handleB4(boost::shared_ptr<IPacket> iPack) {
 				return;
 		}
 		DBManager* dbManager = sender->getDBManager();
-		std::cout << "B4 handle called" << std::endl;
 		if (sender->getEmpID() > 0) {
 				std::string verifiedEmail;
 				getVerifiedEmail(sender->getEmpID(), verifiedEmail, dbManager);
@@ -139,7 +142,6 @@ void EmailManager::handleB4(boost::shared_ptr<IPacket> iPack) {
 				getUnverifiedEmail(sender->getEmpID(), unverifiedEmail, dbManager);
 				replyPacket.set_verifiedemail(verifiedEmail);
 				replyPacket.set_unverifiedemail(unverifiedEmail);
-				std::cout << "Unverified email: " << unverifiedEmail << std::endl;
 		}
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B5");
 		oPack->setSenderID(0);
@@ -357,4 +359,12 @@ bool EmailManager::sendVerificationEmail(const std::string& sendToAddress, const
 		bodyCmd += EMAIL_HTML_DIR + "emailPt2.html";
 		bodyCmd += ")";
 		return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Email Verification", bodyCmd, true);
+}
+
+bool EmailManager::sendChangeEmail(const std::string& sendToAddress)
+{
+		std::string bodyCmd = "(cat ";
+		bodyCmd += EMAIL_HTML_DIR + "emailChange.html";
+		bodyCmd += ")";
+		return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Email Changed", bodyCmd, true);
 }

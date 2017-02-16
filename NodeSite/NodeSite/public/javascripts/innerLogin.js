@@ -22,7 +22,8 @@ function InnerLoginManager(client, root, onLogin) {
 
 		client.packetManager.addPKey(new PKey("A1", function (iPack) {
 				var packA1 = innerLoginManager.PacketA1.decode(iPack.packData);
-    if (packA1.pwdToken === null) {
+    if (packA1.pwdToken === null || packA1.pwdToken.length <= 0) {
+						console.log("Login error: " + packA1.msg);
       window.location = './login.html?' + window.location;
     }
     else {

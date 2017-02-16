@@ -2,7 +2,9 @@
 
 <html lang="en">
 <head>
-    <title>BeachBevs - Login</title>
+		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+		<link rel="stylesheet" type="text/css" href="stylesheets/loginStyle.css" media="all">
+		<title>BeachBevs - Login</title>
 </head>
 <body>
     <script defer src="javascripts/jquery-1.12.0.js"></script>
@@ -15,15 +17,33 @@
     <script defer src="javascripts/SetupManager.js"></script>
     <script defer src="javascripts/Client.js"></script>
     <script defer src="javascripts/login.js"></script>
-    <h1>Login</h1>
-    <form>
-        Username:<br>
-        <input id="userName" type="text">
-        <br>Password:<br>
-        <input id="pwd" type="password">
-        <br>
-        <button id="login" type="button"> Login </button>
-    </form>
-    <p id="msg"></p>
+				<script defer src="javascripts/mBar.js"></script>
+				<div id="mBar"></div>
+				<img id="loading" src="images/load.gif" alt="loading">
+				<div id="loginDiv" class="hidden">
+						<h1 id="loginTitle">Employee Login</h1>
+						<ul>
+								<li>
+										<h2>Name</h2>
+								</li>
+								<li>
+										<input id="userName" type="text" />
+								</li>
+								<li>
+										<h2>Password</h2>
+								</li>
+								<li>
+										<input id="pwd" type="password" />
+								</li>
+						</ul>
+						<a id="loginButton">
+								<h2>Login</h2>
+						</a>
+												<br />
+						<a id="pwdResetButton">
+								<h2>Forgot Password</h2>
+						</a>
+						<p id="msg" class="hidden"></p>
+				</div>
 </body>
 </html>

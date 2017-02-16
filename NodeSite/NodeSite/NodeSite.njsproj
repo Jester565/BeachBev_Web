@@ -95,6 +95,7 @@
     <Content Include="public\stylesheets\email_confirmStyle.css" />
     <Content Include="public\stylesheets\employeeStyle.css" />
     <Content Include="public\stylesheets\indexStyle.css" />
+    <Content Include="public\stylesheets\loginStyle.css" />
     <Content Include="public\stylesheets\mBarStyle.css" />
     <Content Include="public\stylesheets\menuStyle.css" />
     <Content Include="public\stylesheets\noGeoStyle.css" />

@@ -28,6 +28,7 @@ public:
 		IDType unverifiedEmailToEID(const std::string& email, DBManager* dbManager);
 
 		bool sendVerificationEmail(const std::string& sendToAddress, const std::string& urlEncodedEmailToken);
+		bool sendChangeEmail(const std::string& sendToAddress);
 		~EmailManager();
 
 private:

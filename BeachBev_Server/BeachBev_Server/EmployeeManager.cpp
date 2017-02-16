@@ -31,7 +31,6 @@ EmployeeManager::EmployeeManager(BB_Server* bbServer)
 
 void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 {
-	std::cout << "A0 called" << std::endl;
 		ProtobufPackets::PackA0 packA0;
 		packA0.ParseFromString(*iPack->getData());
 		ProtobufPackets::PackA1 replyPacket;
@@ -40,30 +39,21 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 				return;
 		}
 		DBManager* dbManager = sender->getDBManager();
-		std::cout << "Name: " << packA0.name() << std::endl;
 		IDType eID = nameToEID(packA0.name(), dbManager);
 		if (eID == 0) {
-			std::cout << "email to eID" << std::endl;
 				eID = emailManager->emailToEID(packA0.email(), dbManager);
-				std::cout << "MOO" << std::endl;
 				if (eID == 0) {
-					std::cout << "call 1" << std::endl;
-					eID = addEmployeeToDatabase(packA0.name(), dbManager);
-					std::cout << "call 2" << std::endl;
+						eID = addEmployeeToDatabase(packA0.name(), dbManager);
 						setPwd(eID, packA0.pwd(), dbManager);
-						std::cout << "Pwd set" << std::endl;
 						std::string urlEncodedPwdToken;
 						DeviceID devID = addPwdToken(eID, urlEncodedPwdToken, dbManager);
 						std::string urlEncodedEmailToken;
-						std::cout << "DEVICE ID: " << devID << std::endl;
 						emailManager->setUnverifiedEmail(eID, packA0.email(), urlEncodedEmailToken, dbManager);
 						emailManager->sendVerificationEmail(packA0.email(), urlEncodedEmailToken);
 						loginClient(sender, eID);
 
 						replyPacket.set_pwdtoken(urlEncodedPwdToken);
-						std::cout << "url enoced pwd token: " << urlEncodedPwdToken << std::endl;
 						replyPacket.set_deviceid(devID);
-						std::cout << "EID: " << eID << std::endl;
 						replyPacket.set_eid(eID);
 						replyPacket.set_msg("Account Added");
 				}
@@ -76,7 +66,6 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 		{
 				replyPacket.set_msg("Name already used");
 		}
-		std::cout << "Sending..." << std::endl;
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 		oPack->setSenderID(0);
 		oPack->addSendToID(sender->getID());
@@ -96,8 +85,6 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 		DBManager* dbManager = sender->getDBManager();
 		BYTE dbTokenHash[TOKEN_SIZE];
 		OTL_BIGINT tokenTime;
-		std::cout << "EID: " << packA2.eid() << std::endl;
-		std::cout << "DevID: " << packA2.deviceid() << std::endl;
 		if (getPwdToken(packA2.eid(), dbTokenHash, tokenTime, packA2.deviceid(), dbManager)) {
 				if (CheckInTimeRange(tokenTime, MAX_TOKEN_HOURS)) {
 						std::vector<BYTE> packToken;
@@ -113,7 +100,6 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 								}
 						}
 						if (match) {
-							std::cout << "login successful" << std::endl;
 								std::string urlEncodedPwdToken;
 								setPwdToken(packA2.eid(), urlEncodedPwdToken, packA2.deviceid(), dbManager);
 								replyPacket.set_pwdtoken(urlEncodedPwdToken);
@@ -331,21 +317,12 @@ IDType EmployeeManager::nameToEID(const std::string& name, DBManager* dbManager)
 		query += "]>";
 		try
 		{
-			if (dbManager->getConnection() == nullptr) {
-				std::cout << "REE" << std::endl;
-			}
-			std::cout << "Running otl" << std::endl;
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
-				std::cout << "Running otl2" << std::endl;
 				otlStream << name;
-				std::cout << "output name" << std::endl;
 				if (!otlStream.eof()) {
-					std::cout << "Running otl3" << std::endl;
 						int eIDInt = 0;
 						otlStream >> eIDInt;
-						std::cout << "Running otl4" << std::endl;
 						eID = eIDInt;
-						std::cout << "running otl5" << std::endl;
 				}
 		}
 		catch (otl_exception ex)
