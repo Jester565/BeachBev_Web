@@ -15,6 +15,7 @@ static const std::string& CONNECT_INFORMATION_PATH = "./mysql.coni";
 
 int main()
 {
+	
 		BB_Server server;
 		server.setCertPath(CERT_PATH);
 		server.setPemPath(PEM_PATH);

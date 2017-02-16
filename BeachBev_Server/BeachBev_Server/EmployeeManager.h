@@ -46,17 +46,11 @@ bool CmdInjectSafe(T data, uint32_t dataSize) {
 		return true;
 }
 
-bool CheckInTimeRange(OTL_BIGINT& time, int numHours) {
-		OTL_BIGINT now = std::time(NULL);
-		if (now - time <= numHours * 60 * 60) {
-				return true;
-		}
-		return false;
-}
-
 class EmployeeManager : public PKeyOwner
 {
 public:
+	static bool CheckInTimeRange(OTL_BIGINT& time, int numHours);
+	
 		EmployeeManager(BB_Server* server);
 
 		/// <summary>

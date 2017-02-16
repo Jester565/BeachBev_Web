@@ -82,7 +82,7 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 				BYTE dbEmailTokenHash[TOKEN_SIZE];
 				OTL_BIGINT tokenTime;
 				if (getEmailToken(sender->getEmpID(), dbEmailTokenHash, tokenTime, dbManager)) {
-						if (CheckInTimeRange(tokenTime, MAX_TOKEN_HOURS)) {
+					if (EmployeeManager::CheckInTimeRange(tokenTime, MAX_TOKEN_HOURS)) {
 								std::vector<BYTE> packEmailToken;
 								packEmailToken.reserve(TOKEN_SIZE);
 								CryptoManager::UrlDecode(packEmailToken, packB2.emailtoken());

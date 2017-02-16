@@ -14,6 +14,11 @@
 #include <time.h>
 #include <thread>
 
+bool EmployeeManager::CheckInTimeRange(OTL_BIGINT& time, int numHours) {
+	OTL_BIGINT now = std::time(NULL);
+	return (now - time <= numHours * 60 * 60);
+}
+
 EmployeeManager::EmployeeManager(BB_Server* bbServer)
 		:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
 {
@@ -38,7 +43,7 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 				eID = emailManager->emailToEID(packA0.email(), dbManager);
 				if (eID == 0) {
 						eID = addEmployeeToDatabase(packA0.name(), dbManager);
-						setPwd(eID, packA0.pwd, dbManager);
+						setPwd(eID, packA0.pwd(), dbManager);
 						std::string urlEncodedPwdToken;
 						DeviceID devID = addPwdToken(eID, urlEncodedPwdToken, dbManager);
 						std::string urlEncodedEmailToken;

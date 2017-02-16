@@ -5,7 +5,6 @@
 #include <cryptopp/secblock.h>
 #include <cryptopp/base64.h>
 
-
 void CryptoManager::GenerateHash(BYTE * hash, uint32_t hashSize, const BYTE * data, size_t dataSize, const BYTE * salt, uint32_t saltSize)
 {
 		CryptoPP::PKCS5_PBKDF2_HMAC <CryptoPP::SHA256> pbkdf2;
