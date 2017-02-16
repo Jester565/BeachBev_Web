@@ -3,7 +3,7 @@
 #include <fstream>
 #include <boost/serialization/access.hpp>
 
-static const int OTL_BUFFER_SIZE = 50;
+static const int OTL_BUFFER_SIZE = 1;
 
 struct ConnectionInformation {
 		friend class boost::serialization::access;

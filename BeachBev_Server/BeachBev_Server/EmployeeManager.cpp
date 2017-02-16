@@ -13,6 +13,7 @@
 #include <PKey.h>
 #include <time.h>
 #include <thread>
+#include <csignal>
 
 bool EmployeeManager::CheckInTimeRange(OTL_BIGINT& time, int numHours) {
 	OTL_BIGINT now = std::time(NULL);
@@ -30,6 +31,8 @@ EmployeeManager::EmployeeManager(BB_Server* bbServer)
 
 void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 {
+	std::raise(SIGINT);
+	std::cout << "A0 called" << std::endl;
 		ProtobufPackets::PackA0 packA0;
 		packA0.ParseFromString(*iPack->getData());
 		ProtobufPackets::PackA1 replyPacket;
@@ -38,15 +41,22 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 				return;
 		}
 		DBManager* dbManager = sender->getDBManager();
+		std::cout << "Name: " << packA0.name() << std::endl;
 		IDType eID = nameToEID(packA0.name(), dbManager);
 		if (eID == 0) {
+			std::cout << "email to eID" << std::endl;
 				eID = emailManager->emailToEID(packA0.email(), dbManager);
+				std::cout << "MOO" << std::endl;
 				if (eID == 0) {
-						eID = addEmployeeToDatabase(packA0.name(), dbManager);
+					std::cout << "call 1" << std::endl;
+					eID = addEmployeeToDatabase(packA0.name(), dbManager);
+					std::cout << "call 2" << std::endl;
 						setPwd(eID, packA0.pwd(), dbManager);
+						std::cout << "Pwd set" << std::endl;
 						std::string urlEncodedPwdToken;
 						DeviceID devID = addPwdToken(eID, urlEncodedPwdToken, dbManager);
 						std::string urlEncodedEmailToken;
+						std::cout << "pwdToken set" << std::endl;
 						emailManager->setUnverifiedEmail(eID, packA0.email(), urlEncodedEmailToken, dbManager);
 						emailManager->sendVerificationEmail(packA0.email(), urlEncodedEmailToken);
 						loginClient(sender, eID);
@@ -65,8 +75,11 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 		{
 				replyPacket.set_msg("Name already used");
 		}
+		std::cout << "Sending..." << std::endl;
+		replyPacket.set_eid(0);
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<OPacket>("A1");
 		oPack->setSenderID(0);
+		oPack->addSendToID(sender->getID());
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
 		bbServer->getClientManager()->send(oPack, sender);
 }
@@ -230,7 +243,7 @@ bool EmployeeManager::setPwd(IDType eID, const std::string & pwd, DBManager * db
 		try {
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 				CryptoManager::OutputBytes(otlStream, genHash, HASH_SIZE);
-				CryptoManager::OutputBytes(otlStream, genSalt, HASH_SIZE);
+				CryptoManager::OutputBytes(otlStream, genSalt, SALT_SIZE);
 				otlStream << (int)eID;
 		}
 		catch (otl_exception ex)
@@ -315,12 +328,21 @@ IDType EmployeeManager::nameToEID(const std::string& name, DBManager* dbManager)
 		query += "]>";
 		try
 		{
+			if (dbManager->getConnection() == nullptr) {
+				std::cout << "REE" << std::endl;
+			}
+			std::cout << "Running otl" << std::endl;
 				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				std::cout << "Running otl2" << std::endl;
 				otlStream << name;
+				std::cout << "output name" << std::endl;
 				if (!otlStream.eof()) {
+					std::cout << "Running otl3" << std::endl;
 						int eIDInt = 0;
 						otlStream >> eIDInt;
+						std::cout << "Running otl4" << std::endl;
 						eID = eIDInt;
+						std::cout << "running otl5" << std::endl;
 				}
 		}
 		catch (otl_exception ex)
