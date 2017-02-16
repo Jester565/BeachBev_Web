@@ -26,7 +26,7 @@ function EmailManager(root) {
 						emailManager.updateEmailDisplay();
 				}
 				else {
-						emailManager.setErrorMsg(emailManager.msg);
+						emailManager.setErrorMsg(packB1.msg);
 						emailManager.bindButtons();
 				}
   }, this, "Gets the users email information"));
@@ -66,6 +66,7 @@ function EmailManager(root) {
 		};
 
 		this.unbindButtons = function () {
+				$('#errorMsg').addClass('hidden');
 				$('#resendButton').unbind('click');
 				$('#changeButton').unbind('click');
 				$('#cancelButton').unbind('click');
@@ -109,7 +110,7 @@ function EmailManager(root) {
 								}
 								else {
 										var packB0 = emailManager.PacketB0.create({
-												email: emailManager.unverifiedEmail
+												email: $('#emailChangeField').val()
 										});
 										emailManager.requestEmail = $('#emailChangeField').val();
 										client.tcpConnection.sendPack(new OPacket("B0", true, [0], packB0, emailManager.PacketB0));
@@ -127,9 +128,9 @@ function EmailManager(root) {
 				});
 		};
 
-		this.showErrorMsg = function (msg) {
-				$('errorMsg').text(msg);
-				$('errorMsg').removeClass('hidden');
+		this.setErrorMsg = function (msg) {
+				$('#errorMsg').html(msg);
+				$('#errorMsg').removeClass('hidden');
 				$('html, body').animate({
 						scrollTop: $("#errorMsg").offset().top
     }, 100);
