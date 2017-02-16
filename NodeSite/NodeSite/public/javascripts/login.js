@@ -28,6 +28,8 @@ function LoginManager(root) {
   }, loginManager, "Gets the success of the login"));
 
 		loginManager.bindButtons = function () {
+				$('#loginButton').removeClass('processing');
+				$('#pwdResetButton').removeClass('processing');
 				$('#loginButton').click(function () {
 						if ($('#userName').val().length <= 0) {
 								loginManager.setErrorMsg("No username was entered");

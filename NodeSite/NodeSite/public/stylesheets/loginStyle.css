@@ -128,6 +128,17 @@ ul {
 		border-color:red;
 }
 
+#msg {
+  text-align: center;
+  font-family: 'Bitter', serif;
+  font-size: 1em;
+  color: red;
+  padding-top: .2em;
+  padding-bottom: .2em;
+  background-color: rgba(0, 0, 0, .8);
+  transition: .25s ease-in-out;
+}
+
 .hidden {
 		display: none !important;
 }
