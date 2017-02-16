@@ -260,7 +260,7 @@ bool EmployeeManager::setPwdToken(IDType eID, std::string& urlEncodedPwdToken, D
 		CryptoManager::GenerateRandomData(genToken, TOKEN_SIZE);
 		BYTE genTokenHash[TOKEN_SIZE];
 		CryptoManager::GenerateHash(genTokenHash, TOKEN_SIZE, genToken, TOKEN_SIZE);
-		std::string query = "REPLACE INTO PwdTokens (:f1<int>, :f2<int>, :f3<raw[";
+		std::string query = "REPLACE INTO PwdTokens VALUES (:f1<int>, :f2<int>, :f3<raw[";
 		query += std::to_string(TOKEN_SIZE);
 		query += "]>, :f4<bigint>)";
 		try {
