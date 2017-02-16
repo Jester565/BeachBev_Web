@@ -54,6 +54,6 @@ var client = new Client(function (root) {
 						emailConfirmManager = new EmailConfirmManager(client.root);
 				});
   client.tcpConnection.onclose = function () {
-    document.location.href = './noServer.html';
+     redirect('./noServer.html');
   };
 });

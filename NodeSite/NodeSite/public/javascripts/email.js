@@ -152,6 +152,6 @@ var client = new Client(function (root) {
 						emailManager = new EmailManager(client.root);
 				});
   client.tcpConnection.onclose = function () {
-    document.location.href = './noServer.html';
+				redirect('./noServer.html');
   };
 });

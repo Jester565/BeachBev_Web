@@ -34,7 +34,7 @@ function ApplyManager(root) {
 						Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
 						Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: 'beachbevs.com', secure: true });
 						Cookies.set('eID', packA1.eID, { path: '/', domain: 'beachbevs.com', secure: true });
-						window.location = './email.html';
+						redirect('./email.html');
 				}
   }, this, "Gets the success of the login"));
 
@@ -73,7 +73,7 @@ var client = new Client(function (root) {
 				applyManager = new ApplyManager(client.root);
 		}
   client.tcpConnection.onclose = function () {
-    window.location = './noServer.html';
+    redirect('./noServer.html');
   };
 });
 

@@ -19,10 +19,10 @@ function LoginManager(root) {
 						var url = document.location.href;
 						var questionI = url.indexOf('?');
 						if (questionI !== -1) {
-								document.location.href = url.substring(++questionI);
+								redirect(url.substring(++questionI));
 						}
 						else {
-								document.location.href = './employee.html';
+								redirect('./employee.html');
 						}
 				}
   }, loginManager, "Gets the success of the login"));
@@ -79,7 +79,7 @@ var client = new Client(function (root) {
 				loginManager = new LoginManager(client.root);
 		}
   client.tcpConnection.onclose = function () {
-    document.location.href = './noServer.html';
+    redirect('./noServer.html');
   };
 });
 

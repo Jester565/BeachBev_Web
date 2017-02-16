@@ -1,3 +1,10 @@
+function redirect(url) {
+		if (client !== null && client.tcpConnection !== null) {
+				client.tcpConnection.onclose = null;
+		}
+		document.location.href = url;
+}
+
 
 function Client(protoInitCallback)
 {
