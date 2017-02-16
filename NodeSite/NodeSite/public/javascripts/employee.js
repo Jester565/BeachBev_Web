@@ -26,7 +26,7 @@ function ApplyManager(root) {
 
   client.packetManager.addPKey(new PKey("A1", function (iPack) {
     var packA1 = applyManager.PacketA1.decode(iPack.packData);
-    if (packA1.pwdToken === null) {
+    if (packA1.pwdToken === null || packA1.pwdToken.length <= 0) {
       $('#applyButton').click(applyManager.submit);
       setErrorMsg(packA1.msg);
     }

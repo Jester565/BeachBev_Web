@@ -8,7 +8,7 @@ function LoginManager(root) {
 
   client.packetManager.addPKey(new PKey("A1", function (iPack) {
     var packA1 = loginManager.PacketA1.decode(iPack.packData);
-    if (packA1.pwdToken === null) {
+    if (packA1.pwdToken === null || packA1.pwdToken.length <= 0) {
 						loginManager.bindButtons();
       loginManager.setErrorMsg(packA1.msg);
     }
