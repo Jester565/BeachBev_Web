@@ -16,7 +16,7 @@ function EmailConfirmManager(root) {
       $('#msg').text(packB3.msg);
     }
     else {
-      setErrorMsg(packB3.msg);
+      emailConfirmManager.setErrorMsg(packB3.msg);
     }
   }, emailConfirmManager, "Gets if the confirmation was successful"));
 
@@ -28,7 +28,8 @@ function EmailConfirmManager(root) {
 		var url = window.location.href;
   var questionI = url.indexOf('?');
   if (questionI !== -1) {
-    emailConfirmManager.emailToken = url.substring(++questionI);
+			emailConfirmManager.emailToken = url.substring(++questionI);
+			console.log("Email Token: " + emailConfirmManager.emailToken);
 				var packB2 = emailConfirmManager.PacketB2.create({
 						emailToken: emailConfirmManager.emailToken
 				});
@@ -36,16 +37,21 @@ function EmailConfirmManager(root) {
 		} else {
 				emailConfirmManager.setErrorMsg("No email token in url");
 		}
+		this.setErrorMsg = function(msg) {
+				$('#msg').text(msg);
+				$('#msg').removeClass('hidden');
+		};
 }
 
 var emailConfirmManager;
+var innerLoginManager;
 
 var client = new Client(function (root) {
   console.log("ON LOAD CALLED");
   innerLoginManager = new InnerLoginManager(client, root,
 				function () {
 						console.log("LOGGED IN");
-						emailManager = new EmailConfirmManager(client.root);
+						emailConfirmManager = new EmailConfirmManager(client.root);
 				});
   client.tcpConnection.onclose = function () {
     window.location = './noServer.html';
