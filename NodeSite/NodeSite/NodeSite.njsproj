@@ -37,9 +37,11 @@
     <Compile Include="public\javascripts\aScore.js" />
     <Compile Include="public\javascripts\bytebuffer.min.js" />
     <Compile Include="public\javascripts\Client.js" />
+    <Compile Include="public\javascripts\email.js" />
     <Compile Include="public\javascripts\email_confirm.js" />
     <Compile Include="public\javascripts\employee.js" />
     <Compile Include="public\javascripts\index.js" />
+    <Compile Include="public\javascripts\innerLogin.js" />
     <Compile Include="public\javascripts\jquery-1.12.0.js" />
     <Compile Include="public\javascripts\login.js" />
     <Compile Include="public\javascripts\long.min.js" />
@@ -55,6 +57,7 @@
     <Compile Include="routes\users.js" />
     <Content Include="package.json" />
     <Content Include="public\apply.html" />
+    <Content Include="public\email.html" />
     <Content Include="public\email_confirm.html" />
     <Content Include="public\employee.html" />
     <Content Include="public\fonts\Berlin.ttf" />
@@ -88,6 +91,7 @@
     <Content Include="public\noGeo.html" />
     <Content Include="public\noServer.html" />
     <Content Include="public\orders.html" />
+    <Content Include="public\stylesheets\emailStyle.css" />
     <Content Include="public\stylesheets\email_confirmStyle.css" />
     <Content Include="public\stylesheets\employeeStyle.css" />
     <Content Include="public\stylesheets\indexStyle.css" />
