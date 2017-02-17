@@ -52,6 +52,7 @@
     <Compile Include="public\javascripts\PacketIO.js" />
     <Compile Include="public\javascripts\PacketManager.js" />
     <Compile Include="public\javascripts\protobuf.min.js" />
+    <Compile Include="public\javascripts\pwdReset.js" />
     <Compile Include="public\javascripts\SetupManager.js" />
     <Compile Include="public\javascripts\TCPConnection.js" />
     <Compile Include="routes\users.js" />
@@ -91,6 +92,7 @@
     <Content Include="public\noGeo.html" />
     <Content Include="public\noServer.html" />
     <Content Include="public\orders.html" />
+    <Content Include="public\pwdReset.html" />
     <Content Include="public\stylesheets\emailStyle.css" />
     <Content Include="public\stylesheets\email_confirmStyle.css" />
     <Content Include="public\stylesheets\employeeStyle.css" />
@@ -102,6 +104,7 @@
     <Content Include="public\stylesheets\noServerStyle.css" />
     <Content Include="public\stylesheets\orderStyle.css" />
     <Content Include="public\stylesheets\outRangeStyle.css" />
+    <Content Include="public\stylesheets\pwdResetStyle.css" />
     <Content Include="README.md" />
     <Content Include="typings.json" />
     <Content Include="views\index.jade" />

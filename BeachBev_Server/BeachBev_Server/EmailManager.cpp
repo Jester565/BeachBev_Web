@@ -9,8 +9,10 @@
 #include <ClientManager.h>
 #include <cryptopp/base64.h>
 
+//TODO
+const std::string EmailManager::PWD_RESET_URL = "https://beachbevs.com/pwdReset.html";
 const std::string EmailManager::EMAIL_CONFIRM_URL = "https://beachbevs.com/email_confirm.html";
-const std::string EmailManager::EMAIL_HTML_DIR = "/home/ubuntu/BeachBev_Web/";
+const std::string EmailManager::HTML_DIR = "/home/ubuntu/BeachBev_Web/";
 
 EmailManager::EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager)
 		:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
@@ -353,19 +355,35 @@ bool EmailManager::sendVerificationEmail(const std::string& sendToAddress, const
 		std::cout << "EMAIL URL: " << emailURL << std::endl;
 
 		std::string bodyCmd = "(cat ";
-		bodyCmd += EMAIL_HTML_DIR + "emailPt1.html";
+		bodyCmd += HTML_DIR + "emailPt1.html";
 		bodyCmd += "; echo -n \"";
 		bodyCmd += emailURL;
 		bodyCmd += "\"; cat ";
-		bodyCmd += EMAIL_HTML_DIR + "emailPt2.html";
+		bodyCmd += HTML_DIR + "emailPt2.html";
 		bodyCmd += ")";
 		return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Email Verification", bodyCmd, true);
+}
+
+bool EmailManager::sendPwdResetEmail(const std::string& sendToAddress, const std::string & urlEncodedPwdToken)
+{
+		std::string pwdResetURL = PWD_RESET_URL + "?" + urlEncodedPwdToken;
+
+		std::cout << "PwdReset URL: " << pwdResetURL << std::endl;
+
+		std::string bodyCmd = "(cat ";
+		bodyCmd += HTML_DIR + "emailPwdResetPt1.html";
+		bodyCmd += "; echo -n \"";
+		bodyCmd += pwdResetURL;
+		bodyCmd += "\"; cat ";
+		bodyCmd += HTML_DIR + "emailPwdResetPt2.html";
+		bodyCmd += ")";
+		return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Password Reset", bodyCmd, true);
 }
 
 bool EmailManager::sendChangeEmail(const std::string& sendToAddress)
 {
 		std::string bodyCmd = "(cat ";
-		bodyCmd += EMAIL_HTML_DIR + "emailChange.html";
+		bodyCmd += HTML_DIR + "emailChange.html";
 		bodyCmd += ")";
 		return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Email Changed", bodyCmd, true);
 }

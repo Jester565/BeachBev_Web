@@ -8,8 +8,8 @@ class EmailManager : public PKeyOwner
 {
 public:
 		static const std::string EMAIL_CONFIRM_URL;
-		static const std::string EMAIL_HTML_DIR;
-		static const std::string EMAIL_VERIFY_BODY_CMD;
+		static const std::string HTML_DIR;
+		static const std::string PWD_RESET_URL;
 
 		EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager);
 
@@ -28,7 +28,11 @@ public:
 		IDType unverifiedEmailToEID(const std::string& email, DBManager* dbManager);
 
 		bool sendVerificationEmail(const std::string& sendToAddress, const std::string& urlEncodedEmailToken);
+		bool sendPwdResetEmail(const std::string& sendToAddress, const std::string& urlEncodedPwdToken);
 		bool sendChangeEmail(const std::string& sendToAddress);
+
+		bool getVerifiedEmail(IDType eID, std::string& email, DBManager* dbManager);
+		bool getUnverifiedEmail(IDType eID, std::string& email, DBManager* dbManager);
 		~EmailManager();
 
 private:

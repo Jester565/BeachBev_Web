@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+		<link rel="stylesheet" type="text/css" href="stylesheets/pwdResetStyle.css" media="all">
+		<title>BeachBevs - Password Reset</title>
+</head>
+<body>
+		<script defer src="javascripts/jquery-1.12.0.js"></script>
+		<script defer src="javascripts/long.min.js"></script>
+		<script defer src="javascripts/bytebuffer.min.js"></script>
+		<script defer src="javascripts/protobuf.min.js"></script>
+		<script defer src="javascripts/PacketIO.js"></script>
+		<script defer src="javascripts/PacketManager.js"></script>
+		<script defer src="javascripts/TCPConnection.js"></script>
+		<script defer src="javascripts/SetupManager.js"></script>
+		<script defer src="javascripts/js.cookie.js"></script>
+		<script defer src="javascripts/Client.js"></script>
+		<script defer src="javascripts/pwdReset.js"></script>
+		<script defer src="javascripts/mBar.js"></script>
+		<div id="mBar"></div>
+		<img id="loading" src="images/load.gif" alt="loading">
+		<div id="pwdResetDiv" class="hidden">
+				<h1 id="pwdResetTitle">Reset Password</h1>
+				<ul>
+						<li>
+								<h2>Password</h2>
+						</li>
+						<li>
+								<input id="pwd" type="password" />
+						</li>
+						<li>
+								<h2>Confirm Password</h2>
+						</li>
+						<li>
+								<input id="pwdConfirm" type="password" />
+						</li>
+				</ul>
+				<a id="changeButton">
+						<h2>Change</h2>
+				</a>
+		</div>
+		<p id="msg" class="hidden"></p>
+</body>
+</html>
