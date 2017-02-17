@@ -115,7 +115,8 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 				}
 				else
 				{
-						replyPacket.set_msg("The token for this email is already verified, you may be <a href=\'./login.html\'>logged into the wrong account.</a>");
+						replyPacket.set_msg("The token for this email is already verified, \
+								you may be <a href=\'javascript:document.location.href=\"login.html?\" + document.location.href\'>logged into the wrong account.</a>");
 				}
 		}
 		else
