@@ -38,7 +38,7 @@ function EmailConfirmManager(root) {
 				emailConfirmManager.setErrorMsg("No email token in url");
 		}
 		this.setErrorMsg = function(msg) {
-				$('#msg').text(msg);
+				$('#msg').html(msg);
 				$('#msg').removeClass('hidden');
 		};
 }
