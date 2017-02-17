@@ -22,15 +22,15 @@ function PwdResetManager(root) {
 				}
   }, pwdResetManager, "Gets the success of the login"));
 
-		client.packetManager.addPKey(new PKey("A5", function (iPack) {
-    var packA5 = pwdResetManager.PacketA5.decode(iPack.packData);
-    if (packA5.success) {
+		client.packetManager.addPKey(new PKey("A7", function (iPack) {
+    var packA7 = pwdResetManager.PacketA7.decode(iPack.packData);
+    if (packA7.success) {
 						$('#loading').addClass('hidden');
 						$('#pwdResetDiv').removeClass('hidden');
 						pwdResetManager.bindButtons();
 				}
 				else {
-						pwdResetManager.setErrorMsg(packA5.msg);
+						pwdResetManager.setErrorMsg(packA7.msg);
 				}
   }, pwdResetManager, "Gets the success of the password reset email"));
 
@@ -91,7 +91,7 @@ var pwdResetManager;
 var client = new Client(function (root) {
   console.log("ON LOAD CALLED");
 		client.tcpConnection.onopen = function () {
-				pwdResetManager = new pwdResetManager(client.root);
+				pwdResetManager = new PwdResetManager(client.root);
 		}
   client.tcpConnection.onclose = function () {
     redirect('./noServer.html');

@@ -39,8 +39,6 @@ private:
 		bool verifyEmail(IDType eID, DBManager* dbManager);
 		bool removeUnverifiedEmail(IDType eID, DBManager* dbManager);
 		bool getEmailToken(IDType eID, BYTE* dbEmailTokenHash, OTL_BIGINT& tokenTime, DBManager* dbManager);
-		bool getVerifiedEmail(IDType eID, std::string& email, DBManager* dbManager);
-		bool getUnverifiedEmail(IDType eID, std::string& email, DBManager* dbManager);
 		BB_Server* bbServer;
 
 		EmployeeManager* employeeManager;
