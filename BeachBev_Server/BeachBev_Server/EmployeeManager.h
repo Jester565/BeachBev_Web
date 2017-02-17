@@ -116,6 +116,7 @@ protected:
 		bool getPwdToken(IDType eID, BYTE* databaseTokenHash, OTL_BIGINT& tokenTime, DeviceID devID, DBManager* dbManager);
 		bool checkPwdResetToken(const std::string& urlEncodedPwdToken, IDType& eID, OTL_BIGINT& tokenTime, DBManager* dbManager);
 
+		bool removePwdResetToken(IDType eID, DBManager* dbManager);
 		void loginClient(BB_Client* bbClient, IDType eID);
 		EmailManager* emailManager;
 		BB_Server* bbServer;

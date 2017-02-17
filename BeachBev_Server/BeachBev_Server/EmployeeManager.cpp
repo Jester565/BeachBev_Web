@@ -43,26 +43,33 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 		}
 		DBManager* dbManager = sender->getDBManager();
 		IDType eID = nameToEID(packA0.name(), dbManager);
-		if (eID == 0) {
-				eID = emailManager->emailToEID(packA0.email(), dbManager);
-				if (eID == 0) {
-						eID = addEmployeeToDatabase(packA0.name(), dbManager);
-						setPwd(eID, packA0.pwd(), dbManager);
-						std::string urlEncodedPwdToken;
-						DeviceID devID = addPwdToken(eID, urlEncodedPwdToken, dbManager);
-						std::string urlEncodedEmailToken;
-						emailManager->setUnverifiedEmail(eID, packA0.email(), urlEncodedEmailToken, dbManager);
-						emailManager->sendVerificationEmail(packA0.email(), urlEncodedEmailToken);
-						loginClient(sender, eID);
+		if (eID <= 0) {
+				eID = emailManager->emailToEID(packA0.name(), dbManager);
+				if (eID <= 0) {
+						eID = emailManager->emailToEID(packA0.email(), dbManager);
+						if (eID == 0) {
+								eID = addEmployeeToDatabase(packA0.name(), dbManager);
+								setPwd(eID, packA0.pwd(), dbManager);
+								std::string urlEncodedPwdToken;
+								DeviceID devID = addPwdToken(eID, urlEncodedPwdToken, dbManager);
+								std::string urlEncodedEmailToken;
+								emailManager->setUnverifiedEmail(eID, packA0.email(), urlEncodedEmailToken, dbManager);
+								emailManager->sendVerificationEmail(packA0.email(), urlEncodedEmailToken);
+								loginClient(sender, eID);
 
-						replyPacket.set_pwdtoken(urlEncodedPwdToken);
-						replyPacket.set_deviceid(devID);
-						replyPacket.set_eid(eID);
-						replyPacket.set_msg("Account Added");
+								replyPacket.set_pwdtoken(urlEncodedPwdToken);
+								replyPacket.set_deviceid(devID);
+								replyPacket.set_eid(eID);
+								replyPacket.set_msg("Account Added");
+						}
+						else
+						{
+								replyPacket.set_msg("Email already used");
+						}
 				}
 				else
 				{
-						replyPacket.set_msg("Email already used");
+						replyPacket.set_msg("Name cannot be a used email");
 				}
 		}
 		else
@@ -142,6 +149,16 @@ void EmployeeManager::handleA3(boost::shared_ptr<IPacket> iPack)
 		}
 		DBManager* dbManager = sender->getDBManager();
 		IDType eID = nameToEID(packA3.name(), dbManager);
+		if (eID <= 0) {
+				eID = emailManager->verifiedEmailToEID(packA3.name(), dbManager);
+				if (eID <= 0) {
+						eID = emailManager->unverifiedEmailToEID(packA3.name(), dbManager);
+						std::string verifiedEmail;
+						if (emailManager->getVerifiedEmail(eID, verifiedEmail, dbManager)) {
+								eID = 0;
+						}
+				}
+		}
 		if (eID != 0) {
 				BYTE dbPwdHash[HASH_SIZE];
 				BYTE dbPwdSalt[SALT_SIZE];
@@ -299,6 +316,7 @@ void EmployeeManager::handleA8(boost::shared_ptr<IPacket> iPack)
 								replyPacket.set_eid(eID);
 								replyPacket.set_deviceid(devID);
 								replyPacket.set_msg("Successful");
+								removePwdResetToken(eID, dbManager);
 						}
 						else
 						{
@@ -568,6 +586,21 @@ bool EmployeeManager::checkPwdResetToken(const std::string& urlEncodedPwdResetTo
 						otlStream >> tokenTime;
 						return true;
 				}
+		}
+		catch (otl_exception ex)
+		{
+				std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+		return false;
+}
+
+bool EmployeeManager::removePwdResetToken(IDType eID, DBManager * dbManager)
+{
+		std::string query = "DELETE FROM PwdResetTokens WHERE eID=:f1<int>";
+		try {
+				otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+				otlStream << (int)eID;
+				return true;
 		}
 		catch (otl_exception ex)
 		{
