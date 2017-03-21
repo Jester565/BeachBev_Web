@@ -1,6 +1,8 @@
 #pragma once
+#include <aws/core/Region.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <memory>
 #ifdef _WIN32
 #include <WinSock2.h>
 #define OTL_BIGINT int64_t
@@ -11,3 +13,9 @@
 #endif
 #define OTL_STL
 #include "otlv4.h"
+
+static const const char* AWS_ALLOC_TAG = "0";
+template <typename T>
+using AwsSharedPtr = std::shared_ptr<T>;
+
+static const char * AWS_SERVER_REGION = Aws::Region::US_WEST_2;

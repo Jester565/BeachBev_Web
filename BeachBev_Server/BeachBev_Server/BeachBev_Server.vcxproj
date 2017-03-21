@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -27,26 +27,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -76,7 +76,11 @@
     <Import Project="..\..\..\..\..\Documents\Visual Studio 2015\Props\CryptoPP64_R.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Linkage-AWSSDKCPP-SES>static</Linkage-AWSSDKCPP-SES>
+    <Linkage-AWSSDKCPP-Core>static</Linkage-AWSSDKCPP-Core>
+    <Linkage-AWSSDKCPP-S3>static</Linkage-AWSSDKCPP-S3>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -145,7 +149,27 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="otlv4.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\AWSSDKCPP-S3.redist.1.0.20060301.82\build\native\AWSSDKCPP-S3.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-S3.redist.1.0.20060301.82\build\native\AWSSDKCPP-S3.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-S3.1.0.20060301.82\build\native\AWSSDKCPP-S3.targets" Condition="Exists('..\packages\AWSSDKCPP-S3.1.0.20060301.82\build\native\AWSSDKCPP-S3.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-SES.redist.1.0.20101201.82\build\native\AWSSDKCPP-SES.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-SES.redist.1.0.20101201.82\build\native\AWSSDKCPP-SES.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-SES.1.0.20101201.82\build\native\AWSSDKCPP-SES.targets" Condition="Exists('..\packages\AWSSDKCPP-SES.1.0.20101201.82\build\native\AWSSDKCPP-SES.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Core.redist.1.0.82\build\native\AWSSDKCPP-Core.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.redist.1.0.82\build\native\AWSSDKCPP-Core.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Core.1.0.82\build\native\AWSSDKCPP-Core.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.1.0.82\build\native\AWSSDKCPP-Core.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-S3.redist.1.0.20060301.82\build\native\AWSSDKCPP-S3.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-S3.redist.1.0.20060301.82\build\native\AWSSDKCPP-S3.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-S3.1.0.20060301.82\build\native\AWSSDKCPP-S3.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-S3.1.0.20060301.82\build\native\AWSSDKCPP-S3.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-SES.redist.1.0.20101201.82\build\native\AWSSDKCPP-SES.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-SES.redist.1.0.20101201.82\build\native\AWSSDKCPP-SES.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-SES.1.0.20101201.82\build\native\AWSSDKCPP-SES.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-SES.1.0.20101201.82\build\native\AWSSDKCPP-SES.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.redist.1.0.82\build\native\AWSSDKCPP-Core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.redist.1.0.82\build\native\AWSSDKCPP-Core.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.1.0.82\build\native\AWSSDKCPP-Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.1.0.82\build\native\AWSSDKCPP-Core.targets'))" />
+  </Target>
 </Project>

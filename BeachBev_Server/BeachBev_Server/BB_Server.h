@@ -8,23 +8,22 @@ class EmployeeManager;
 class BB_Server : public WSS_Server
 {
 public:
-		BB_Server();
+	BB_Server();
 
-		virtual void createManagers() override;
+	virtual void createManagers() override;
 
-		virtual Client* createClient(boost::shared_ptr<TCPConnection> tcpConnection, IDType id) override;
+	virtual Client* createClient(boost::shared_ptr<TCPConnection> tcpConnection, IDType id) override;
 
-		void setDBConnectionInformation(ConnectionInformation& conInformation) {
-				dbConInfo = conInformation;
-		}
+	void setDBConnectionInformation(ConnectionInformation& conInformation) {
+		dbConInfo = conInformation;
+	}
 
-		void run(uint16_t port) override;
+	void run(uint16_t port) override;
 
-		~BB_Server();
+	~BB_Server();
 
 private:
-		CommandHandler* cmdHandler;
-		EmployeeManager* employeeManager;
-		ConnectionInformation dbConInfo;
+	CommandHandler* cmdHandler;
+	EmployeeManager* employeeManager;
+	ConnectionInformation dbConInfo;
 };
-

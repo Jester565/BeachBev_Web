@@ -7,72 +7,72 @@
 
 void CryptoManager::GenerateHash(BYTE * hash, uint32_t hashSize, const BYTE * data, size_t dataSize, const BYTE * salt, uint32_t saltSize)
 {
-		CryptoPP::PKCS5_PBKDF2_HMAC <CryptoPP::SHA256> pbkdf2;
-		pbkdf2.DeriveKey(hash, hashSize, 0, data, dataSize, salt, saltSize, 80020);
+	CryptoPP::PKCS5_PBKDF2_HMAC <CryptoPP::SHA256> pbkdf2;
+	pbkdf2.DeriveKey(hash, hashSize, 0, data, dataSize, salt, saltSize, 80020);
 }
 
 void CryptoManager::GenerateHash(BYTE * hash, uint32_t hashSize, const BYTE * data, size_t dataSize)
 {
-		CryptoPP::SHA512 hashFunc;
-		if (hashSize >= CryptoPP::SHA512::DIGESTSIZE)
-		{
-				hashFunc.CalculateDigest(hash, data, dataSize);
+	CryptoPP::SHA512 hashFunc;
+	if (hashSize >= CryptoPP::SHA512::DIGESTSIZE)
+	{
+		hashFunc.CalculateDigest(hash, data, dataSize);
+	}
+	else
+	{
+		byte digest[CryptoPP::SHA512::DIGESTSIZE];
+		hashFunc.CalculateDigest(digest, data, dataSize);
+		for (int i = 0; i < hashSize; i++) {
+			hash[i] = digest[i];
 		}
-		else
-		{
-				byte digest[CryptoPP::SHA512::DIGESTSIZE];
-				hashFunc.CalculateDigest(digest, data, dataSize);
-				for (int i = 0; i < hashSize; i++) {
-						hash[i] = digest[i];
-				}
-		}
+	}
 }
 
 void CryptoManager::GenerateRandomData(BYTE * rngData, uint32_t rngDataSize)
 {
-		CryptoPP::AutoSeededRandomPool rng;
-		rng.GenerateBlock(rngData, rngDataSize);
+	CryptoPP::AutoSeededRandomPool rng;
+	rng.GenerateBlock(rngData, rngDataSize);
 }
 
 void CryptoManager::UrlEncode(std::string & encoded, const BYTE * data, uint32_t dataSize)
 {
-		CryptoPP::Base64URLEncoder encoder;
-		encoder.Put(data, dataSize);
-		encoder.MessageEnd();
-		CryptoPP::word64 size = encoder.MaxRetrievable();
-		if (size) {
-				encoded.resize(size);
-				encoder.Get((byte*)encoded.data(), encoded.size());
-		}
+	CryptoPP::Base64URLEncoder encoder;
+	encoder.Put(data, dataSize);
+	encoder.MessageEnd();
+	CryptoPP::word64 size = encoder.MaxRetrievable();
+	if (size) {
+		encoded.resize(size);
+		encoder.Get((byte*)encoded.data(), encoded.size());
+	}
 }
 
 void CryptoManager::UrlDecode(std::vector <BYTE>& decoded, const std::string& encoded)
 {
-		CryptoPP::Base64URLDecoder decoder;
-		decoder.Put((byte*)encoded.data(), encoded.size());
-		decoder.MessageEnd();
-		CryptoPP::word64 size = decoder.MaxRetrievable();
-		if (size) {
-				decoded.resize(size);
-				decoder.Get((byte*)decoded.data(), decoded.size());
-		}
+	CryptoPP::Base64URLDecoder decoder;
+	decoder.Put((byte*)encoded.data(), encoded.size());
+	decoder.MessageEnd();
+	CryptoPP::word64 size = decoder.MaxRetrievable();
+	if (size) {
+		decoded.resize(size);
+		decoder.Get((byte*)decoded.data(), decoded.size());
+	}
 }
 
 void CryptoManager::OutputBytes(otl_stream & stream, BYTE * data, uint16_t size)
 {
-		otl_long_string otlStr(size);
-		for (int i = 0; i < size; i++) {
-			 otlStr[i] = data[i];
-		}
-		otlStr.set_len(size);
-	 stream << otlStr;
+	otl_long_string otlStr(size);
+	for (int i = 0; i < size; i++) {
+		otlStr[i] = data[i];
+	}
+	otlStr.set_len(size);
+	stream << otlStr;
 }
 
 void CryptoManager::InputBytes(otl_stream & stream, BYTE * data, uint16_t size)
 {
-		otl_long_string otlStr(size);
-		stream >> otlStr;
-		for (int i = 0; i < size; i++) {
-				data[i] = otlStr[i];
-		}
+	otl_long_string otlStr(size);
+	stream >> otlStr;
+	for (int i = 0; i < size; i++) {
+		data[i] = otlStr[i];
+	}
 }

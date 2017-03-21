@@ -7,32 +7,32 @@
 #include <ClientManager.h>
 
 BB_Server::BB_Server()
-		:WSS_Server(boost::asio::ip::tcp::v4())
+	:WSS_Server(boost::asio::ip::tcp::v4())
 {
-		cmdHandler = new CommandHandler(this);
+	cmdHandler = new CommandHandler(this);
 }
 
 void BB_Server::createManagers()
 {
-		servicePool = new BB_ServicePool(certPath, pemPath, dbConInfo);
-		pm = new PacketManager(this);
-		cm = new ClientManager(this);
+	servicePool = new BB_ServicePool(certPath, pemPath, dbConInfo);
+	pm = new PacketManager(this);
+	cm = new ClientManager(this);
 }
 
 Client * BB_Server::createClient(boost::shared_ptr<TCPConnection> tcpConnection, IDType id)
 {
-		return new BB_Client(tcpConnection, ((BB_ServicePool*)servicePool)->getNextDBManager(), this, id);
+	return new BB_Client(tcpConnection, ((BB_ServicePool*)servicePool)->getNextDBManager(), this, id);
 }
 
 void BB_Server::run(uint16_t port)
 {
-		employeeManager = new EmployeeManager(this);
-		WSS_Server::run(port);
-		cmdHandler->run();
+	employeeManager = new EmployeeManager(this);
+	WSS_Server::run(port);
+	cmdHandler->run();
 }
 
 BB_Server::~BB_Server()
 {
-		delete cmdHandler;
-		cmdHandler = nullptr;
+	delete cmdHandler;
+	cmdHandler = nullptr;
 }
