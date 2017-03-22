@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include <Macros.h>
 #include <PKeyOwner.h>
 #include <WSIPacket.h>

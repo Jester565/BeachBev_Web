@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include "DBManager.h"
 #include <WSS_Server.h>
 
