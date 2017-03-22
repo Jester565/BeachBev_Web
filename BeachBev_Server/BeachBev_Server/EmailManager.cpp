@@ -237,10 +237,6 @@ bool EmailManager::setUnverifiedEmail(IDType eID, const std::string & email, std
 
 bool EmailManager::setUnverifiedEmail(IDType eID, const std::string & email, BYTE* hashedEmailToken, DBManager * dbManager)
 {
-	BYTE genToken[TOKEN_SIZE];
-	CryptoManager::GenerateRandomData(genToken, TOKEN_SIZE);
-	BYTE genTokenHash[TOKEN_SIZE];
-	CryptoManager::GenerateHash(genTokenHash, TOKEN_SIZE, genToken, TOKEN_SIZE);
 	std::string query = "REPLACE INTO UnverifiedEmails VALUES (:f1<int>, :f2<char[";
 	query += std::to_string(EMAIL_SIZE);
 	query += "]>, :f3<raw[";
@@ -250,7 +246,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, const std::string & email, BYT
 		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 		otlStream << (int)eID;
 		otlStream << email;
-		CryptoManager::OutputBytes(otlStream, genTokenHash, TOKEN_SIZE);
+		CryptoManager::OutputBytes(otlStream, hashedEmailToken, TOKEN_SIZE);
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
 	catch (otl_exception ex)
