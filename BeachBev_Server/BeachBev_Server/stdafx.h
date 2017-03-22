@@ -1,7 +1,4 @@
 #pragma once
-#ifndef _WIN32
-#define _GLIBCXX_USE_CXX11_ABI 0
-#endif
 #include <aws/core/Region.h>
 #include <stdio.h>
 #include <stdint.h>

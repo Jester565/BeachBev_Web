@@ -32,12 +32,12 @@ struct CreateAccountEmailContext : public Aws::Client::AsyncCallerContext
 	BYTE* hashedEmailToken;
 	std::string urlEncodedPwdToken;
 	~CreateAccountEmailContext()
-	{
-		if (hashedEmailToken != nullptr) {
-			delete[] hashedEmailToken;
-			hashedEmailToken = nullptr;
+		{
+			if (hashedEmailToken != nullptr) {
+				delete[] hashedEmailToken;
+				hashedEmailToken = nullptr;
+			}
 		}
-	}
 };
 
 struct PasswordResetContext : public Aws::Client::AsyncCallerContext
@@ -47,18 +47,18 @@ struct PasswordResetContext : public Aws::Client::AsyncCallerContext
 
 class EmployeeManager : public PKeyOwner
 {
-public:
+ public:
 	static bool CheckInTimeRange(OTL_BIGINT& time, int numHours);
 
 	void CreateAccountEmailHandler(const Aws::SES::SESClient* client,
-		const Aws::SES::Model::SendEmailRequest& request,
-		const Aws::SES::Model::SendEmailOutcome& outcome,
-		const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context);
+																 const Aws::SES::Model::SendEmailRequest& request,
+																 const Aws::SES::Model::SendEmailOutcome& outcome,
+																 const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context);
 
 	void PwdResetEmailHandler(const Aws::SES::SESClient* client,
-		const Aws::SES::Model::SendEmailRequest& request,
-		const Aws::SES::Model::SendEmailOutcome& outcome,
-		const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context);
+														const Aws::SES::Model::SendEmailRequest& request,
+														const Aws::SES::Model::SendEmailOutcome& outcome,
+														const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context);
 
 	EmployeeManager(BB_Server* server);
 
@@ -110,7 +110,7 @@ public:
 
 	~EmployeeManager();
 
-protected:
+ protected:
 	IDType addEmployeeToDatabase(const std::string& name, DBManager* dbManager);
 	bool setPwd(IDType eID, const std::string& pwd, DBManager* dbManager);
 	bool setPwdToken(IDType eID, std::string& urlEncodedPwdToken, DeviceID deviceID, DBManager* dbManager);

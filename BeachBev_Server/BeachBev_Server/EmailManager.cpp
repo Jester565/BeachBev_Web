@@ -26,20 +26,20 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 		packB1.set_success(false);
 		if (outcome.IsSuccess()) {
 			if (setUnverifiedEmail(unverifiedEmailContext->eID, request.GetDestination().GetToAddresses().front(), unverifiedEmailContext->hashedEmailToken, bbClient->getDBManager()))
-			{
-				packB1.set_success(true);
-				packB1.set_msg("Email successfully changed");
-			}
+				{
+					packB1.set_success(true);
+					packB1.set_msg("Email successfully changed");
+				}
 			else
-			{
-				packB1.set_msg("Failed to set unverified email after successful email send");
-			}
+				{
+					packB1.set_msg("Failed to set unverified email after successful email send");
+				}
 		}
 		else
-		{
-			//packB1.set_msg("Failed to send verification email: " + outcome.GetError().GetMessage().c_str());
-			std::cerr << "ChangeUnverifiedEmailHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
-		}
+			{
+				//packB1.set_msg("Failed to send verification email: " + outcome.GetError().GetMessage().c_str());
+				std::cerr << "ChangeUnverifiedEmailHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
+			}
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(packB1.SerializeAsString()));
@@ -92,30 +92,30 @@ void EmailManager::handleB0(boost::shared_ptr<IPacket> iPack)
 				CryptoManager::GenerateHash(genTokenHash, TOKEN_SIZE, genToken, TOKEN_SIZE);
 				std::string urlEncodedEmailToken;
 				CryptoManager::UrlEncode(urlEncodedEmailToken, genTokenHash, TOKEN_SIZE);
-				
+
 				AwsSharedPtr<ChangeUnverifiedEmailContext> changeUnverifiedContext = std::make_shared<ChangeUnverifiedEmailContext>();
 				changeUnverifiedContext->eID = sender->getEmpID();
 				changeUnverifiedContext->hashedEmailToken = genTokenHash;
 
-				sendVerificationEmail(packB0.email(), urlEncodedEmailToken, 
-					std::bind(&EmailManager::ChangeUnverifiedEmailHandler, this, std::placeholders::_1,
-						std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), changeUnverifiedContext);
+				sendVerificationEmail(packB0.email(), urlEncodedEmailToken,
+															std::bind(&EmailManager::ChangeUnverifiedEmailHandler, this, std::placeholders::_1,
+																				std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), changeUnverifiedContext);
 				replyPacket.set_success(true);
 			}
 			else
+				{
+					replyPacket.set_msg("This email is already used");
+				}
+		}
+		else
 			{
 				replyPacket.set_msg("This email is already used");
 			}
-		}
-		else
-		{
-			replyPacket.set_msg("This email is already used");
-		}
 	}
 	else
-	{
-		replyPacket.set_msg("Not logged in");
-	}
+		{
+			replyPacket.set_msg("Not logged in");
+		}
 	if (!replyPacket.success()) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
 		oPack->setSenderID(0);
@@ -154,34 +154,34 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 				if (match) {
 					std::string prevEmail;
 					if (getVerifiedEmail(sender->getEmpID(), prevEmail, dbManager)) {
-						sendChangeEmail(prevEmail, 
-							std::bind(&EmailManager::ChangeEmailNotificationHandler, this, std::placeholders::_1,
-								std::placeholders::_2, std::placeholders::_3));
+						sendChangeEmail(prevEmail,
+														std::bind(&EmailManager::ChangeEmailNotificationHandler, this, std::placeholders::_1,
+																			std::placeholders::_2, std::placeholders::_3));
 					}
 					verifyEmail(sender->getEmpID(), dbManager);
 					replyPacket.set_success(true);
 					replyPacket.set_msg("Email verified");
 				}
 				else
-				{
-					replyPacket.set_msg("Invalid token");
-				}
+					{
+						replyPacket.set_msg("Invalid token");
+					}
 			}
 			else
-			{
-				replyPacket.set_msg("Token expired");
-			}
+				{
+					replyPacket.set_msg("Token expired");
+				}
 		}
 		else
-		{
-			replyPacket.set_msg("The token for this email is already verified, \
-								you may be <a href=\'javascript:document.location.href=\"login.html?\" + document.location.href\'>logged into the wrong account.</a>");
-		}
+			{
+				replyPacket.set_msg("The token for this email is already verified, \
+you may be <a href=\'javascript:document.location.href=\"login.html?\" + document.location.href\'>logged into the wrong account.</a>");
+			}
 	}
 	else
-	{
-		replyPacket.set_msg("Not logged in");
-	}
+		{
+			replyPacket.set_msg("Not logged in");
+		}
 	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B3");
 	oPack->setSenderID(0);
 	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
@@ -228,9 +228,9 @@ bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, std::string
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	CryptoManager::UrlEncode(urlEncodedEmailToken, genToken, TOKEN_SIZE);
 	return true;
 }
@@ -250,9 +250,9 @@ bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, BYTE* hashe
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	return true;
 }
 
@@ -267,9 +267,9 @@ bool EmailManager::sendEmail(const std::string & sendToAddress, const std::strin
 		sesBody.SetHtml(sesBodyContent);
 	}
 	else
-	{
-		sesBody.SetText(sesBodyContent);
-	}
+		{
+			sesBody.SetText(sesBodyContent);
+		}
 	Aws::SES::Model::Message msg;
 	msg.SetSubject(sesSubject);
 	msg.SetBody(sesBody);
@@ -298,19 +298,19 @@ IDType EmailManager::verifiedEmailToEID(const std::string & email, DBManager * d
 	query += std::to_string((int)EMAIL_SIZE);
 	query += "]>";
 	try
-	{
-		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
-		otlStream << email;
-		if (!otlStream.eof()) {
-			int eIDInt = 0;
-			otlStream >> eIDInt;
-			eID = eIDInt;
+		{
+			otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+			otlStream << email;
+			if (!otlStream.eof()) {
+				int eIDInt = 0;
+				otlStream >> eIDInt;
+				eID = eIDInt;
+			}
 		}
-	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	return eID;
 }
 
@@ -321,19 +321,19 @@ IDType EmailManager::unverifiedEmailToEID(const std::string & email, DBManager *
 	query += std::to_string((int)EMAIL_SIZE);
 	query += "]>";
 	try
-	{
-		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
-		otlStream << email;
-		if (!otlStream.eof()) {
-			int eIDInt = 0;
-			otlStream >> eIDInt;
-			eID = eIDInt;
+		{
+			otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+			otlStream << email;
+			if (!otlStream.eof()) {
+				int eIDInt = 0;
+				otlStream >> eIDInt;
+				eID = eIDInt;
+			}
 		}
-	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	return eID;
 }
 
@@ -358,9 +358,9 @@ bool EmailManager::verifyEmail(IDType eID, DBManager * dbManager)
 		return true;
 	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	return false;
 }
 
@@ -373,9 +373,9 @@ bool EmailManager::removeUnverifiedEmail(IDType eID, DBManager * dbManager)
 		return true;
 	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	return false;
 }
 
@@ -392,9 +392,9 @@ bool EmailManager::getEmailToken(IDType eID, BYTE * dbEmailTokenHash, OTL_BIGINT
 		}
 	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	return false;
 }
 
@@ -410,9 +410,9 @@ bool EmailManager::getVerifiedEmail(IDType eID, std::string & email, DBManager *
 		}
 	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	return false;
 }
 
@@ -428,9 +428,9 @@ bool EmailManager::getUnverifiedEmail(IDType eID, std::string & email, DBManager
 		}
 	}
 	catch (otl_exception ex)
-	{
-		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-	}
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
 	return false;
 }
 
