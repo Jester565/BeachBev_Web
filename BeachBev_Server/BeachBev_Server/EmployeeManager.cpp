@@ -22,33 +22,45 @@ bool EmployeeManager::CheckInTimeRange(OTL_BIGINT& time, int numHours) {
 }
 
 void EmployeeManager::CreateAccountEmailHandler(const Aws::SES::SESClient * client,
-																								const Aws::SES::Model::SendEmailRequest & request,
-																								const Aws::SES::Model::SendEmailOutcome & outcome,
-																								const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
+	const Aws::SES::Model::SendEmailRequest & request,
+	const Aws::SES::Model::SendEmailOutcome & outcome,
+	const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	auto createAccountContext = std::static_pointer_cast<const CreateAccountEmailContext>(context);
 	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(createAccountContext->clientID);
+	if (!outcome.IsSuccess())
+	{
+		std::string query = "DELETE FROM Employees WHERE eID=:f1<int>";
+		try {
+			otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *createAccountContext->dbManager->getConnection());
+			otlStream << (int)createAccountContext->eID;
+		}
+		catch (otl_exception ex)
+		{
+			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		}
+	}
 	if (sender != nullptr) {
 		ProtobufPackets::PackA1 replyPacket;
 		if (outcome.IsSuccess()) {
 			if (emailManager->setUnverifiedEmail(createAccountContext->eID, request.GetDestination().GetToAddresses().front(),
-																					 createAccountContext->hashedEmailToken, sender->getDBManager()))
-				{
-					loginClient(sender, createAccountContext->eID);
-					replyPacket.set_pwdtoken(createAccountContext->urlEncodedPwdToken);
-					replyPacket.set_deviceid(createAccountContext->deviceID);
-					replyPacket.set_eid(createAccountContext->eID);
-					replyPacket.set_msg("Account Added");
-				}
+				createAccountContext->hashedEmailToken, sender->getDBManager()))
+			{
+				loginClient(sender, createAccountContext->eID);
+				replyPacket.set_pwdtoken(createAccountContext->urlEncodedPwdToken);
+				replyPacket.set_deviceid(createAccountContext->deviceID);
+				replyPacket.set_eid(createAccountContext->eID);
+				replyPacket.set_msg("Account Added");
+			}
 			else
-				{
-					replyPacket.set_msg("Could not set unverifiedEmail after verification email");
-				}
+			{
+				replyPacket.set_msg("Could not set unverifiedEmail after verification email");
+			}
 		}
 		else
-			{
-				replyPacket.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
-			}
+		{
+			replyPacket.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
+		}
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 		oPack->setSenderID(0);
 		oPack->addSendToID(sender->getID());
@@ -63,8 +75,15 @@ void EmployeeManager::PwdResetEmailHandler(const Aws::SES::SESClient * client, c
 	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(pwdResetContext->clientID);
 	if (sender != nullptr) {
 		ProtobufPackets::PackA5 replyPacket;
-		replyPacket.set_success(true);
-		replyPacket.set_msg("Password reset email sent");
+		if (outcome.IsSuccess()) {
+			replyPacket.set_success(true);
+			replyPacket.set_msg("Password reset email sent");
+		}
+		else
+		{
+			replyPacket.set_success(false);
+			replyPacket.set_msg("Failed to send email");
+		}
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A5");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
@@ -118,26 +137,28 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 				createAccountContext->eID = eID;
 				createAccountContext->deviceID = devID;
 				createAccountContext->hashedEmailToken = genTokenHash;
+				createAccountContext->dbManager = dbManager;
+				createAccountContext->urlEncodedPwdToken = urlEncodedPwdToken;
 				emailManager->sendVerificationEmail(packA0.email(), urlEncodedEmailToken,
-																						std::bind(&EmployeeManager::CreateAccountEmailHandler, this, std::placeholders::_1,
-																											std::placeholders::_2, std::placeholders::_3, std::placeholders::_4),
-																						createAccountContext);
+					std::bind(&EmployeeManager::CreateAccountEmailHandler, this, std::placeholders::_1,
+						std::placeholders::_2, std::placeholders::_3, std::placeholders::_4),
+					createAccountContext);
 				success = true;
 			}
 			else
-				{
-					replyPacket.set_msg("Email already used");
-				}
+			{
+				replyPacket.set_msg("Email already used");
+			}
 		}
 		else
-			{
-				replyPacket.set_msg("Name cannot be a used email");
-			}
+		{
+			replyPacket.set_msg("Name cannot be a used email");
+		}
 	}
 	else
-		{
-			replyPacket.set_msg("Name already used");
-		}
+	{
+		replyPacket.set_msg("Name already used");
+	}
 	if (!success) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 		oPack->setSenderID(0);
@@ -168,11 +189,11 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 			CryptoManager::GenerateHash(packTokenHash, TOKEN_SIZE, packToken.data(), packToken.size());
 			bool match = true;
 			for (int i = 0; i < TOKEN_SIZE; i++)//Iterate through all to prevent time-based attacks
-				{
-					if (packTokenHash[i] != dbTokenHash[i]) {
-						match = false;
-					}
+			{
+				if (packTokenHash[i] != dbTokenHash[i]) {
+					match = false;
 				}
+			}
 			if (match) {
 				std::string urlEncodedPwdToken;
 				setPwdToken(packA2.eid(), urlEncodedPwdToken, packA2.deviceid(), dbManager);
@@ -183,19 +204,19 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 				loginClient(sender, packA2.eid());
 			}
 			else
-				{
-					replyPacket.set_msg("Tokens did not match");
-				}
+			{
+				replyPacket.set_msg("Tokens did not match");
+			}
 		}
 		else
-			{
-				replyPacket.set_msg("Token expired");
-			}
+		{
+			replyPacket.set_msg("Token expired");
+		}
 	}
 	else
-		{
-			replyPacket.set_msg("Could not aquire a token");
-		}
+	{
+		replyPacket.set_msg("Could not aquire a token");
+	}
 	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 	oPack->setSenderID(0);
 	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
@@ -229,8 +250,8 @@ void EmployeeManager::handleA3(boost::shared_ptr<IPacket> iPack)
 		if (getPwdData(eID, dbPwdHash, dbPwdSalt, dbManager)) {
 			BYTE packPwdHash[HASH_SIZE];
 			CryptoManager::GenerateHash(packPwdHash, HASH_SIZE,
-																	(BYTE*)packA3.pwd().data(), packA3.pwd().size(),
-																	dbPwdSalt, SALT_SIZE);
+				(BYTE*)packA3.pwd().data(), packA3.pwd().size(),
+				dbPwdSalt, SALT_SIZE);
 			bool match = true;
 			for (int i = 0; i < HASH_SIZE; i++) {
 				if (packPwdHash[i] != dbPwdHash[i]) {
@@ -253,19 +274,19 @@ void EmployeeManager::handleA3(boost::shared_ptr<IPacket> iPack)
 				loginClient(sender, eID);
 			}
 			else
-				{
-					replyPacket.set_msg("Invalid login");
-				}
+			{
+				replyPacket.set_msg("Invalid login");
+			}
 		}
 		else
-			{
-				replyPacket.set_msg("Could not get pwd data from database");
-			}
+		{
+			replyPacket.set_msg("Could not get pwd data from database");
+		}
 	}
 	else
-		{
-			replyPacket.set_msg("Invalid login");
-		}
+	{
+		replyPacket.set_msg("Invalid login");
+	}
 	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 	oPack->setSenderID(0);
 	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
@@ -291,33 +312,33 @@ void EmployeeManager::handleA4(boost::shared_ptr<IPacket> iPack)
 			eID = unverifiedEID;
 		}
 		else
-			{
-				replyPacket.set_msg("Must used verified email");
-			}
+		{
+			replyPacket.set_msg("Must used verified email");
+		}
 	}
 	else
-		{
-			eID = emailManager->verifiedEmailToEID(packA4.email(), dbManager);
-			if (eID <= 0) {
-				replyPacket.set_msg("Email not found");
-			}
+	{
+		eID = emailManager->verifiedEmailToEID(packA4.email(), dbManager);
+		if (eID <= 0) {
+			replyPacket.set_msg("Email not found");
 		}
+	}
 	if (eID > 0) {
 		std::string urlEncodedPwdResetToken;
 		if (setPwdResetToken(eID, urlEncodedPwdResetToken, dbManager))
-			{
-				AwsSharedPtr<PasswordResetContext> pwdResetContext = std::make_shared<PasswordResetContext>();
-				pwdResetContext->clientID = sender->getEmpID();
-				emailManager->sendPwdResetEmail(packA4.email(), urlEncodedPwdResetToken,
-																				std::bind(&EmployeeManager::PwdResetEmailHandler, this, std::placeholders::_1,
-																									std::placeholders::_2, std::placeholders::_3, std::placeholders::_4),
-																				pwdResetContext);
-				replyPacket.set_success(true);
-			}
+		{
+			AwsSharedPtr<PasswordResetContext> pwdResetContext = std::make_shared<PasswordResetContext>();
+			pwdResetContext->clientID = sender->getEmpID();
+			emailManager->sendPwdResetEmail(packA4.email(), urlEncodedPwdResetToken,
+				std::bind(&EmployeeManager::PwdResetEmailHandler, this, std::placeholders::_1,
+					std::placeholders::_2, std::placeholders::_3, std::placeholders::_4),
+				pwdResetContext);
+			replyPacket.set_success(true);
+		}
 		else
-			{
-				replyPacket.set_msg("Failed to set pwdResetToken");
-			}
+		{
+			replyPacket.set_msg("Failed to set pwdResetToken");
+		}
 	}
 	if (!replyPacket.success()) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A5");
@@ -346,14 +367,14 @@ void EmployeeManager::handleA6(boost::shared_ptr<IPacket> iPack)
 			replyPacket.set_msg("Valid token");
 		}
 		else
-			{
-				replyPacket.set_msg("Token expired");
-			}
+		{
+			replyPacket.set_msg("Token expired");
+		}
 	}
 	else
-		{
-			replyPacket.set_msg("Invalid token");
-		}
+	{
+		replyPacket.set_msg("Invalid token");
+	}
 	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A7");
 	oPack->setSenderID(0);
 	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
@@ -384,19 +405,19 @@ void EmployeeManager::handleA8(boost::shared_ptr<IPacket> iPack)
 				removePwdResetToken(eID, dbManager);
 			}
 			else
-				{
-					replyPacket.set_msg("Could not set password");
-				}
+			{
+				replyPacket.set_msg("Could not set password");
+			}
 		}
 		else
-			{
-				replyPacket.set_msg("Token expired");
-			}
+		{
+			replyPacket.set_msg("Token expired");
+		}
 	}
 	else
-		{
-			replyPacket.set_msg("Invalid token");
-		}
+	{
+		replyPacket.set_msg("Invalid token");
+	}
 	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 	oPack->setSenderID(0);
 	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
@@ -407,9 +428,9 @@ BB_Client* EmployeeManager::getEmployee(IDType eID)
 {
 	auto it = employees.find(eID);
 	if (it != employees.end())
-		{
-			return (BB_Client*)it->second;
-		}
+	{
+		return (BB_Client*)it->second;
+	}
 	return nullptr;
 }
 
@@ -425,9 +446,9 @@ IDType EmployeeManager::addEmployeeToDatabase(const std::string & name, DBManage
 		otlStream << name;
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	return eID;
 }
 
@@ -451,10 +472,10 @@ bool EmployeeManager::setPwd(IDType eID, const std::string & pwd, DBManager * db
 		otlStream << (int)eID;
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-			return false;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+		return false;
+	}
 	return true;
 }
 
@@ -475,9 +496,9 @@ bool EmployeeManager::setPwdToken(IDType eID, std::string& urlEncodedPwdToken, D
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	CryptoManager::UrlEncode(urlEncodedPwdToken, genToken, TOKEN_SIZE);
 	return true;
 }
@@ -498,9 +519,9 @@ bool EmployeeManager::setPwdResetToken(IDType eID, std::string & urlEncodedPwdRe
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	CryptoManager::UrlEncode(urlEncodedPwdResetToken, genToken, TOKEN_SIZE);
 	return true;
 }
@@ -513,9 +534,9 @@ bool EmployeeManager::clearPwdTokens(IDType eID, DBManager * dbManager)
 		otlStream << (int)eID;
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 }
 
 DeviceID EmployeeManager::addPwdToken(IDType eID, std::string & urlEncodedPwdToken, DBManager * dbManager)
@@ -530,20 +551,20 @@ DeviceID EmployeeManager::getNextDeviceID(IDType eID, DBManager * dbManager)
 	DeviceID devID = 0;
 	std::string query = "SELECT deviceID FROM PwdTokens WHERE eID=:f1<int> ORDER BY deviceID desc limit 1";
 	try
+	{
+		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+		otlStream << (int)eID;
+		if (!otlStream.eof())
 		{
-			otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
-			otlStream << (int)eID;
-			if (!otlStream.eof())
-				{
-					int devInt = 0;
-					otlStream >> devInt;
-					devID = devInt;
-				}
+			int devInt = 0;
+			otlStream >> devInt;
+			devID = devInt;
 		}
+	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	return devID + 1;
 }
 
@@ -554,19 +575,19 @@ IDType EmployeeManager::nameToEID(const std::string& name, DBManager* dbManager)
 	query += std::to_string((int)NAME_SIZE);
 	query += "]>";
 	try
-		{
-			otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
-			otlStream << name;
-			if (!otlStream.eof()) {
-				int eIDInt = 0;
-				otlStream >> eIDInt;
-				eID = eIDInt;
-			}
+	{
+		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+		otlStream << name;
+		if (!otlStream.eof()) {
+			int eIDInt = 0;
+			otlStream >> eIDInt;
+			eID = eIDInt;
 		}
+	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	return eID;
 }
 
@@ -575,20 +596,20 @@ IDType EmployeeManager::getNextEID(DBManager* dbManager)
 	IDType eID = 0;
 	std::string query = "SELECT * FROM Employees ORDER BY eID desc limit 1";
 	try
+	{
+		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+		dbManager->getConnection()->commit();
+		if (!otlStream.eof())
 		{
-			otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
-			dbManager->getConnection()->commit();
-			if (!otlStream.eof())
-				{
-					int eIDInt = 0;
-					otlStream >> eIDInt;
-					eID = eIDInt;
-				}
+			int eIDInt = 0;
+			otlStream >> eIDInt;
+			eID = eIDInt;
 		}
+	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	return eID + 1;
 }
 
@@ -605,9 +626,9 @@ bool EmployeeManager::getPwdData(IDType eID, BYTE * hash, BYTE * salt, DBManager
 		}
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	return false;
 }
 
@@ -625,9 +646,9 @@ bool EmployeeManager::getPwdToken(IDType eID, BYTE * databaseTokenHash, OTL_BIGI
 		}
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	return false;
 }
 
@@ -653,9 +674,9 @@ bool EmployeeManager::checkPwdResetToken(const std::string& urlEncodedPwdResetTo
 		}
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	return false;
 }
 
@@ -668,9 +689,9 @@ bool EmployeeManager::removePwdResetToken(IDType eID, DBManager * dbManager)
 		return true;
 	}
 	catch (otl_exception ex)
-		{
-			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
-		}
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 	return false;
 }
 

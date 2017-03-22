@@ -13,30 +13,30 @@ struct ChangeUnverifiedEmailContext : public Aws::Client::AsyncCallerContext
 	BYTE* hashedEmailToken;
 
 	~ChangeUnverifiedEmailContext()
-		{
-			if (hashedEmailToken != nullptr) {
-				delete[] hashedEmailToken;
-				hashedEmailToken = nullptr;
-			}
+	{
+		if (hashedEmailToken != nullptr) {
+			delete[] hashedEmailToken;
+			hashedEmailToken = nullptr;
 		}
+	}
 };
 
 class EmailManager : public PKeyOwner
 {
- public:
+public:
 
 	static const std::string EMAIL_CONFIRM_URL;
 	static const std::string HTML_DIR;
 	static const std::string PWD_RESET_URL;
 
 	void ChangeUnverifiedEmailHandler(const Aws::SES::SESClient* client,
-																		const Aws::SES::Model::SendEmailRequest& request,
-																		const Aws::SES::Model::SendEmailOutcome& outcome,
-																		const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context);
+		const Aws::SES::Model::SendEmailRequest& request,
+		const Aws::SES::Model::SendEmailOutcome& outcome,
+		const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context);
 
 	void ChangeEmailNotificationHandler(const Aws::SES::SESClient* client,
-																			const Aws::SES::Model::SendEmailRequest& request,
-																			const Aws::SES::Model::SendEmailOutcome& outcome);
+		const Aws::SES::Model::SendEmailRequest& request,
+		const Aws::SES::Model::SendEmailOutcome& outcome);
 
 	EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager);
 
@@ -65,7 +65,7 @@ class EmailManager : public PKeyOwner
 	bool getUnverifiedEmail(IDType eID, std::string& email, DBManager* dbManager);
 	~EmailManager();
 
- private:
+private:
 	bool verifyEmail(IDType eID, DBManager* dbManager);
 	bool removeUnverifiedEmail(IDType eID, DBManager* dbManager);
 	bool getEmailToken(IDType eID, BYTE* dbEmailTokenHash, OTL_BIGINT& tokenTime, DBManager* dbManager);
