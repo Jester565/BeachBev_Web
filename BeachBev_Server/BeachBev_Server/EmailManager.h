@@ -48,8 +48,8 @@ public:
 
 	void handleB4(boost::shared_ptr<IPacket> iPack);
 
-	bool setUnverifiedEmail(IDType eID, const std::string& email, std::string& urlEncodedEmailToken, DBManager* dbManager);
-	bool setUnverifiedEmail(IDType eID, const std::string& email, BYTE* hashedEmailToken, DBManager* dbManager);
+	bool setUnverifiedEmail(IDType eID, Aws::String email, std::string& urlEncodedEmailToken, DBManager* dbManager);
+	bool setUnverifiedEmail(IDType eID, Aws::String email, BYTE* hashedEmailToken, DBManager* dbManager);
 
 	bool sendEmail(const std::string& sendToAddress, const std::string& senderAddress, const std::string& senderName, const std::string& subject, const std::string& body, Aws::SES::SendEmailResponseReceivedHandler handler, const AwsSharedPtr<const Aws::Client::AsyncCallerContext> context = nullptr, bool isHTML = false);
 

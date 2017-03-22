@@ -209,7 +209,7 @@ void EmailManager::handleB4(boost::shared_ptr<IPacket> iPack) {
 	bbServer->getClientManager()->send(oPack, sender);
 }
 
-bool EmailManager::setUnverifiedEmail(IDType eID, const std::string & email, std::string& urlEncodedEmailToken, DBManager * dbManager)
+bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, std::string& urlEncodedEmailToken, DBManager * dbManager)
 {
 	BYTE genToken[TOKEN_SIZE];
 	CryptoManager::GenerateRandomData(genToken, TOKEN_SIZE);
@@ -235,7 +235,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, const std::string & email, std
 	return true;
 }
 
-bool EmailManager::setUnverifiedEmail(IDType eID, const std::string & email, BYTE* hashedEmailToken, DBManager * dbManager)
+bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, BYTE* hashedEmailToken, DBManager * dbManager)
 {
 	std::string query = "REPLACE INTO UnverifiedEmails VALUES (:f1<int>, :f2<char[";
 	query += std::to_string(EMAIL_SIZE);
