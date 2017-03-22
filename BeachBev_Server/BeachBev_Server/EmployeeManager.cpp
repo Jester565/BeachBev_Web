@@ -130,7 +130,7 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 				BYTE* genTokenHash = new BYTE[TOKEN_SIZE];
 				CryptoManager::GenerateHash(genTokenHash, TOKEN_SIZE, genToken, TOKEN_SIZE);
 				std::string urlEncodedEmailToken;
-				CryptoManager::UrlEncode(urlEncodedEmailToken, genTokenHash, TOKEN_SIZE);
+				CryptoManager::UrlEncode(urlEncodedEmailToken, genToken, TOKEN_SIZE);
 
 				AwsSharedPtr<CreateAccountEmailContext> createAccountContext = std::make_shared<CreateAccountEmailContext>();
 				createAccountContext->clientID = sender->getID();
