@@ -37,8 +37,8 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 		}
 		else
 		{
-			packB1.set_msg("Failed to send verification email: " + outcome.GetError().GetMessage());
-			std::cerr << "ChangeUnverifiedEmailHandler: " + outcome.GetError().GetMessage() << std::endl;
+			//packB1.set_msg("Failed to send verification email: " + outcome.GetError().GetMessage().c_str());
+			std::cerr << "ChangeUnverifiedEmailHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
 		}
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
 		oPack->setSenderID(0);
@@ -50,7 +50,7 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 void EmailManager::ChangeEmailNotificationHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome)
 {
 	if (!outcome.IsSuccess()) {
-		std::cerr << "ChanageEmailNotificationHandler: " << outcome.GetError().GetMessage() << std::endl;
+		std::cerr << "ChanageEmailNotificationHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
 	}
 }
 
@@ -223,7 +223,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, std::string
 	try {
 		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 		otlStream << (int)eID;
-		otlStream << std::string(email);
+		otlStream << std::string(email.c_str());
 		CryptoManager::OutputBytes(otlStream, genTokenHash, TOKEN_SIZE);
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
@@ -245,7 +245,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, BYTE* hashe
 	try {
 		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 		otlStream << (int)eID;
-		otlStream << std::string(email);
+		otlStream << std::string(email.c_str());
 		CryptoManager::OutputBytes(otlStream, hashedEmailToken, TOKEN_SIZE);
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
@@ -437,14 +437,14 @@ bool EmailManager::getUnverifiedEmail(IDType eID, std::string & email, DBManager
 bool EmailManager::sendVerificationEmail(const std::string& sendToAddress, const std::string& urlEncodedEmailToken, const Aws::SES::SendEmailResponseReceivedHandler& handler, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	std::string emailURL = EMAIL_CONFIRM_URL + "?" + urlEncodedEmailToken;
-	Aws::StringStream stringIn;
+	std::stringstream stringIn;
 	{
-		Aws::IFStream fileIn(HTML_DIR + "emailPt1.html");
+		std::ifstream fileIn(HTML_DIR + "emailPt1.html");
 		stringIn << fileIn.rdbuf();
 	}
 	stringIn << emailURL;
 	{
-		Aws::IFStream fileIn(HTML_DIR + "emailPt2.html");
+		std::ifstream fileIn(HTML_DIR + "emailPt2.html");
 		stringIn << fileIn.rdbuf();
 	}
 	return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Email Verification", stringIn.str(), handler, context, true);
@@ -453,14 +453,14 @@ bool EmailManager::sendVerificationEmail(const std::string& sendToAddress, const
 bool EmailManager::sendPwdResetEmail(const std::string& sendToAddress, const std::string & urlEncodedPwdToken, const Aws::SES::SendEmailResponseReceivedHandler& handler, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	std::string pwdResetURL = PWD_RESET_URL + "?" + urlEncodedPwdToken;
-	Aws::StringStream stringIn;
+	std::stringstream stringIn;
 	{
-		Aws::IFStream fileIn(HTML_DIR + "emailPwdResetPt1.html");
+		std::ifstream fileIn(HTML_DIR + "emailPwdResetPt1.html");
 		stringIn << fileIn.rdbuf();
 	}
 	stringIn << pwdResetURL;
 	{
-		Aws::IFStream fileIn(HTML_DIR + "emailPwdResetPt2.html");
+		std::ifstream fileIn(HTML_DIR + "emailPwdResetPt2.html");
 		stringIn << fileIn.rdbuf();
 	}
 	return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Password Reset", stringIn.str(), handler,context, true);
@@ -468,9 +468,9 @@ bool EmailManager::sendPwdResetEmail(const std::string& sendToAddress, const std
 
 bool EmailManager::sendChangeEmail(const std::string& sendToAddress, const Aws::SES::SendEmailResponseReceivedHandler& handler, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
-	Aws::StringStream stringIn;
+	std::stringstream stringIn;
 	{
-		Aws::IFStream fileIn(HTML_DIR + "emailChange.html");
+		std::ifstream fileIn(HTML_DIR + "emailChange.html");
 		stringIn << fileIn.rdbuf();
 	}
 	return sendEmail(sendToAddress, "management@beachbevs.com", "BeachBevs", "Email Changed", stringIn.str(), handler, context, true);

@@ -1,9 +1,6 @@
 #pragma once
-<<<<<<< HEAD
 #include <aws/email/SESClient.h>
-=======
 #include "stdafx.h"
->>>>>>> 45147b78bcf451e90fb9915451cf7af0ceb372bc
 #include <Macros.h>
 #include <PKeyOwner.h>
 #include <WSIPacket.h>
