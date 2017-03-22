@@ -60,6 +60,7 @@ EmailManager::EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager
 	addKey(new PKey("B0", this, &EmailManager::handleB0));
 	addKey(new PKey("B2", this, &EmailManager::handleB2));
 	addKey(new PKey("B4", this, &EmailManager::handleB4));
+	initSESClient();
 }
 
 bool EmailManager::initSESClient()
