@@ -25,7 +25,7 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 		ProtobufPackets::PackB1 packB1;
 		packB1.set_success(false);
 		if (outcome.IsSuccess()) {
-			if (setUnverifiedEmail(unverifiedEmailContext->eID, request.GetDestination().GetToAddresses().front(), unverifiedEmailContext->hashedEmailToken, bbClient->getDBManager()))
+			if (setUnverifiedEmail(unverifiedEmailContext->eID, std::string(request.GetDestination().GetToAddresses().front()), unverifiedEmailContext->hashedEmailToken, bbClient->getDBManager()))
 			{
 				packB1.set_success(true);
 				packB1.set_msg("Email successfully changed");
