@@ -25,7 +25,7 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 		ProtobufPackets::PackB1 packB1;
 		packB1.set_success(false);
 		if (outcome.IsSuccess()) {
-			if (setUnverifiedEmail(unverifiedEmailContext->eID, std::string(request.GetDestination().GetToAddresses().front()), unverifiedEmailContext->hashedEmailToken, bbClient->getDBManager()))
+			if (setUnverifiedEmail(unverifiedEmailContext->eID, request.GetDestination().GetToAddresses().front(), unverifiedEmailContext->hashedEmailToken, bbClient->getDBManager()))
 			{
 				packB1.set_success(true);
 				packB1.set_msg("Email successfully changed");
@@ -37,8 +37,8 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 		}
 		else
 		{
-			packB1.set_msg("Failed to send verification email: " + outcome.GetError().GetMessageA());
-			std::cerr << "ChangeUnverifiedEmailHandler: " + outcome.GetError().GetMessageA() << std::endl;
+			packB1.set_msg("Failed to send verification email: " + outcome.GetError().GetMessage());
+			std::cerr << "ChangeUnverifiedEmailHandler: " + outcome.GetError().GetMessage() << std::endl;
 		}
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
 		oPack->setSenderID(0);
@@ -50,7 +50,7 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 void EmailManager::ChangeEmailNotificationHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome)
 {
 	if (!outcome.IsSuccess()) {
-		std::cerr << "ChanageEmailNotificationHandler: " << outcome.GetError().GetMessageA() << std::endl;
+		std::cerr << "ChanageEmailNotificationHandler: " << outcome.GetError().GetMessage() << std::endl;
 	}
 }
 
@@ -223,7 +223,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, std::string
 	try {
 		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 		otlStream << (int)eID;
-		otlStream << email;
+		otlStream << std::string(email);
 		CryptoManager::OutputBytes(otlStream, genTokenHash, TOKEN_SIZE);
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
@@ -245,7 +245,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, BYTE* hashe
 	try {
 		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 		otlStream << (int)eID;
-		otlStream << email;
+		otlStream << std::string(email);
 		CryptoManager::OutputBytes(otlStream, hashedEmailToken, TOKEN_SIZE);
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
