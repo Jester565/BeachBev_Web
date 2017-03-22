@@ -1,10 +1,13 @@
 #pragma once
+#include <aws/email/SESClient.h>
 #include <Macros.h>
 #include <PKeyOwner.h>
 #include <WSIPacket.h>
 #include <unordered_map>
 #include <base64_converter.h>
-#include <aws/email/SESClient.h>
+#include <string>
+#include <aws/core/Aws.h>
+#include <aws/email/model/SendEmailRequest.h>
 
 class DBManager;
 class BB_Server;

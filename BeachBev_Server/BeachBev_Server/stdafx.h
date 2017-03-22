@@ -14,7 +14,7 @@
 #define OTL_STL
 #include "otlv4.h"
 
-static const const char* AWS_ALLOC_TAG = "0";
+static const char* AWS_ALLOC_TAG = "0";
 template <typename T>
 using AwsSharedPtr = std::shared_ptr<T>;
 
