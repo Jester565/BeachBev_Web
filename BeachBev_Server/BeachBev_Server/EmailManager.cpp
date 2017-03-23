@@ -20,11 +20,11 @@ const std::string EmailManager::HTML_DIR = "/home/ubuntu/BeachBev_Web/";
 void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	auto unverifiedEmailContext = std::static_pointer_cast<const ChangeUnverifiedEmailContext>(context);
-	auto bbClient = bbServer->getClientManager()->getClient(unverifiedEmailContext->clientID);
+	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(unverifiedEmailContext->clientID);
 	ProtobufPackets::PackB1 packB1;
 	packB1.set_success(false);
 	if (outcome.IsSuccess()) {
-		if (setUnverifiedEmail(unverifiedEmailContext->eID, request.GetDestination().GetToAddresses().front(), unverifiedEmailContext->hashedEmailToken, bbClient->getDBManager()))
+		if (setUnverifiedEmail(unverifiedEmailContext->eID, request.GetDestination().GetToAddresses().front(), unverifiedEmailContext->hashedEmailToken, unverifiedEmailContext->dbManager))
 		{
 			packB1.set_success(true);
 			packB1.set_msg("Email successfully changed");
@@ -39,11 +39,11 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 		packB1.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
 		std::cerr << "ChangeUnverifiedEmailHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
 	}
-	if (bbClient != nullptr) {
+	if (sender != nullptr) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(packB1.SerializeAsString()));
-		bbServer->getClientManager()->send(oPack, bbClient);
+		bbServer->getClientManager()->send(oPack, sender);
 	}
 }
 

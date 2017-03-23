@@ -43,7 +43,7 @@ void EmployeeManager::CreateAccountEmailHandler(const Aws::SES::SESClient * clie
 	ProtobufPackets::PackA1 replyPacket;
 	if (outcome.IsSuccess()) {
 		if (emailManager->setUnverifiedEmail(createAccountContext->eID, request.GetDestination().GetToAddresses().front(),
-			createAccountContext->hashedEmailToken, sender->getDBManager()))
+			createAccountContext->hashedEmailToken, createAccountContext->dbManager))
 		{
 			loginClient(sender, createAccountContext->eID);
 			replyPacket.set_pwdtoken(createAccountContext->urlEncodedPwdToken);
