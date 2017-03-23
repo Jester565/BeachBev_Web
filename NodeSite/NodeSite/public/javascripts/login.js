@@ -117,7 +117,7 @@ function LoginManager(root) {
 		$('#msg').addClass('error');
 		$('#msg').removeClass('hidden');
 		$('#msg').focus();
-		.scrollTo($('#msg'));
+		this.scrollTo($('#msg'));
 	};
 
 	loginManager.bindButtons();
