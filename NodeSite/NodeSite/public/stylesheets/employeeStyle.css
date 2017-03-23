@@ -112,7 +112,7 @@ ul {
   width: 60vw;
   height: auto;
   padding: 0;
-  background: rgba(255, 127, 1, .97) rgb(255, 127,1);
+  background: rgba(255, 127, 1, .97);
   border-radius: 1vw;
   text-align: center;
   text-decoration: none;
@@ -155,7 +155,7 @@ ul {
   color: red;
   padding-top: .2em;
   padding-bottom: .2em;
-  background-color: rgba(0, 0, 0, .8) rgb(1,1,1);
+  background-color: rgba(0, 0, 0, .8);
   transition: .25s ease-in-out;
 }
 

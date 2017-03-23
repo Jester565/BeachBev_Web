@@ -19,7 +19,7 @@ html,body {
     left: -6px;
     width: calc(100% + 12px);
     height: 4em;
-    background: rgba(255, 127, 1, .97) rgb(255, 127, 1);
+    background: rgba(255, 127, 1, .97);
     border: solid;
     border-width: 2px;
     border-color: rgb(128, 128, 128);

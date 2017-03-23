@@ -9,14 +9,14 @@
   color: red;
   padding-top: .2em;
   padding-bottom: .2em;
-  background-color: rgba(210, 210, 210, .8) rgb(210, 210, 210);
+  background-color: rgba(210, 210, 210, .8);
   transition: .25s ease-in-out;
 }
 
 #msg.success {
   color: black;
   font-size: 1em;
-  background-color: rgba(0, 0, 0, 0) rgb(1,1,1);
+  background-color: rgba(0, 0, 0, 0);
   padding-left: .2em;
   padding-right: .2em;
 }
