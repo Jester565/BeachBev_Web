@@ -1,5 +1,7 @@
-﻿function redirect(url) {
-	window.location.href = url;
+﻿if (typeof redirect === "undefined") {
+	function redirect(url) {
+		window.location.href = url;
+	}
 }
 
 $(document).ready(function () {
