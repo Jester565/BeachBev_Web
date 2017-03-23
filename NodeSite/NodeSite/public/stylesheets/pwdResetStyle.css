@@ -109,11 +109,10 @@ ul {
 	transition: .25s ease-in-out;
 }
 
-#msg.error {
-	color: red;
-	background-color: black;
-}
-
+	#msg.error {
+		color: red;
+		background-color: black;
+	}
 
 .checkmark__circle {
 	stroke-dasharray: 166;

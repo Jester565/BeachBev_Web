@@ -8,6 +8,7 @@
 </head>
 <body>
 	<script defer src="javascripts/jquery-1.12.0.js"></script>
+	<script defer src="javascripts/jquery.scrollTo.js"></script>
 	<script defer src="javascripts/long.min.js"></script>
 	<script defer src="javascripts/bytebuffer.min.js"></script>
 	<script defer src="javascripts/protobuf.min.js"></script>
@@ -28,13 +29,13 @@
 				<h2>Name or Email</h2>
 			</li>
 			<li>
-				<input id="userName" type="text" />
+				<input id="userName" type="text" spellcheck="false" />
 			</li>
 			<li>
 				<h2>Password</h2>
 			</li>
 			<li>
-				<input id="pwd" type="password" />
+				<input id="pwd" type="password" spellcheck="false" />
 			</li>
 		</ul>
 		<a id="loginButton">
@@ -44,7 +45,7 @@
 		<hr />
 		<label for="emailField" id="emailFieldLabel" class="hidden">Account Email</label>
 		<br />
-		<input id="emailField" type="text" class="hidden" />
+		<input id="emailField" type="text" class="hidden" spellcheck="false" />
 		<br />
 		<a id="pwdResetButton">
 			<h2>Forgot Password</h2>

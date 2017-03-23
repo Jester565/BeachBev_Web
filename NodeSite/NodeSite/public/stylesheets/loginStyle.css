@@ -1,192 +1,193 @@
 ﻿html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+	height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 body {
-  overflow-x: hidden;
+	overflow-x: hidden;
 }
 
 h2 {
-		font-family: 'Bitter', serif;
+	font-family: 'Bitter', serif;
+	font-size: large;
 }
 
 #loginDiv {
-		margin-top: 5.0em;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 80%;
-		width: 750px;
-  left: 0;
-  right: 0;
-  height: auto;
-  padding: 5px;
-  background-color: rgb(175, 175, 175);
-  border: solid;
-  border-color: black;
-  border-width: 2px;
-  border-radius: 7px;
-		text-align:left;
+	margin-top: 5.0em;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 80%;
+	width: 750px;
+	left: 0;
+	right: 0;
+	height: auto;
+	padding: 5px;
+	background-color: rgb(175, 175, 175);
+	border: solid;
+	border-color: black;
+	border-width: 2px;
+	border-radius: 7px;
+	text-align: left;
 }
 
 #loginTitle {
-		font-family: 'Bitter', serif;
-		font-size: xx-large;
-		text-align: center;
-		color: black;
+	font-family: 'Bitter', serif;
+	font-size: xx-large;
+	text-align: center;
+	color: black;
 }
 
 input[type="text"],
-input[type="password"]{
-  margin-left: 0;
-  margin-right: auto;
-  display: block;
-  margin-top: -18px;
-  width: 94%;
-  font-family: sans-serif;
-  font-size: 18px;
-  box-shadow: none;
-  border-radius: none;
-  border: solid 1px #dcdcdc;
-  transition: box-shadow 0.3s, border 0.3s;
+input[type="password"] {
+	margin-left: 0;
+	margin-right: auto;
+	display: block;
+	margin-top: -18px;
+	width: 94%;
+	font-family: sans-serif;
+	font-size: 18px;
+	box-shadow: none;
+	border-radius: none;
+	border: solid 1px #dcdcdc;
+	transition: box-shadow 0.3s, border 0.3s;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus{
-  outline: none;
-  border: solid 1px #707070;
-  box-shadow: 0 0 5px 1px #969696;
-}
+	input[type="text"]:focus,
+	input[type="password"]:focus {
+		outline: none;
+		border: solid 1px #707070;
+		box-shadow: 0 0 5px 1px #969696;
+	}
 
 #emailFieldLabel {
-		font-family: 'Bitter', serif;
-		font-size: medium;
-		text-align: left;
-		color: black;
-		margin-left: 10%;
+	font-family: 'Bitter', serif;
+	font-size: medium;
+	text-align: left;
+	color: black;
+	margin-left: 10%;
 }
 
 #emailField {
-		margin-top: 9px;
-		display: block;
-		margin-left: auto;
-		margin-right: auto;
-		width: 80%;
+	margin-top: 9px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
 }
 
 ul {
-  list-style-type: none;
-  height: auto;
-  overflow: hidden;
+	list-style-type: none;
+	height: auto;
+	overflow: hidden;
 }
 
 #loading {
-		position: fixed;
-  width: 35vw;
-  height: 30vw;
-  top: 50%;
-  left: 50%;
-  margin-top: -15vw;
-  margin-left: -17.5vw;
+	position: fixed;
+	width: 35vw;
+	height: 30vw;
+	top: 50%;
+	left: 50%;
+	margin-top: -15vw;
+	margin-left: -17.5vw;
 }
 
 #loginButton {
-		font-size:smaller;
-		text-align: center;
-		display: block;
-  padding-left: 10px;
-		padding-right: 10px;
-		width: 100px;
-		margin-left: auto;
-		margin-right: auto;
-  background: rgba(255, 100, 1, .97);
-  border-radius: 1vw;
-  text-decoration: none;
-  cursor: pointer;
-  border-color: black;
-  border: solid;
-  border-width: 2px;
-  transition: .25s ease-in-out;
+	font-size: smaller;
+	text-align: center;
+	display: block;
+	padding-left: 10px;
+	padding-right: 10px;
+	width: 100px;
+	margin-left: auto;
+	margin-right: auto;
+	background: rgba(255, 100, 1, .97);
+	border-radius: 1vw;
+	text-decoration: none;
+	cursor: pointer;
+	border-color: black;
+	border: solid;
+	border-width: 2px;
+	transition: .25s ease-in-out;
 }
 
-#loginButton:hover {
-		background-color:white;
-		border-color:orangered;
-}
+	#loginButton:hover {
+		background-color: white;
+		border-color: orangered;
+	}
 
 #pwdResetButton {
-		text-align: center;
-  display: block;
-		margin-left: auto;
-		margin-right: auto;
-		width: 170px;
-  padding-left: 10px;
-		padding-right: 10px;
-  background: rgba(255, 100, 1, .97);
-  border-radius: 1vw;
-  text-decoration: none;
-		font-size: xx-small;
-  cursor: pointer;
-  border-color: black;
-  border: solid;
-  border-width: 2px;
-  transition: .25s ease-in-out;
-		margin-bottom: 30px;
+	text-align: center;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 170px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background: rgba(255, 100, 1, .97);
+	border-radius: 1vw;
+	text-decoration: none;
+	font-size: xx-small;
+	cursor: pointer;
+	border-color: black;
+	border: solid;
+	border-width: 2px;
+	transition: .25s ease-in-out;
+	margin-bottom: 30px;
 }
 
-#pwdResetButton:hover {
-		background-color:white;
-		border-color:red;
-}
+	#pwdResetButton:hover {
+		background-color: white;
+		border-color: red;
+	}
 
 #cancelButton {
-  text-align: center;
-  display: block;
-		margin-left: auto;
-		margin-right: auto;
-		width: 75px;
-  padding-left: 10px;
-		padding-right: 10px;
-  background: rgba(255, 100, 1, .97);
-  border-radius: 1vw;
-  text-decoration: none;
-		font-size: xx-small;
-  cursor: pointer;
-  border-color: black;
-  border: solid;
-  border-width: 2px;
-  transition: .25s ease-in-out;
-		margin-bottom: 30px;
+	text-align: center;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 75px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background: rgba(255, 100, 1, .97);
+	border-radius: 1vw;
+	text-decoration: none;
+	font-size: xx-small;
+	cursor: pointer;
+	border-color: black;
+	border: solid;
+	border-width: 2px;
+	transition: .25s ease-in-out;
+	margin-bottom: 30px;
 }
 
-#cancelButton:hover {
-		background-color:white;
-		border-color:orangered;
-}
+	#cancelButton:hover {
+		background-color: white;
+		border-color: orangered;
+	}
 
 #msg {
-  text-align: center;
-  font-family: 'Bitter', serif;
-  font-size: 1em;
-  color: black;
-  padding-top: .2em;
-  padding-bottom: .2em;
-  background-color: rgba(220, 220, 220, .8);
-  transition: .25s ease-in-out;
+	text-align: center;
+	font-family: 'Bitter', serif;
+	font-size: 1em;
+	color: black;
+	padding-top: .2em;
+	padding-bottom: .2em;
+	background-color: rgba(220, 220, 220, .8);
+	transition: .25s ease-in-out;
 }
 
-#msg.error {
+	#msg.error {
 		color: red;
 		background-color: black;
-}
+	}
 
 .hidden {
-		display: none !important;
+	display: none !important;
 }
 
 .processing {
-		background-color: dimgray !important;
-		border-color:white !important;
+	background-color: dimgray !important;
+	border-color: white !important;
 }

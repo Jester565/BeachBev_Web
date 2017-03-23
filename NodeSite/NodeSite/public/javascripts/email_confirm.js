@@ -24,6 +24,7 @@ function EmailConfirmManager(root) {
 		$('#msg').removeClass('hidden');
 		$('#msg').text(str);
 		$('#msg').focus();
+		$('window').scrollTo($('#msg'));
 	};
 
 	var url = window.location.href;

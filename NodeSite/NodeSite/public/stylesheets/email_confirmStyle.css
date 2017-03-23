@@ -1,38 +1,38 @@
 ﻿#space {
-  height: 4em;
+	height: 4em;
 }
 
 #msg {
-  text-align: center;
-  font-family: 'Bitter', serif;
-  font-size: 1em;
-  color: red;
-  padding-top: .2em;
-  padding-bottom: .2em;
-  background-color: rgba(210, 210, 210, .8);
-  transition: .25s ease-in-out;
+	text-align: center;
+	font-family: 'Bitter', serif;
+	font-size: 1em;
+	color: red;
+	padding-top: .2em;
+	padding-bottom: .2em;
+	background-color: rgba(210, 210, 210, .8);
+	transition: .25s ease-in-out;
 }
 
-#msg.success {
-  color: black;
-  font-size: 1em;
-  background-color: rgba(0, 0, 0, 0);
-  padding-left: .2em;
-  padding-right: .2em;
-}
+	#msg.success {
+		color: black;
+		font-size: 1em;
+		background-color: rgba(0, 0, 0, 0);
+		padding-left: .2em;
+		padding-right: .2em;
+	}
 
 #loading {
-    position: fixed;
-    width: 400px;
-    height: 262px;
-    top: 50%;
-    left: 50%;
-    margin-left: -200px;
-    margin-top: -131px;
+	position: fixed;
+	width: 400px;
+	height: 262px;
+	top: 50%;
+	left: 50%;
+	margin-left: -200px;
+	margin-top: -131px;
 }
 
 .hidden {
-		display: none !important;
+	display: none !important;
 }
 
 .checkmark__circle {

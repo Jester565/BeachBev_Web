@@ -131,9 +131,8 @@ function EmailManager(root) {
 	this.setErrorMsg = function (msg) {
 		$('#errorMsg').html(msg);
 		$('#errorMsg').removeClass('hidden');
-		$('html, body').animate({
-			scrollTop: $("#errorMsg").offset().top
-		}, 100);
+		$('#errorMsg').focus();
+		$('window').scrollTo($('#msg'));
 	};
 	var packB4 = emailManager.PacketB4.create({
 	});

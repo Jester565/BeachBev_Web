@@ -132,10 +132,10 @@ ul {
 
 	#applyButton h2 {
 		font-family: 'Bitter', serif;
-		font-size: 3em;
+		font-size: large;
 		color: black;
-		padding-left: 10px;
-		padding-right: 10px;
+		padding-left: 4px;
+		padding-right: 4px;
 	}
 
 	#applyButton.error:hover {

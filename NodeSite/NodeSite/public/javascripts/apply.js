@@ -4,6 +4,7 @@ function setErrorMsg(str) {
 	$('#msg').removeClass('invisible');
 	$('#msg').text(str);
 	$('#msg').focus();
+	$('window').scrollTo($('#msg'));
 	$('#applyButton').addClass('error');
 	$('#applyButton').removeClass('load');
 	$('#applyButton h2').text('ERROR');

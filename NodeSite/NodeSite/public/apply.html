@@ -2,64 +2,65 @@
 
 <html lang="en">
 <head>
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-  <link rel="stylesheet" type="text/css" href="stylesheets/applyStyle.css" media="all">
-  <title>BeachBevs - Employee</title>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+	<link rel="stylesheet" type="text/css" href="stylesheets/applyStyle.css" media="all">
+	<title>BeachBevs - Employee</title>
 </head>
 <body>
-  <script defer src="javascripts/jquery-1.12.0.js"></script>
-  <script defer src="javascripts/protobuf.min.js"></script>
-  <script defer src="javascripts/PacketIO.js"></script>
-  <script defer src="javascripts/PacketManager.js"></script>
-  <script defer src="javascripts/TCPConnection.js"></script>
-  <script defer src="javascripts/SetupManager.js"></script>
-  <script defer src="javascripts/Client.js"></script>
-  <script defer src="javascripts/js.cookie.js"></script>
-  <script defer src="javascripts/apply.js"></script>
-  <script defer src="javascripts/mBar.js"></script>
-  <div id="mBar"></div>
-		<img id="loading" src="images/load.gif" alt="loading">
-  <img id="workerImg" src="images/HB3.jpg" draggable="false" class="hidden">
-  <div id="spaceDiv"></div>
-  <p id="pitch" class="hidden">
-    Working for us is easy! Just pick up your phone, head to the beach, sign into our
-    website, and take some orders.<br />With a beautiful view of Hermosa beach and flexible hours
-    why would you not want to work with us?
-  </p>
-  <div id="applyDiv" class="hidden">
-    <ul>
-      <li>
-        <h2>Name</h2>
-      </li>
-      <li>
-        <input id="userName" type="text" />
-      </li>
-      <li>
-        <h2>Password</h2>
-      </li>
-      <li>
-        <input id="pwd" type="password" />
-      </li>
-      <li>
-        <h2>Confirm Password</h2>
-      </li>
-      <li>
-        <input id="pwdConfirm" type="password" />
-      </li>
-      <li>
-        <h2>Email</h2>
-      </li>
-      <li>
-        <input id="email" type="text" />
-      </li>
-    </ul>
+	<script defer src="javascripts/jquery-1.12.0.js"></script>
+	<script defer src="javascripts/jquery.scrollTo.js"></script>
+	<script defer src="javascripts/protobuf.min.js"></script>
+	<script defer src="javascripts/PacketIO.js"></script>
+	<script defer src="javascripts/PacketManager.js"></script>
+	<script defer src="javascripts/TCPConnection.js"></script>
+	<script defer src="javascripts/SetupManager.js"></script>
+	<script defer src="javascripts/Client.js"></script>
+	<script defer src="javascripts/js.cookie.js"></script>
+	<script defer src="javascripts/apply.js"></script>
+	<script defer src="javascripts/mBar.js"></script>
+	<div id="mBar"></div>
+	<img id="loading" src="images/load.gif" alt="loading">
+	<img id="workerImg" src="images/HB3.jpg" draggable="false" class="hidden">
+	<div id="spaceDiv"></div>
+	<p id="pitch" class="hidden">
+		Working for us is easy! Just pick up your phone, head to the beach, sign into our
+		website, and take some orders.<br />With a beautiful view of Hermosa beach and flexible hours
+		why would you not want to work with us?
+	</p>
+	<div id="applyDiv" class="hidden">
+		<ul>
+			<li>
+				<h2>Name</h2>
+			</li>
+			<li>
+				<input id="userName" type="text" spellcheck="false" />
+			</li>
+			<li>
+				<h2>Password</h2>
+			</li>
+			<li>
+				<input id="pwd" type="password" />
+			</li>
+			<li>
+				<h2>Confirm Password</h2>
+			</li>
+			<li>
+				<input id="pwdConfirm" type="password" />
+			</li>
+			<li>
+				<h2>Email</h2>
+			</li>
+			<li>
+				<input id="email" type="text" spellcheck="false" />
+			</li>
+		</ul>
 		<div id="applyButtonWrapper">
-    <a id="applyButton">
-      <h2>APPLY NOW</h2>
-    </a>
+			<a id="applyButton">
+				<h2>APPLY NOW</h2>
+			</a>
 		</div>
-    <p id="msg" class="invisible"></p>
-  </div>
-  <div id="blankDiv"></div>
+		<p id="msg" class="invisible"></p>
+	</div>
+	<div id="blankDiv"></div>
 </body>
 </html>

@@ -1,153 +1,153 @@
 ﻿html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+	height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 body {
-  overflow-x: hidden;
+	overflow-x: hidden;
 }
 
 #emailDiv {
 	margin-top: 5.0em;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
-  left: 0;
-  right: 0;
-  height: auto;
-  padding: 5px;
-  background-color: rgb(175, 175, 175);
-  border: solid;
-  border-color: black;
-  border-width: 2px;
-  border-radius: 7px;
-		text-align:center;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+	left: 0;
+	right: 0;
+	height: auto;
+	padding: 5px;
+	background-color: rgb(175, 175, 175);
+	border: solid;
+	border-color: black;
+	border-width: 2px;
+	border-radius: 7px;
+	text-align: center;
 }
 
 #emailTitle {
-		font-family: 'Bitter', serif;
-		font-size: xx-large;
-		color: black;
+	font-family: 'Bitter', serif;
+	font-size: xx-large;
+	color: black;
 }
 
 #emailBody {
-		font-family: 'Bitter', serif;
-		font-size: 1.2em;
+	font-family: 'Bitter', serif;
+	font-size: 1.2em;
 }
 
 #resendButton {
-  display: inline-block;
-  padding-left: 10px;
-		padding-right: 10px;
-  background: rgba(255, 127, 1, .97);
-  border-radius: 1vw;
-  text-decoration: none;
-		font-size: large;
-  cursor: pointer;
-  border-color: black;
-  border: solid;
-  border-width: 2px;
-  transition: .25s ease-in-out;
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 10px;
+	background: rgba(255, 127, 1, .97);
+	border-radius: 1vw;
+	text-decoration: none;
+	font-size: large;
+	cursor: pointer;
+	border-color: black;
+	border: solid;
+	border-width: 2px;
+	transition: .25s ease-in-out;
 }
 
-#resendButton:hover {
-		background-color:white;
-		border-color:orangered;
-}
+	#resendButton:hover {
+		background-color: white;
+		border-color: orangered;
+	}
 
 #loading {
-		position: fixed;
-  width: 35vw;
-  height: 30vw;
-  top: 50%;
-  left: 50%;
-  margin-top: -15vw;
-  margin-left: -17.5vw;
+	position: fixed;
+	width: 35vw;
+	height: 30vw;
+	top: 50%;
+	left: 50%;
+	margin-top: -15vw;
+	margin-left: -17.5vw;
 }
 
 hr {
-		display: block;
-  height: 20px;
-  border: 0;
-  border-top: 10px solid rgb(255, 0, 0);
-  margin: 1em 0;
-  padding: 0;
+	display: block;
+	height: 20px;
+	border: 0;
+	border-top: 10px solid rgb(255, 0, 0);
+	margin: 1em 0;
+	padding: 0;
 }
 
 #emailChangeFieldLabel {
-		font-size: x-large;
-		font-family: 'Bitter', serif;
-		text-align: left;
+	font-size: x-large;
+	font-family: 'Bitter', serif;
+	text-align: left;
 }
 
 #emailChangeField {
-		margin-bottom: 20px;
-		font-size: 30px;
-		width: 60%;
-		max-width: 500px;
-		text-align: center;
+	margin-bottom: 20px;
+	font-size: large;
+	width: 60%;
+	max-width: 500px;
+	text-align: center;
 }
 
 #changeButton {
-  display: inline-block;
-  padding-left: 10px;
-		padding-right: 10px;
-  background: rgba(255, 100, 1, .97);
-  border-radius: 1vw;
-  text-decoration: none;
-		font-size: large;
-  cursor: pointer;
-  border-color: black;
-  border: solid;
-  border-width: 2px;
-  transition: .25s ease-in-out;
-		margin-bottom: 30px;
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 10px;
+	background: rgba(255, 100, 1, .97);
+	border-radius: 1vw;
+	text-decoration: none;
+	font-size: large;
+	cursor: pointer;
+	border-color: black;
+	border: solid;
+	border-width: 2px;
+	transition: .25s ease-in-out;
+	margin-bottom: 30px;
 }
 
-#changeButton:hover {
-		background-color:white;
-		border-color:orangered;
-}
+	#changeButton:hover {
+		background-color: white;
+		border-color: orangered;
+	}
 
 #cancelButton {
-  display: inline-block;
-  padding-left: 10px;
-		padding-right: 10px;
-  background: rgba(255, 100, 1, .97);
-  border-radius: 1vw;
-  text-decoration: none;
-		font-size: large;
-  cursor: pointer;
-  border-color: black;
-  border: solid;
-  border-width: 2px;
-  transition: .25s ease-in-out;
-		margin-bottom: 30px;
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 10px;
+	background: rgba(255, 100, 1, .97);
+	border-radius: 1vw;
+	text-decoration: none;
+	font-size: large;
+	cursor: pointer;
+	border-color: black;
+	border: solid;
+	border-width: 2px;
+	transition: .25s ease-in-out;
+	margin-bottom: 30px;
 }
 
-#cancelButton:hover {
-		background-color:white;
-		border-color:orangered;
-}
+	#cancelButton:hover {
+		background-color: white;
+		border-color: orangered;
+	}
 
 #errorMsg {
-  text-align: center;
-  font-family: 'Bitter', serif;
-  font-size: 1em;
-  color: red;
-  padding-top: .2em;
-  padding-bottom: .2em;
-  background-color: rgba(0, 0, 0, .8);
-  transition: .25s ease-in-out;
+	text-align: center;
+	font-family: 'Bitter', serif;
+	font-size: 1em;
+	color: red;
+	padding-top: .2em;
+	padding-bottom: .2em;
+	background-color: rgba(0, 0, 0, .8);
+	transition: .25s ease-in-out;
 }
 
 .hidden {
-		display: none !important;
+	display: none !important;
 }
 
 .processing {
-		background-color: dimgray !important;
-		border-color:white !important;
+	background-color: dimgray !important;
+	border-color: white !important;
 }
