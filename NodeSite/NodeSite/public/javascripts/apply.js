@@ -3,6 +3,7 @@
 function setErrorMsg(str) {
 	$('#msg').removeClass('invisible');
 	$('#msg').text(str);
+	$('#msg').focus();
 	$('#applyButton').addClass('error');
 	$('#applyButton').removeClass('load');
 	$('#applyButton h2').text('ERROR');

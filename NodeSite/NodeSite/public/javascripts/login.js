@@ -68,6 +68,7 @@ function LoginManager(root) {
 		$('#pwdResetButton').click(function () {
 			if ($('#emailField').hasClass('hidden')) {
 				$('#pwdResetButton h2').text('Send Password Reset Email');
+				$('#pwdResetButton').blur();
 				$('#emailField').removeClass('hidden');
 				$('#emailFieldLabel').removeClass('hidden');
 				$('#cancelButton').removeClass('hidden');
@@ -115,6 +116,7 @@ function LoginManager(root) {
 		$('#msg').text(msg);
 		$('#msg').addClass('error');
 		$('#msg').removeClass('hidden');
+		$('#msg').focus();
 	};
 
 	loginManager.bindButtons();

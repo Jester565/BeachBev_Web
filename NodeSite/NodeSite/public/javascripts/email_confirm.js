@@ -23,6 +23,7 @@ function EmailConfirmManager(root) {
 	emailConfirmManager.setErrorMsg = function (str) {
 		$('#msg').removeClass('hidden');
 		$('#msg').text(str);
+		$('#msg').focus();
 	};
 
 	var url = window.location.href;

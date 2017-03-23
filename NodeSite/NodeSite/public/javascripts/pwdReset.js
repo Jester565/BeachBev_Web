@@ -17,6 +17,8 @@ function PwdResetManager(root) {
 			Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
 			Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: 'beachbevs.com', secure: true });
 			Cookies.set('eID', packA1.eID, { path: '/', domain: 'beachbevs.com', secure: true });
+			$('#checkmark').removeClass('hidden');
+			$('#pwdResetDive').addClass('hidden');
 			pwdResetManager.setMsg(packA1.msg);
 		}
 	}, pwdResetManager, "Gets the success of the login"));
@@ -69,6 +71,7 @@ function PwdResetManager(root) {
 		$('#msg').text(msg);
 		$('#msg').addClass('error');
 		$('#msg').removeClass('hidden');
+		$('#msg').focus();
 	};
 
 	var url = window.location.href;
