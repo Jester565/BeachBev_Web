@@ -20,26 +20,26 @@ const std::string EmailManager::HTML_DIR = "/home/ubuntu/BeachBev_Web/";
 void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	auto unverifiedEmailContext = std::static_pointer_cast<const ChangeUnverifiedEmailContext>(context);
-	auto bbClient = employeeManager->getEmployee(unverifiedEmailContext->eID);
-	if (bbClient != nullptr) {
-		ProtobufPackets::PackB1 packB1;
-		packB1.set_success(false);
-		if (outcome.IsSuccess()) {
-			if (setUnverifiedEmail(unverifiedEmailContext->eID, request.GetDestination().GetToAddresses().front(), unverifiedEmailContext->hashedEmailToken, bbClient->getDBManager()))
-			{
-				packB1.set_success(true);
-				packB1.set_msg("Email successfully changed");
-			}
-			else
-			{
-				packB1.set_msg("Failed to set unverified email after successful email send");
-			}
+	auto bbClient = bbServer->getClientManager()->getClient(unverifiedEmailContext->clientID);
+	ProtobufPackets::PackB1 packB1;
+	packB1.set_success(false);
+	if (outcome.IsSuccess()) {
+		if (setUnverifiedEmail(unverifiedEmailContext->eID, request.GetDestination().GetToAddresses().front(), unverifiedEmailContext->hashedEmailToken, bbClient->getDBManager()))
+		{
+			packB1.set_success(true);
+			packB1.set_msg("Email successfully changed");
 		}
 		else
 		{
-			packB1.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
-			std::cerr << "ChangeUnverifiedEmailHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
+			packB1.set_msg("Failed to set unverified email after successful email send");
 		}
+	}
+	else
+	{
+		packB1.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
+		std::cerr << "ChangeUnverifiedEmailHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
+	}
+	if (bbClient != nullptr) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
 		oPack->setSenderID(0);
 		oPack->setData(boost::make_shared<std::string>(packB1.SerializeAsString()));
@@ -92,9 +92,11 @@ void EmailManager::handleB0(boost::shared_ptr<IPacket> iPack)
 				BYTE* genTokenHash = new BYTE[TOKEN_SIZE];
 				CryptoManager::GenerateHash(genTokenHash, TOKEN_SIZE, genToken, TOKEN_SIZE);
 				std::string urlEncodedEmailToken;
-				CryptoManager::UrlEncode(urlEncodedEmailToken, genTokenHash, TOKEN_SIZE);
+				CryptoManager::UrlEncode(urlEncodedEmailToken, genToken, TOKEN_SIZE);
 
 				AwsSharedPtr<ChangeUnverifiedEmailContext> changeUnverifiedContext = std::make_shared<ChangeUnverifiedEmailContext>();
+				changeUnverifiedContext->dbManager = dbManager;
+				changeUnverifiedContext->clientID = iPack->getSentFromID();
 				changeUnverifiedContext->eID = sender->getEmpID();
 				changeUnverifiedContext->hashedEmailToken = genTokenHash;
 

@@ -40,27 +40,27 @@ void EmployeeManager::CreateAccountEmailHandler(const Aws::SES::SESClient * clie
 			std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
 		}
 	}
-	if (sender != nullptr) {
-		ProtobufPackets::PackA1 replyPacket;
-		if (outcome.IsSuccess()) {
-			if (emailManager->setUnverifiedEmail(createAccountContext->eID, request.GetDestination().GetToAddresses().front(),
-				createAccountContext->hashedEmailToken, sender->getDBManager()))
-			{
-				loginClient(sender, createAccountContext->eID);
-				replyPacket.set_pwdtoken(createAccountContext->urlEncodedPwdToken);
-				replyPacket.set_deviceid(createAccountContext->deviceID);
-				replyPacket.set_eid(createAccountContext->eID);
-				replyPacket.set_msg("Account Added");
-			}
-			else
-			{
-				replyPacket.set_msg("Could not set unverifiedEmail after verification email");
-			}
+	ProtobufPackets::PackA1 replyPacket;
+	if (outcome.IsSuccess()) {
+		if (emailManager->setUnverifiedEmail(createAccountContext->eID, request.GetDestination().GetToAddresses().front(),
+			createAccountContext->hashedEmailToken, sender->getDBManager()))
+		{
+			loginClient(sender, createAccountContext->eID);
+			replyPacket.set_pwdtoken(createAccountContext->urlEncodedPwdToken);
+			replyPacket.set_deviceid(createAccountContext->deviceID);
+			replyPacket.set_eid(createAccountContext->eID);
+			replyPacket.set_msg("Account Added");
 		}
 		else
 		{
-			replyPacket.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
+			replyPacket.set_msg("Could not set unverifiedEmail after verification email");
 		}
+	}
+	else
+	{
+		replyPacket.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
+	}
+	if (sender != nullptr) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
 		oPack->setSenderID(0);
 		oPack->addSendToID(sender->getID());

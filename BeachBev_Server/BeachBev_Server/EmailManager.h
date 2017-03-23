@@ -9,8 +9,10 @@
 
 struct ChangeUnverifiedEmailContext : public Aws::Client::AsyncCallerContext
 {
+	IDType clientID;
 	IDType eID;
 	BYTE* hashedEmailToken;
+	DBManager* dbManager;
 
 	~ChangeUnverifiedEmailContext()
 	{
