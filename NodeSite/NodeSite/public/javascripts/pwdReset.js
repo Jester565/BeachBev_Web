@@ -72,7 +72,7 @@ function PwdResetManager(root) {
 		$('#msg').addClass('error');
 		$('#msg').removeClass('hidden');
 		$('#msg').focus();
-		$('window').scrollTo($('#msg'));
+		$('html, body').scrollTo($('#msg'), 100);
 	};
 
 	var url = window.location.href;

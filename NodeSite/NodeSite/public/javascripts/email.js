@@ -132,7 +132,7 @@ function EmailManager(root) {
 		$('#errorMsg').html(msg);
 		$('#errorMsg').removeClass('hidden');
 		$('#errorMsg').focus();
-		$('window').scrollTo($('#msg'));
+		$('html, body').scrollTo($('#msg'), 100);
 	};
 	var packB4 = emailManager.PacketB4.create({
 	});
