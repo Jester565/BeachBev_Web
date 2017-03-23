@@ -11,11 +11,34 @@ $(document).ready(function () {
 		$('#headerRectBorderCover').toggleClass('open');
 	});
 
+	function empMenuClick() {
+		
+	}
+
+	$('#dropArrowImg').click(function () {
+		if ($('#employeeMenuDiv').hasClass('hidden')) {
+			$('#employeeMenuDiv').removeClass('hidden');
+			$('#dropArrowImg').addClass('dropped');
+		}
+		else {
+			$('#employeeMenuDiv').addClass('hidden');
+			$('#dropArrowImg').removeClass('dropped');
+		}
+	});
+
 	$('#homeLink').click(function () {
 		redirect("./index.html");
 	});
 
-	$('#employeeLink').click(function () {
+	$('#employeeMenuTitle').click(function () {
 		redirect("./employee.html");
+	});
+
+	$('#loginLink').click(function () {
+		redirect("./login.html");
+	});
+
+	$('#applyLink').click(function () {
+		redirect("./apply.html");
 	});
 });

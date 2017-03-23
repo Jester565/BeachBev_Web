@@ -33,7 +33,6 @@
   <ItemGroup>
     <Compile Include="appTest.js" />
     <Compile Include="app.js" />
-    <Compile Include="public\javascripts\apply.js" />
     <Compile Include="public\javascripts\aScore.js" />
     <Compile Include="public\javascripts\bytebuffer.min.js" />
     <Compile Include="public\javascripts\Client.js" />
@@ -57,10 +56,9 @@
     <Compile Include="public\javascripts\TCPConnection.js" />
     <Compile Include="routes\users.js" />
     <Content Include="package.json" />
-    <Content Include="public\apply.html" />
     <Content Include="public\email.html" />
     <Content Include="public\email_confirm.html" />
-    <Content Include="public\employee.html" />
+    <Content Include="public\apply.html" />
     <Content Include="public\fonts\Berlin.ttf" />
     <Content Include="public\fonts\BERNHC.TTF" />
     <Content Include="public\fonts\BLADRMF_.TTF" />
@@ -69,6 +67,7 @@
     <Content Include="public\images\beach.jpg" />
     <Content Include="public\images\closed.png" />
     <Content Include="public\images\confirmOrder.png" />
+    <Content Include="public\images\dropDownArrow.png" />
     <Content Include="public\images\editOrder.png" />
     <Content Include="public\images\foodman.png" />
     <Content Include="public\images\HB2.jpg" />
@@ -85,6 +84,9 @@
     <Content Include="public\images\subtractClick.png" />
     <Content Include="public\images\tab.png" />
     <Content Include="public\index.html" />
+    <Content Include="public\resume.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="public\PackFW.proto" />
     <Content Include="public\login.html" />
     <Content Include="public\mBar.html" />
@@ -95,6 +97,9 @@
     <Content Include="public\pwdReset.html" />
     <Content Include="public\stylesheets\emailStyle.css" />
     <Content Include="public\stylesheets\email_confirmStyle.css" />
+    <Content Include="public\employee.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="public\stylesheets\employeeStyle.css" />
     <Content Include="public\stylesheets\indexStyle.css" />
     <Content Include="public\stylesheets\loginStyle.css" />
