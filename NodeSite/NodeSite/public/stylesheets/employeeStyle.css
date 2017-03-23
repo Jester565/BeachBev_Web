@@ -108,8 +108,7 @@ ul {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  max-width: 40vh;
-  width: 60vw;
+  width: auto;
   height: auto;
   padding: 0;
   background: rgba(255, 127, 1, .97);
