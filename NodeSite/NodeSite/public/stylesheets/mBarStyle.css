@@ -79,6 +79,14 @@ nav ul {
   list-style: none;
 }
 
+li a {
+	cursor: pointer;
+}
+
+li a:hover {
+	background-color: rgba(0, 0, 0, .2);
+}
+
 nav ul li a {
   font-family: 'Bitter', serif;
   font-weight: bold;

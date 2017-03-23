@@ -24,7 +24,7 @@ function InnerLoginManager(client, root, onLogin) {
 		var packA1 = innerLoginManager.PacketA1.decode(iPack.packData);
 		if (packA1.pwdToken === null || packA1.pwdToken.length <= 0) {
 			console.log("Login error: " + packA1.msg);
-			document.location.href = './login.html?' + document.location.href;
+			redirect('./login.html?' + document.location.href);
 		}
 		else {
 			Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
