@@ -9,7 +9,7 @@
     left: -6px;
     width: calc(100% + 12px);
     height: 4em;
-    background: rgba(255, 127, 1, .99);
+    background: rgba(255, 127, 1, .99) rgb(255, 127, 1);
     border: solid;
     border-width: 2px;
     border-color: rgb(128, 128, 128);
@@ -47,7 +47,7 @@
 
 #headerRectBorderCover {
    position: fixed;
-   background-color: rgba(255, 127, 1, 1);
+   background-color: rgb(255, 127, 1);
    top: calc(4em - 4px);
    left: -202px;
    width: 202px;
@@ -57,7 +57,7 @@
 }
 
 #headerRectBorderCover.open {
-   left: 0px;
+   left: 0;
 }
 
 #sideMenuNav {
@@ -67,7 +67,7 @@
   left: -204px;
   height: calc(100% + 3px);
   width: 202px;
-  background-color: rgba(255, 127, 1, .99);
+  background-color: rgba(255, 127, 1, .99) rgb(255, 127, 1);
   border: solid;
   border-width: 2px;
   border-color: rgb(128, 128, 128);
@@ -87,7 +87,7 @@ nav ul li a {
   text-align: left;
   margin-left: -20px;
   color:black;
-  padding: 10px 0px;
+  padding: 10px 0;
   font-size: 2em;
 }
 
@@ -99,6 +99,7 @@ nav ul li a {
   width: 2.5em;
   height: 2em;
   -webkit-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
@@ -124,7 +125,7 @@ nav ul li a {
 }
 
 #sideMenuButton span:nth-child(1) {
-  top: 0%;
+  top: 0;
 }
 
 #sideMenuButton span:nth-child(2) {

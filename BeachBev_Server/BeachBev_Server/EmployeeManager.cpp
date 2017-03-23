@@ -328,7 +328,7 @@ void EmployeeManager::handleA4(boost::shared_ptr<IPacket> iPack)
 		if (setPwdResetToken(eID, urlEncodedPwdResetToken, dbManager))
 		{
 			AwsSharedPtr<PasswordResetContext> pwdResetContext = std::make_shared<PasswordResetContext>();
-			pwdResetContext->clientID = sender->getEmpID();
+			pwdResetContext->clientID = iPack->getSentFromID();
 			emailManager->sendPwdResetEmail(packA4.email(), urlEncodedPwdResetToken,
 				std::bind(&EmployeeManager::PwdResetEmailHandler, this, std::placeholders::_1,
 					std::placeholders::_2, std::placeholders::_3, std::placeholders::_4),

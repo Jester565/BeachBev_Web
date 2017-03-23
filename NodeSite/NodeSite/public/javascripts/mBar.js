@@ -1,4 +1,3 @@
-﻿
-$(document).ready(function () {
-  $("#mBar").load("./mBar.html");
+﻿$(document).ready(function () {
+	$("#mBar").load("./mBar.html");
 });
