@@ -2,14 +2,12 @@
 var resumeManager;
 var innerLoginManager;
 
-var CRED_DELAY_MIN = 15;
 var BUCKET_REGION = 'us-west-1';
 var BUCKET_NAME = 'beachbev-resumes'
 
 var resumeManager = null;
 var resumeZone = null;
 
-/*
 var client = new Client(function (root) {
 	console.log("ON LOAD CALLED");
 	innerLoginManager = new InnerLoginManager(client, root,
@@ -18,13 +16,9 @@ var client = new Client(function (root) {
 			resumeManager = new ResumeManager(client.root);
 		});
 	client.tcpConnection.onclose = function () {
-		//redirect('./noServer.html');
-		resumeManager = new ResumeManager(client.root);
+		redirect('./noServer.html');
 	};
 });
-*/
-
-resumeManager = new ResumeManager();
 
 function ResumeManager(root) {
 	resumeManager = this;
@@ -45,19 +39,17 @@ function ResumeManager(root) {
 		$('#msg').addClass('hidden');
 	}
 
+	this.initDisplay = function () {
+		$('#uploadDiv').removeClass('hidden');
+		$('#loading').addClass('hidden');
+	}
+
 	this.initAWS = function (resumeCreds) {
 		AWS.config.update({
 			credentials: resumeCreds,
 			region: BUCKET_REGION
 		});
-
 		resumeManager.s3Client = new AWS.S3({ apiVersion: '2006-03-01' });
-	}
-
-	this.initAWSNoPacks = function () {
-		var credentials = new AWS.Credentials("AKIAISOB52YUY7N6C3OQ", "QVx6tG7WZtIidZse6Kcj9v1N+XzZNBXRGhS0+dOd");
-		this.s3Prefix = '2';
-		resumeManager.initAWS(credentials);
 	}
 
 	this.initPackets = function (root) {
@@ -65,13 +57,55 @@ function ResumeManager(root) {
 		resumeManager.PacketD1 = root.lookup("ProtobufPackets.PackD1");
 		client.packetManager.addPKey(new PKey("D1", function (iPack) {
 			var packD1 = resumeManager.PacketD1.decode(iPack.packData);
-			var credentials = new AWS.Credentials();
-			credentials.accessKeyID = packD1.accessKeyID;
-			credentials.secretAccessKey = packD1.accessKey;
-			credentials.sessionToken = packD1.sessionToken;
-			credentials.expireTime = new Date(new Date().getTime() + CRED_DELAY_MIN * 600000);
-			credentials.expired = false;
+			if (packD1.accessKey.length > 0) {
+				resumeManager.s3Prefix = packD1.folderObjKey.substr(packD1.folderObjKey.indexOf('/') + 1);
+				var credentials = new AWS.Credentials({
+					accessKeyID: packD1.accessKeyID,
+					secretAccessKey: packD1.accessKey,
+					sessionToken: packD1.sessionToken
+				});
+				resumeManager.initAWS(credentials);
+				resumeManager.loadResumes();
+			}
+			else {
+				console.log(packD1.msg);
+			}
 		}));
+	}
+
+	this.sendD0 = function () {
+		var packD0 = resumeManager.PacketD0.create({});
+		client.tcpConnection.sendPack(new OPacket("D0", true, [0], packD0, resumeManager.PacketD0));
+	}
+
+	this.loadResumes = function () {
+		var resumeFolderKey = encodeURIComponent(resumeManager.s3Prefix) + '/';
+		var params = {
+			Bucket: BUCKET_NAME,
+			Prefix: resumeFolderKey,
+			MaxKeys: 100,
+			FetchOwner: false,
+			EncodingType: 'url',
+		}
+		resumeManager.s3Client.listObjectsV2(params, function (err, data) {
+			if (err) {
+				resumeManager.setErrorMsg("Could not load resume folder: " + err.message);
+			}
+			else {
+				var files = data.Contents.map(function (file) {
+					var fileName = file.Key.substr(file.Key.indexOf('/') + 1);
+					if (fileName.length > 0) {
+						file.size = file.Size;
+						file.name = fileName;
+						file.type = 'application/pdf';
+						file.uploaded = true;
+						resumeZone.addFile(file);
+						resumeZone.emit("complete", file);
+					}
+				});
+			}
+			resumeManager.initDisplay();
+		})
 	}
 
 	this.uploadResume = function (file) {
@@ -170,44 +204,8 @@ function ResumeManager(root) {
 			pdf.getPage(resumeManager.pdfIndex).then(resumeManager.loadPDFPage);
 		});
 	}
-
-	this.loadResumes = function (arn) {
-		var resumeFolderKey = encodeURIComponent(resumeManager.s3Prefix) + '/';
-		var params = {
-			Bucket: BUCKET_NAME,
-			Prefix: resumeFolderKey,
-			MaxKeys: 100,
-			FetchOwner: false,
-			EncodingType: 'url',
-		}
-		resumeManager.s3Client.listObjectsV2(params, function (err, data) {
-			if (err) {
-				resumeManager.setErrorMsg("Could not load resume folder: " + err.message);
-			}
-			else {
-				var files = data.Contents.map(function (file) {
-					var fileName = file.Key.substr(file.Key.indexOf('/') + 1);
-					if (fileName.length > 0) {
-						file.size = file.Size;
-						file.name = fileName;
-						file.type = 'application/pdf';
-						file.uploaded = true;
-						resumeZone.addFile(file);
-						resumeZone.emit("complete", file);
-					}
-				});
-			}
-			resumeManager.initDisplay();
-		})
-	}
-
-	this.initDisplay = function () {
-		$('#uploadDiv').removeClass('hidden');
-		$('#loading').addClass('hidden');
-	}
-
-	this.initAWSNoPacks();
-	this.loadResumes();
+	this.initPackets();
+	this.sendD0();
 }
 
 Dropzone.options.resumezone = {
