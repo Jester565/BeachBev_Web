@@ -109,7 +109,7 @@ void ResumeManager::requestResumeHandler(const Aws::STS::STSClient * stsClient, 
 		}
 		else
 		{
-			replyPacket.set_msg("Failed to request access id: " + std::string(outcome.GetError().GetMessage()));
+			replyPacket.set_msg("Failed to request access id: " + std::string(outcome.GetError().GetMessage().c_str()));
 			std::cerr << replyPacket.msg();
 		}
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("D1");
