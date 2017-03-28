@@ -6,6 +6,7 @@
 
 class BB_Server;
 class BB_Client;
+class EmailManager;
 
 struct RequestResumePermContext
 {
@@ -23,7 +24,7 @@ public:
 
 	static const std::string USER_RESUME_BUCKET_ARN;
 
-	ResumeManager(BB_Server* bbServer);
+	ResumeManager(BB_Server* bbServer, EmailManager* emailManager);
 
 	bool initStsClient();
 
@@ -40,5 +41,6 @@ private:
 		const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context);
 
 	BB_Server* bbServer;
+	EmailManager* emailManager;
 	AwsSharedPtr<Aws::STS::STSClient> stsClient;
 };

@@ -2,6 +2,7 @@
 #include "Packets/BBPacks.pb.h"
 #include "BB_Server.h"
 #include "BB_Client.h"
+#include "EmailManager.h"
 #include <ClientManager.h>
 #include <WSOPacket.h>
 #include <WSIPacket.h>
@@ -32,8 +33,8 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT2 = "/*\"\
 
 const std::string ResumeManager::USER_RESUME_NAME = "pdf_usr";
 
-ResumeManager::ResumeManager(BB_Server* bbServer)
-	:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
+ResumeManager::ResumeManager(BB_Server* bbServer, EmailManager* emailManager)
+	:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer), emailManager(emailManager)
 {
 	if (!initStsClient()) {
 		std::cerr << "Could not initialize STS client!" << std::endl;
@@ -51,8 +52,21 @@ bool ResumeManager::initStsClient()
 void ResumeManager::handleD0(boost::shared_ptr<IPacket> iPack)
 {
 	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	std::string email;
 	if (sender->getEmpID() > 0) {
-		requestUserResumePermissions(sender);
+		if (emailManager->getVerifiedEmail(sender->getEmpID(), email, sender->getDBManager())) {
+			requestUserResumePermissions(sender);
+		}
+		else
+		{
+			ProtobufPackets::PackD1 replyPacket;
+			replyPacket.set_msg("Email is not verified");
+			boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("D1");
+			oPack->setSenderID(0);
+			oPack->addSendToID(sender->getID());
+			oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+			bbServer->getClientManager()->send(oPack, sender);
+		}
 	}
 }
 

@@ -102,7 +102,7 @@ EmployeeManager::EmployeeManager(BB_Server* bbServer)
 	addKey(new PKey("A6", this, &EmployeeManager::handleA6));
 	addKey(new PKey("A8", this, &EmployeeManager::handleA8));
 	emailManager = new EmailManager(bbServer, this);
-	resumeManager = new ResumeManager(bbServer);
+	resumeManager = new ResumeManager(bbServer, emailManager);
 }
 
 void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
