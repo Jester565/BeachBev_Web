@@ -24,7 +24,6 @@ var client = new Client(function (root) {
 });
 */
 
-
 resumeManager = new ResumeManager();
 
 function ResumeManager(root) {
@@ -32,7 +31,6 @@ function ResumeManager(root) {
 
 	this.s3Client = null;
 	this.s3Prefix = null;
-	this.s3URL = null;
 	this.pdf = null;
 	this.pdfIndex = 0;
 
@@ -41,6 +39,10 @@ function ResumeManager(root) {
 		$('#msg').removeClass('hidden');
 		$('#msg').focus();
 		$('html, body').scrollTo($('#msg'), 100);
+	}
+
+	this.clearErrorMsg = function () {
+		$('#msg').addClass('hidden');
 	}
 
 	this.initAWS = function (resumeCreds) {
@@ -54,7 +56,7 @@ function ResumeManager(root) {
 
 	this.initAWSNoPacks = function () {
 		var credentials = new AWS.Credentials("AKIAISOB52YUY7N6C3OQ", "QVx6tG7WZtIidZse6Kcj9v1N+XzZNBXRGhS0+dOd");
-		this.s3Prefix = '1';
+		this.s3Prefix = '2';
 		resumeManager.initAWS(credentials);
 	}
 
@@ -81,13 +83,14 @@ function ResumeManager(root) {
 			Body: file
 		}, function (err, data) {
 			if (err) {
-				console.log(err.message);
+				resumeManager.setErrorMsg(err.message);
+				$('#uploadButton h2').text('Failed');
 			}
 			else {
-				resumeManager.s3URL = this.request.httpRequest.endpoint.href + BUCKET_NAME + '/';
 				file.uploaded = true;
 				resumeZone.emit("complete", file);
 				resumeZone.emit("success", file);
+				$('#uploadButton h2').text('Complete');
 			}
 		});
 	}
@@ -152,7 +155,16 @@ function ResumeManager(root) {
 				}
 				else
 				{
+					$('body').css('background-color', 'lightgrey');
 					$('#pdfBackDiv').removeClass('hidden');
+					$('#pdfExit').click(function () {
+						$('body').css('background-color', 'white');
+						$('#pdfBackDiv').addClass('hidden');
+						$('.pdfPage').remove();
+						$('#pdfExit').unbind('click');
+						resumeManager.pdf = null;
+						resumeManager.pdfIndex = 0;
+					});
 				}
 			}
 			pdf.getPage(resumeManager.pdfIndex).then(resumeManager.loadPDFPage);
@@ -173,7 +185,6 @@ function ResumeManager(root) {
 				resumeManager.setErrorMsg("Could not load resume folder: " + err.message);
 			}
 			else {
-				resumeManager.s3URL = this.request.httpRequest.endpoint.href + BUCKET_NAME + '/';
 				var files = data.Contents.map(function (file) {
 					var fileName = file.Key.substr(file.Key.indexOf('/') + 1);
 					if (fileName.length > 0) {
@@ -186,6 +197,7 @@ function ResumeManager(root) {
 					}
 				});
 			}
+			resumeManager.initDisplay();
 		})
 	}
 
@@ -196,7 +208,6 @@ function ResumeManager(root) {
 
 	this.initAWSNoPacks();
 	this.loadResumes();
-	this.initDisplay();
 }
 
 Dropzone.options.resumezone = {
@@ -207,28 +218,50 @@ Dropzone.options.resumezone = {
 	thumbnailWidth: 150,
 	thumbnailHeight: 190,
 	clickable: true,
-	accept: function (file, done) {
-		done();
-	},
 	url: function (file) {
 
 	},
 	init: function () {
 		resumeZone = this;
-		$('#uploadButton').click(function () {
-			console.log(resumeZone.files.length);
-			if (resumeZone.files.length > 0) {
-				if (!resumeZone.files[0].uploaded) {
-					resumeManager.uploadResume(resumeZone.files[0]);
-				}
-			}
-		});
 
 		this.on("addedfile", function (file) {
+			resumeManager.clearErrorMsg();
 			file.previewElement.querySelector("img").src = "./images/pdfIcon.png";
 			file.previewElement.addEventListener("click", function () {
 				resumeManager.viewResume(file);
 			});
+			if (!file.uploaded) {
+				$('#uploadButton').addClass('active');
+				$('#uploadButton h2').text('Upload');
+				$('#uploadButton').click(function () {
+					if (resumeZone.files.length > 0) {
+						if (!resumeZone.files[0].uploaded) {
+							resumeManager.clearErrorMsg();
+							$('#uploadButton').removeClass('active');
+							$('#uploadButton h2').text('Uploading...');
+							$('#uploadButton').unbind('click');
+							resumeManager.uploadResume(resumeZone.files[0]);
+						}
+						else
+						{
+							resumeManager.setErrorMsg('File is already uploaded');
+						}
+					}
+					else
+					{
+						resumeManager.setErrorMsg('No files to upload');
+					}
+				});
+			}
+		});
+
+		this.on("error", function (file) {
+			if (!file.accepted) {
+				if (file.type !== 'application/pdf') {
+					this.removeFile(file);
+					resumeManager.setErrorMsg("File was not a pdf");
+				}
+			}
 		});
 
 		this.on("maxfilesexceeded", function (file) {

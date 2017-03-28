@@ -14,8 +14,8 @@
 	<script defer src="javascripts/pdf.worker.js"></script>
 	<script defer src="javascripts/pdf.js"></script>
 	<script defer src="javascripts/jquery-1.12.0.js"></script>
-	<!--
 	<script defer src="javascripts/jquery.scrollTo.js"></script>
+	<!--
 	<script defer src="javascripts/long.min.js"></script>
 	<script defer src="javascripts/bytebuffer.min.js"></script>
 	<script defer src="javascripts/protobuf.min.js"></script>
@@ -36,13 +36,19 @@
 
 		<form class="dropzone" id="resumezone">
 			<div class="dz-message">
-				Drop resume here or click to upload.
+				Drop resume here or click to upload
 				<br /> <span class="note">(only one pdf)</span>
 			</div>
 		</form>
 		<div id="uploadButton">
-			<h2>Upload</h2>
+			<h2>No Changes</h2>
 		</div>
+		<hr />
+		<p id="instructions">
+			1. Drag PDF into the dropzone (the dashed box)<br />
+			2. Press upload to REPLACE your old resume<br />
+			PS: You can click on the resume in the dropzone to view it
+		</p>
 	</div>
 	<div id="pdfBackDiv" class="hidden">
 		<div id="pdfDiv">
