@@ -7,7 +7,6 @@
 #include <WSOPacket.h>
 #include <WSIPacket.h>
 #include <boost/make_shared.hpp>
-#include <aws/iam/model/Policy.h>
 #include <aws/sts/model/GetFederationTokenRequest.h>
 
 const std::string ResumeManager::USER_RESUME_POLICY_PT1 = "{\
