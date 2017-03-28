@@ -8,7 +8,7 @@ class BB_Server;
 class BB_Client;
 class EmailManager;
 
-struct RequestResumePermContext
+struct RequestResumePermContext : public Aws::Client::AsyncCallerContext
 {
 	int clientID;
 	std::string arn;
