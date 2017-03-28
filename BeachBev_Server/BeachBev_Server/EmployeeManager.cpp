@@ -59,7 +59,7 @@ void EmployeeManager::CreateAccountEmailHandler(const Aws::SES::SESClient * clie
 	}
 	else
 	{
-		replyPacket.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
+		replyPacket.set_msg("Failed to send verification email: " + AwsStrToStr(outcome.GetError().GetMessage()));
 	}
 	if (sender != nullptr) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");

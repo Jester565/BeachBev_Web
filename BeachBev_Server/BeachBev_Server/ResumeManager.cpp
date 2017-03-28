@@ -103,13 +103,13 @@ void ResumeManager::requestResumeHandler(const Aws::STS::STSClient * stsClient, 
 		if (outcome.IsSuccess()) {
 			auto credentials = outcome.GetResult().GetCredentials();
 			replyPacket.set_allocated_folderobjkey = resumeContext->arn;
-			replyPacket.set_accesskeyid(credentials.GetAccessKeyId());
-			replyPacket.set_accesskey(credentials.GetSecretAccessKey());
-			replyPacket.set_sessionkey(credentials.GetSessionToken());
+			replyPacket.set_accesskeyid(AwsStrToStr(credentials.GetAccessKeyId()));
+			replyPacket.set_accesskey(AwsStrToStr(credentials.GetSecretAccessKey()));
+			replyPacket.set_sessionkey(AwsStrToStr(credentials.GetSessionToken()));
 		}
 		else
 		{
-			replyPacket.set_msg("Failed to request access id: " + std::string(outcome.GetError().GetMessage().c_str()));
+			replyPacket.set_msg("Failed to request access id: " + AwsStrToStr(outcome.GetError().GetMessage()));
 			std::cerr << replyPacket.msg();
 		}
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("D1");

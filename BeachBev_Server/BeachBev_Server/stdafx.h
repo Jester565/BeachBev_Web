@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <memory>
+#include <string>
 #ifdef _WIN32
 #include <WinSock2.h>
 #define OTL_BIGINT int64_t
@@ -13,6 +14,10 @@
 #endif
 #define OTL_STL
 #include "otlv4.h"
+
+static std::string AwsStrToStr(const Aws::String& awsStr) {
+	return std::string(awsStr.c_str(), awsStr.size());
+}
 
 static const char* AWS_ALLOC_TAG = "0";
 template <typename T>

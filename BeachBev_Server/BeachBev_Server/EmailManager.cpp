@@ -36,8 +36,8 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 	}
 	else
 	{
-		packB1.set_msg("Failed to send verification email: " + std::string(outcome.GetError().GetMessage().c_str()));
-		std::cerr << "ChangeUnverifiedEmailHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
+		packB1.set_msg("Failed to send verification email: " + AwsStrToStr(outcome.GetError().GetMessage()));
+		std::cerr << "ChangeUnverifiedEmailHandler: " << AwsStrToStr(outcome.GetError().GetMessage()) << std::endl;
 	}
 	if (sender != nullptr) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
@@ -50,7 +50,7 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 void EmailManager::ChangeEmailNotificationHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome)
 {
 	if (!outcome.IsSuccess()) {
-		std::cerr << "ChanageEmailNotificationHandler: " << outcome.GetError().GetMessage().c_str() << std::endl;
+		std::cerr << "ChanageEmailNotificationHandler: " << AwsStrToStr(outcome.GetError().GetMessage()) << std::endl;
 	}
 }
 
@@ -226,7 +226,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, std::string
 	try {
 		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 		otlStream << (int)eID;
-		otlStream << std::string(email.c_str());
+		otlStream << AwsStrToStr(email);
 		CryptoManager::OutputBytes(otlStream, genTokenHash, TOKEN_SIZE);
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
@@ -248,7 +248,7 @@ bool EmailManager::setUnverifiedEmail(IDType eID, Aws::String email, BYTE* hashe
 	try {
 		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 		otlStream << (int)eID;
-		otlStream << std::string(email.c_str());
+		otlStream << AwsStrToStr(email);
 		CryptoManager::OutputBytes(otlStream, hashedEmailToken, TOKEN_SIZE);
 		otlStream << (OTL_BIGINT)(std::time(NULL));
 	}
