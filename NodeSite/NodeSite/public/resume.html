@@ -3,8 +3,56 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8" />
-	<title></title>
+	<title>BeachBevs - Resume</title>
+	<link rel="stylesheet" href="stylesheets/dropzone.css">
+	<link rel="stylesheet" href="stylesheets/resumeStyle.css">
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 </head>
 <body>
+	<script defer src="javascripts/aws-sdk.js"></script>
+	<script defer src="javascripts/dropzone.js"></script>
+	<script defer src="javascripts/pdf.worker.js"></script>
+	<script defer src="javascripts/pdf.js"></script>
+	<script defer src="javascripts/jquery-1.12.0.js"></script>
+	<!--
+	<script defer src="javascripts/jquery.scrollTo.js"></script>
+	<script defer src="javascripts/long.min.js"></script>
+	<script defer src="javascripts/bytebuffer.min.js"></script>
+	<script defer src="javascripts/protobuf.min.js"></script>
+	<script defer src="javascripts/PacketIO.js"></script>
+	<script defer src="javascripts/PacketManager.js"></script>
+	<script defer src="javascripts/TCPConnection.js"></script>
+	<script defer src="javascripts/SetupManager.js"></script>
+	<script defer src="javascripts/js.cookie.js"></script>
+	<script defer src="javascripts/Client.js"></script>
+	<script defer src="javascripts/innerLogin.js"></script>
+		-->
+	<script defer src="javascripts/resume.js"></script>
+	<script defer src="javascripts/mBar.js"></script>
+	<div id="mBar"></div>
+	<img id="loading" src="images/load.gif" alt="loading">
+	<div id="uploadDiv" class="hidden">
+		<h1>Resume</h1>
+
+		<form class="dropzone" id="resumezone">
+			<div class="dz-message">
+				Drop resume here or click to upload.
+				<br /> <span class="note">(only one pdf)</span>
+			</div>
+		</form>
+		<div id="uploadButton">
+			<h2>Upload</h2>
+		</div>
+	</div>
+	<div id="pdfBackDiv" class="hidden">
+		<div id="pdfDiv">
+			<div id="pdfHeadDiv">
+				<h1 id="pdfTitle">Title</h1>
+				<img id="pdfExit" src="images/x.png" alt="X" />
+			</div>
+			<div style="height: 82px"></div>
+		</div>
+	</div>
+	<p id="msg" class="hidden"></p>
 </body>
 </html>

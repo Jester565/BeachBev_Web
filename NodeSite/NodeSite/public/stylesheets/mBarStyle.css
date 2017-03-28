@@ -13,7 +13,7 @@
 	border: solid;
 	border-width: 2px;
 	border-color: rgb(128, 128, 128);
-	z-index: 3;
+	z-index: 200;
 	overflow: hidden;
 }
 
@@ -32,7 +32,7 @@
 	font-weight: bold;
 	margin: auto;
 	vertical-align: middle;
-	z-index: 4;
+	z-index: 201;
 	margin-top: .15em;
 	font-size: 2.4em;
 }
@@ -53,7 +53,7 @@
 	width: 202px;
 	height: 2px;
 	transition: .25s ease-in-out;
-	z-index: 3;
+	z-index: 200;
 }
 
 	#headerRectBorderCover.open {
@@ -62,7 +62,7 @@
 
 #sideMenuNav {
 	position: fixed;
-	z-index: 3;
+	z-index: 200;
 	top: calc(4em - 4px);
 	left: -204px;
 	height: calc(100% + 3px);
@@ -118,7 +118,7 @@ nav ul {
 	-o-transition: .5s ease-in-out;
 	transition: .5s ease-in-out;
 	cursor: pointer;
-	z-index: 3;
+	z-index: 200;
 }
 
 	#sideMenuButton span {

@@ -15,6 +15,7 @@ class BB_Server;
 class BB_Client;
 class Client;
 class EmailManager;
+class ResumeManager;
 typedef uint16_t DeviceID;
 
 static const int TOKEN_SIZE = 64;
@@ -129,5 +130,6 @@ protected:
 	bool removePwdResetToken(IDType eID, DBManager* dbManager);
 	void loginClient(BB_Client* bbClient, IDType eID);
 	EmailManager* emailManager;
+	ResumeManager* resumeManager;
 	BB_Server* bbServer;
 };

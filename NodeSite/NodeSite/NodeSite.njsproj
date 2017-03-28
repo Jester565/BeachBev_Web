@@ -20,7 +20,7 @@
     <OutputPath>.</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
     <NodejsPort>443</NodejsPort>
     <StartWebBrowser>True</StartWebBrowser>
   </PropertyGroup>
@@ -34,8 +34,10 @@
     <Compile Include="appTest.js" />
     <Compile Include="app.js" />
     <Compile Include="public\javascripts\aScore.js" />
+    <Compile Include="public\javascripts\aws-sdk-2.32.0.min.js" />
     <Compile Include="public\javascripts\bytebuffer.min.js" />
     <Compile Include="public\javascripts\Client.js" />
+    <Compile Include="public\javascripts\dropzone.js" />
     <Compile Include="public\javascripts\email.js" />
     <Compile Include="public\javascripts\email_confirm.js" />
     <Compile Include="public\javascripts\apply.js" />
@@ -52,8 +54,13 @@
     <Compile Include="public\javascripts\orders.js" />
     <Compile Include="public\javascripts\PacketIO.js" />
     <Compile Include="public\javascripts\PacketManager.js" />
+    <Compile Include="public\javascripts\pdf.js" />
+    <Compile Include="public\javascripts\pdf.worker.js" />
     <Compile Include="public\javascripts\protobuf.min.js" />
     <Compile Include="public\javascripts\pwdReset.js" />
+    <Compile Include="public\javascripts\resume.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="public\javascripts\SetupManager.js" />
     <Compile Include="public\javascripts\TCPConnection.js" />
     <Compile Include="routes\users.js" />
@@ -80,11 +87,15 @@
     <Content Include="public\images\noGeo.png" />
     <Content Include="public\images\ordernow.png" />
     <Content Include="public\images\outRange.png" />
+    <Content Include="public\images\pdfIcon.png" />
     <Content Include="public\images\phoneman.png" />
+    <Content Include="public\images\remove.png" />
     <Content Include="public\images\reviewOrder.png" />
     <Content Include="public\images\setting2.png" />
     <Content Include="public\images\subtractClick.png" />
     <Content Include="public\images\tab.png" />
+    <Content Include="public\images\worker.png" />
+    <Content Include="public\images\x.png" />
     <Content Include="public\index.html" />
     <Content Include="public\resume.html">
       <SubType>Code</SubType>
@@ -97,6 +108,7 @@
     <Content Include="public\noServer.html" />
     <Content Include="public\orders.html" />
     <Content Include="public\pwdReset.html" />
+    <Content Include="public\stylesheets\dropzone.css" />
     <Content Include="public\stylesheets\emailStyle.css" />
     <Content Include="public\stylesheets\email_confirmStyle.css" />
     <Content Include="public\employee.html">
@@ -112,6 +124,9 @@
     <Content Include="public\stylesheets\orderStyle.css" />
     <Content Include="public\stylesheets\outRangeStyle.css" />
     <Content Include="public\stylesheets\pwdResetStyle.css" />
+    <Content Include="public\stylesheets\resumeStyle.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="README.md" />
     <Content Include="typings.json" />
     <Content Include="views\index.jade" />

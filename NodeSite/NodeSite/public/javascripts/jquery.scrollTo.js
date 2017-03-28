@@ -7,7 +7,7 @@
  * @author Ariel Flesler
  * @version 2.1.2
  */
-;(function(factory) {
+; (function (factory) {
 	'use strict';
 	if (typeof define === 'function' && define.amd) {
 		// AMD
@@ -19,31 +19,31 @@
 		// Global
 		factory(jQuery);
 	}
-})(function($) {
+})(function ($) {
 	'use strict';
 
-	var $scrollTo = $.scrollTo = function(target, duration, settings) {
+	var $scrollTo = $.scrollTo = function (target, duration, settings) {
 		return $(window).scrollTo(target, duration, settings);
 	};
 
 	$scrollTo.defaults = {
-		axis:'xy',
+		axis: 'xy',
 		duration: 0,
-		limit:true
+		limit: true
 	};
 
 	function isWin(elem) {
 		return !elem.nodeName ||
-			$.inArray(elem.nodeName.toLowerCase(), ['iframe','#document','html','body']) !== -1;
-	}		
+			$.inArray(elem.nodeName.toLowerCase(), ['iframe', '#document', 'html', 'body']) !== -1;
+	}
 
-	$.fn.scrollTo = function(target, duration, settings) {
+	$.fn.scrollTo = function (target, duration, settings) {
 		if (typeof duration === 'object') {
 			settings = duration;
 			duration = 0;
 		}
 		if (typeof settings === 'function') {
-			settings = { onAfter:settings };
+			settings = { onAfter: settings };
 		}
 		if (target === 'max') {
 			target = 9e9;
@@ -61,14 +61,14 @@
 		settings.offset = both(settings.offset);
 		settings.over = both(settings.over);
 
-		return this.each(function() {
+		return this.each(function () {
 			// Null target yields nothing, just like jQuery does
 			if (target === null) return;
 
 			var win = isWin(this),
 				elem = win ? this.contentWindow || window : this,
 				$elem = $(elem),
-				targ = target, 
+				targ = target,
 				attr = {},
 				toff;
 
@@ -83,7 +83,7 @@
 					}
 					// Relative/Absolute selector
 					targ = win ? $(targ) : $(targ, elem);
-					/* falls through */
+				/* falls through */
 				case 'object':
 					if (targ.length === 0) return;
 					// DOMElement / jQuery
@@ -95,8 +95,8 @@
 
 			var offset = $.isFunction(settings.offset) && settings.offset(elem, targ) || settings.offset;
 
-			$.each(settings.axis.split(''), function(i, axis) {
-				var Pos	= axis === 'x' ? 'Left' : 'Top',
+			$.each(settings.axis.split(''), function (i, axis) {
+				var Pos = axis === 'x' ? 'Left' : 'Top',
 					pos = Pos.toLowerCase(),
 					key = 'scroll' + Pos,
 					prev = $elem[key](),
@@ -107,15 +107,15 @@
 
 					// If it's a dom element, reduce the margin
 					if (settings.margin) {
-						attr[key] -= parseInt(targ.css('margin'+Pos), 10) || 0;
-						attr[key] -= parseInt(targ.css('border'+Pos+'Width'), 10) || 0;
+						attr[key] -= parseInt(targ.css('margin' + Pos), 10) || 0;
+						attr[key] -= parseInt(targ.css('border' + Pos + 'Width'), 10) || 0;
 					}
 
 					attr[key] += offset[pos] || 0;
 
 					if (settings.over[pos]) {
 						// Scroll to a fraction of its width/height
-						attr[key] += targ[axis === 'x'?'width':'height']() * settings.over[pos];
+						attr[key] += targ[axis === 'x' ? 'width' : 'height']() * settings.over[pos];
 					}
 				} else {
 					var val = targ[pos];
@@ -153,7 +153,7 @@
 					// Force it to always be true
 					queue: true,
 					duration: duration,
-					complete: callback && function() {
+					complete: callback && function () {
 						callback.call(elem, targ, settings);
 					}
 				});
@@ -164,9 +164,9 @@
 
 	// Max scrolling position, works on quirks mode
 	// It only fails (not too badly) on IE, quirks mode.
-	$scrollTo.max = function(elem, axis) {
+	$scrollTo.max = function (elem, axis) {
 		var Dim = axis === 'x' ? 'Width' : 'Height',
-			scroll = 'scroll'+Dim;
+			scroll = 'scroll' + Dim;
 
 		if (!isWin(elem))
 			return elem[scroll] - $(elem)[Dim.toLowerCase()]();
@@ -180,30 +180,30 @@
 	};
 
 	function both(val) {
-		return $.isFunction(val) || $.isPlainObject(val) ? val : { top:val, left:val };
+		return $.isFunction(val) || $.isPlainObject(val) ? val : { top: val, left: val };
 	}
 
 	// Add special hooks so that window scroll properties can be animated
-	$.Tween.propHooks.scrollLeft = 
-	$.Tween.propHooks.scrollTop = {
-		get: function(t) {
-			return $(t.elem)[t.prop]();
-		},
-		set: function(t) {
-			var curr = this.get(t);
-			// If interrupt is true and user scrolled, stop animating
-			if (t.options.interrupt && t._last && t._last !== curr) {
-				return $(t.elem).stop();
+	$.Tween.propHooks.scrollLeft =
+		$.Tween.propHooks.scrollTop = {
+			get: function (t) {
+				return $(t.elem)[t.prop]();
+			},
+			set: function (t) {
+				var curr = this.get(t);
+				// If interrupt is true and user scrolled, stop animating
+				if (t.options.interrupt && t._last && t._last !== curr) {
+					return $(t.elem).stop();
+				}
+				var next = Math.round(t.now);
+				// Don't waste CPU
+				// Browsers don't render floating point scroll
+				if (curr !== next) {
+					$(t.elem)[t.prop](next);
+					t._last = this.get(t);
+				}
 			}
-			var next = Math.round(t.now);
-			// Don't waste CPU
-			// Browsers don't render floating point scroll
-			if (curr !== next) {
-				$(t.elem)[t.prop](next);
-				t._last = this.get(t);
-			}
-		}
-	};
+		};
 
 	// AMD requirement
 	return $scrollTo;

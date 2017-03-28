@@ -135,3 +135,26 @@ message PackB5 {
 		string verifiedEmail = 1;
 		string unverifiedEmail = 2;
 }
+
+message PackD0 {
+		
+}
+
+message PackD1 {
+		string folderObjKey = 1;
+		string accessKeyID = 2;
+		string accessKey = 3;
+		string sessionKey = 4;
+		string msg = 5;
+}
+
+message PackD2 {
+
+}
+
+message PackD3 {
+	string accessKeyID = 1;
+	string accessKey = 2;
+	string sessionKey = 3;
+	string msg = 4;
+}

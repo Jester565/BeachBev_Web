@@ -66,7 +66,7 @@ EmailManager::EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager
 bool EmailManager::initSESClient()
 {
 	Aws::Client::ClientConfiguration clientConfig;
-	clientConfig.region = AWS_SERVER_REGION;
+	clientConfig.region = AWS_SERVER_REGION_2;
 	sesClient = Aws::MakeShared<Aws::SES::SESClient>(AWS_ALLOC_TAG, clientConfig);
 	return true;
 }

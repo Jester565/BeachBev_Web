@@ -6,6 +6,7 @@
 #include "BB_Client.h"
 #include "CryptoManager.h"
 #include "EmailManager.h"
+#include "ResumeManager.h"
 #include "DebugManager.h"
 #include <WSS_TCPConnection.h>
 #include <WSOPacket.h>
@@ -101,6 +102,7 @@ EmployeeManager::EmployeeManager(BB_Server* bbServer)
 	addKey(new PKey("A6", this, &EmployeeManager::handleA6));
 	addKey(new PKey("A8", this, &EmployeeManager::handleA8));
 	emailManager = new EmailManager(bbServer, this);
+	resumeManager = new ResumeManager(bbServer);
 }
 
 void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
