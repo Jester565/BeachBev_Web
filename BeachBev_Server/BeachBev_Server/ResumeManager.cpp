@@ -110,7 +110,7 @@ bool ResumeManager::requestUserResumePermissions(BB_Client * sender)
 	policy += USER_RESUME_BUCKET_ARN;
 	policy += USER_RESUME_POLICY_PT2;
 	policy += context->folderObjKey;
-	policy += USER_RESUME_POLICY_PT4;
+	policy += USER_RESUME_POLICY_PT3;
 	policy += USER_RESUME_BUCKET_ARN;
 	policy += "/";
 	policy += context->folderObjKey;
