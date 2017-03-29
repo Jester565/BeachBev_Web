@@ -15,7 +15,6 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT1 = "{\
 \"Version\": \"2012-10-17\",\
 \"Statement\" : [\
 {\
-{\
 	\"Sid\": \"AllowListingOfUserFolder\",\
   \"Effect\": \"Allow\",\
   \"Action\": [\
@@ -29,11 +28,12 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT2 = "\"\
 
 const std::string ResumeManager::USER_RESUME_POLICY_PT3 = "/*\"]}}\
 },\
+{\
 	\"Sid\": \"Stmt1487575487000\",\
 		\"Effect\" : \"Allow\",\
 		\"Action\" : [\
 			\"s3:GetObject\",\
-				\"s3:PutObject\"\
+			\"s3:PutObject\"\
 		],\
 		\"Resource\" : [\
 			\"arn:";
