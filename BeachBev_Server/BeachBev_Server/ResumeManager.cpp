@@ -60,6 +60,7 @@ bool ResumeManager::initStsClient()
 	Aws::Client::ClientConfiguration clientConfig;
 	clientConfig.region = AWS_SERVER_REGION_1;
 	stsClient = Aws::MakeShared<Aws::STS::STSClient>(AWS_ALLOC_TAG, clientConfig);
+	return true;
 }
 
 void ResumeManager::handleD0(boost::shared_ptr<IPacket> iPack)
@@ -110,6 +111,7 @@ bool ResumeManager::requestUserResumePermissions(BB_Client * sender)
 	request.SetName(USER_RESUME_NAME.c_str());
 	stsClient->GetFederationTokenAsync(request, std::bind(&ResumeManager::requestResumeHandler, this,
 		std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	return true;
 }
 
 void ResumeManager::requestResumeHandler(const Aws::STS::STSClient * stsClient, const Aws::STS::Model::GetFederationTokenRequest & req, const Aws::STS::Model::GetFederationTokenOutcome & outcome, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
