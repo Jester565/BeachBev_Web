@@ -108,7 +108,7 @@ bool ResumeManager::requestUserResumePermissions(BB_Client * sender)
 	request.SetDurationSeconds(USER_RESUME_DURATION);
 	request.SetName(USER_RESUME_NAME.c_str());
 	stsClient->GetFederationTokenAsync(request, std::bind(&ResumeManager::requestResumeHandler, this,
-		std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+		std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), context);
 	return true;
 }
 
