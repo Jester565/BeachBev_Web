@@ -58,7 +58,7 @@ function ResumeManager(root) {
 		client.packetManager.addPKey(new PKey("D1", function (iPack) {
 			var packD1 = resumeManager.PacketD1.decode(iPack.packData);
 			if (packD1.accessKey.length > 0) {
-				resumeManager.s3Prefix = packD1.folderObjKey.substr(packD1.folderObjKey.indexOf('/') + 1);
+				resumeManager.s3Prefix = packD1.folderObjKey;
 				var credentials = new AWS.Credentials({
 					accessKeyID: packD1.accessKeyID,
 					secretAccessKey: packD1.accessKey,

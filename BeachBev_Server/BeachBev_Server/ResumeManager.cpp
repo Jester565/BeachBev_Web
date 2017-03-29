@@ -9,10 +9,26 @@
 #include <boost/make_shared.hpp>
 #include <aws/sts/model/GetFederationTokenRequest.h>
 
+const std::string ResumeManager::USER_RESUME_BUCKET_ARN = "aws:s3:::beachbev-resumes";
+
 const std::string ResumeManager::USER_RESUME_POLICY_PT1 = "{\
 \"Version\": \"2012-10-17\",\
 \"Statement\" : [\
 {\
+{\
+	\"Sid\": \"AllowListingOfUserFolder\",\
+  \"Effect\": \"Allow\",\
+  \"Action\": [\
+      \"s3:ListBucket\"\
+  ],\
+  \"Resource\": [\
+      \"arn:";
+const std::string ResumeManager::USER_RESUME_POLICY_PT2 = "\"\
+  ],\
+	\"Condition\":{\"StringLike\":{\"s3:prefix\":[\"";
+
+const std::string ResumeManager::USER_RESUME_POLICY_PT3 = "/*\"]}}\
+},\
 	\"Sid\": \"Stmt1487575487000\",\
 		\"Effect\" : \"Allow\",\
 		\"Action\" : [\
@@ -22,10 +38,8 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT1 = "{\
 		\"Resource\" : [\
 			\"arn:";
 
-const std::string ResumeManager::USER_RESUME_BUCKET_ARN = "aws:s3:::beachbev-resumes/";
-
-const std::string ResumeManager::USER_RESUME_POLICY_PT2 = "/*\"\
-		]\
+const std::string ResumeManager::USER_RESUME_POLICY_PT4 = "/*\"\
+		],\
 }\
 ]\
 }";
@@ -75,17 +89,21 @@ ResumeManager::~ResumeManager()
 
 bool ResumeManager::requestUserResumePermissions(BB_Client * sender)
 {
-	std::string usrArn = USER_RESUME_BUCKET_ARN;
-	usrArn += std::to_string(sender->getEmpID());
-
 	auto context = Aws::MakeShared<RequestResumePermContext>(AWS_ALLOC_TAG);
 	context->clientID = sender->getID();
-	context->arn = usrArn;
+	context->folderObjKey = std::to_string(sender->getEmpID());
 
 	std::string policy = USER_RESUME_POLICY_PT1;
 	policy += USER_RESUME_BUCKET_ARN;
-	policy += usrArn;
 	policy += USER_RESUME_POLICY_PT2;
+	policy += USER_RESUME_BUCKET_ARN;
+	policy += "/";
+	policy += context->folderObjKey;
+	policy += USER_RESUME_POLICY_PT3;
+	policy += USER_RESUME_BUCKET_ARN;
+	policy += "/";
+	policy += context->folderObjKey;
+	policy += USER_RESUME_POLICY_PT4;
 	Aws::STS::Model::GetFederationTokenRequest request;
 	request.SetPolicy(policy);
 	request.SetDurationSeconds(USER_RESUME_DURATION);
@@ -102,7 +120,7 @@ void ResumeManager::requestResumeHandler(const Aws::STS::STSClient * stsClient, 
 		ProtobufPackets::PackD1 replyPacket;
 		if (outcome.IsSuccess()) {
 			auto credentials = outcome.GetResult().GetCredentials();
-			replyPacket.set_allocated_folderobjkey = resumeContext->arn;
+			replyPacket.set_folderobjkey(resumeContext->folderObjKey);
 			replyPacket.set_accesskeyid(AwsStrToStr(credentials.GetAccessKeyId()));
 			replyPacket.set_accesskey(AwsStrToStr(credentials.GetSecretAccessKey()));
 			replyPacket.set_sessionkey(AwsStrToStr(credentials.GetSessionToken()));

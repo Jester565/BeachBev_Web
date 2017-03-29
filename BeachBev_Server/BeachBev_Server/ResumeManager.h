@@ -11,7 +11,7 @@ class EmailManager;
 struct RequestResumePermContext : public Aws::Client::AsyncCallerContext
 {
 	int clientID;
-	std::string arn;
+	std::string folderObjKey;
 };
 
 class ResumeManager : public PKeyOwner
@@ -20,6 +20,8 @@ public:
 	static const int USER_RESUME_DURATION = 900;
 	static const std::string USER_RESUME_POLICY_PT1;
 	static const std::string USER_RESUME_POLICY_PT2;
+	static const std::string USER_RESUME_POLICY_PT3;
+	static const std::string USER_RESUME_POLICY_PT4;
 	static const std::string USER_RESUME_NAME;
 
 	static const std::string USER_RESUME_BUCKET_ARN;
