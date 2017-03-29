@@ -62,7 +62,7 @@ function ResumeManager(root) {
 				var credentials = new AWS.Credentials({
 					accessKeyID: packD1.accessKeyID,
 					secretAccessKey: packD1.accessKey,
-					sessionToken: packD1.sessionToken
+					sessionToken: packD1.sessionKey
 				});
 				resumeManager.initAWS(credentials);
 				resumeManager.loadResumes();
