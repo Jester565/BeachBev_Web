@@ -26,6 +26,19 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT2 = "\"\
 const std::string ResumeManager::USER_RESUME_POLICY_PT3 = "/*\"]}}\
 },\
 {\
+\"Sid\": \"ListRoot\",\
+\"Effect\" : \"Allow\",\
+\"Action\" : [\
+	\"s3:ListBucket\"\
+],\
+\"Resource\" : [\
+	\"arn:";
+
+const std::string ResumeManager::USER_RESUME_POLICY_PT4 = "\"\
+],\
+\"Condition\" : {\"StringEquals\":{\"s3:prefix\":[\"\"], \"s3:delimiter\" : [\"/\"]}}\
+},\
+{\
 	\"Sid\": \"Stmt1487575487000\",\
 	\"Effect\" : \"Allow\",\
 	\"Action\" : [\
@@ -34,7 +47,7 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT3 = "/*\"]}}\
 	],\
 	\"Resource\" : [\
 		\"arn:";
-const std::string ResumeManager::USER_RESUME_POLICY_PT4 = "/*\"\
+const std::string ResumeManager::USER_RESUME_POLICY_PT5 = "/*\"\
 	]\
 }\
 ]\
@@ -100,9 +113,11 @@ bool ResumeManager::requestUserResumePermissions(BB_Client * sender)
 	policy += context->folderObjKey;
 	policy += USER_RESUME_POLICY_PT3;
 	policy += USER_RESUME_BUCKET_ARN;
+	policy += USER_RESUME_POLICY_PT4;
+	policy += USER_RESUME_BUCKET_ARN;
 	policy += "/";
 	policy += context->folderObjKey;
-	policy += USER_RESUME_POLICY_PT4;
+	policy += USER_RESUME_POLICY_PT5;
 	Aws::STS::Model::GetFederationTokenRequest request;
 	request.SetPolicy(policy.c_str());
 	request.SetDurationSeconds(USER_RESUME_DURATION);
