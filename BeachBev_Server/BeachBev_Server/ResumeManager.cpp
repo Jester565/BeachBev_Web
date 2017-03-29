@@ -33,10 +33,8 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT3 = "/*\"]}}\
 ],\
 \"Resource\" : [\
 	\"arn:";
-
 const std::string ResumeManager::USER_RESUME_POLICY_PT4 = "\"\
-],\
-\"Condition\" : {\"StringEquals\":{\"s3:prefix\":[\"\"], \"s3:delimiter\" : [\"/\"]}}\
+]\
 },\
 {\
 	\"Sid\": \"Stmt1487575487000\",\
@@ -52,6 +50,11 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT5 = "/*\"\
 }\
 ]\
 }";
+
+/**
+,\
+\"Condition\" : {\"StringEquals\":{\"s3:prefix\":[\"\"], \"s3:delimiter\" : [\"/\"]}}\
+*/
 
 const std::string ResumeManager::USER_RESUME_BUCKET_ARN = "aws:s3:::beachbev-resumes";
 
