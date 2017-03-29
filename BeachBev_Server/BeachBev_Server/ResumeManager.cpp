@@ -22,19 +22,8 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT1 = "{\
 			\"arn:";
 const std::string ResumeManager::USER_RESUME_POLICY_PT2 = "\"\
 	],\
-	\"Condition\" : {\"StringLike\":{\"s3:prefix\":[\"arn:";
+	\"Condition\" : {\"StringLike\":{\"s3:prefix\":[\"";
 const std::string ResumeManager::USER_RESUME_POLICY_PT3 = "/*\"]}}\
-},\
-{\
-\"Sid\": \"ListRoot\",\
-\"Effect\" : \"Allow\",\
-\"Action\" : [\
-	\"s3:ListBucket\"\
-],\
-\"Resource\" : [\
-	\"arn:";
-const std::string ResumeManager::USER_RESUME_POLICY_PT4 = "\"\
-]\
 },\
 {\
 	\"Sid\": \"Stmt1487575487000\",\
@@ -45,13 +34,22 @@ const std::string ResumeManager::USER_RESUME_POLICY_PT4 = "\"\
 	],\
 	\"Resource\" : [\
 		\"arn:";
-const std::string ResumeManager::USER_RESUME_POLICY_PT5 = "/*\"\
+
+const std::string ResumeManager::USER_RESUME_POLICY_PT4 = "/*\"\
 	]\
 }\
 ]\
 }";
 
 /**
+{\
+\"Sid\": \"ListRoot\",\
+\"Effect\" : \"Allow\",\
+\"Action\" : [\
+\"s3:ListBucket\"\
+],\
+\"Resource\" : [\
+\"arn:";
 ,\
 \"Condition\" : {\"StringEquals\":{\"s3:prefix\":[\"\"], \"s3:delimiter\" : [\"/\"]}}\
 */
@@ -111,16 +109,12 @@ bool ResumeManager::requestUserResumePermissions(BB_Client * sender)
 	std::string policy = USER_RESUME_POLICY_PT1;
 	policy += USER_RESUME_BUCKET_ARN;
 	policy += USER_RESUME_POLICY_PT2;
-	policy += USER_RESUME_BUCKET_ARN;
-	policy += "/";
 	policy += context->folderObjKey;
-	policy += USER_RESUME_POLICY_PT3;
-	policy += USER_RESUME_BUCKET_ARN;
 	policy += USER_RESUME_POLICY_PT4;
 	policy += USER_RESUME_BUCKET_ARN;
 	policy += "/";
 	policy += context->folderObjKey;
-	policy += USER_RESUME_POLICY_PT5;
+	policy += USER_RESUME_POLICY_PT4;
 	Aws::STS::Model::GetFederationTokenRequest request;
 	request.SetPolicy(policy.c_str());
 	request.SetDurationSeconds(USER_RESUME_DURATION);
