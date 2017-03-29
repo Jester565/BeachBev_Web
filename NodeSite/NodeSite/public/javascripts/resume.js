@@ -59,11 +59,7 @@ function ResumeManager(root) {
 			var packD1 = resumeManager.PacketD1.decode(iPack.packData);
 			if (packD1.accessKey.length > 0) {
 				resumeManager.s3Prefix = packD1.folderObjKey;
-				var credentials = new AWS.Credentials({
-					accessKeyID: packD1.accessKeyID,
-					secretAccessKey: packD1.accessKey,
-					sessionToken: packD1.sessionKey
-				});
+				var credentials = new AWS.Credentials(packD1.accessKeyID, packD1.accessKey, packD1.sessionKey);
 				resumeManager.initAWS(credentials);
 				resumeManager.loadResumes();
 			}
