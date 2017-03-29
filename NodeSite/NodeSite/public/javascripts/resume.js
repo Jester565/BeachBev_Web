@@ -204,7 +204,7 @@ function ResumeManager(root) {
 			pdf.getPage(resumeManager.pdfIndex).then(resumeManager.loadPDFPage);
 		});
 	}
-	this.initPackets();
+	this.initPackets(root);
 	this.sendD0();
 }
 
