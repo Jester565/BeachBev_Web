@@ -9,40 +9,38 @@
 #include <boost/make_shared.hpp>
 #include <aws/sts/model/GetFederationTokenRequest.h>
 
-const std::string ResumeManager::USER_RESUME_BUCKET_ARN = "aws:s3:::beachbev-resumes";
-
 const std::string ResumeManager::USER_RESUME_POLICY_PT1 = "{\
 \"Version\": \"2012-10-17\",\
 \"Statement\" : [\
 {\
 	\"Sid\": \"AllowListingOfUserFolder\",\
-  \"Effect\": \"Allow\",\
-  \"Action\": [\
-      \"s3:ListBucket\"\
-  ],\
-  \"Resource\": [\
-      \"arn:";
+		\"Effect\" : \"Allow\",\
+		\"Action\" : [\
+			\"s3:ListBucket\"\
+		],\
+		\"Resource\" : [\
+			\"arn:";
 const std::string ResumeManager::USER_RESUME_POLICY_PT2 = "\"\
-  ],\
-	\"Condition\":{\"StringLike\":{\"s3:prefix\":[\"";
-
+	],\
+	\"Condition\" : {\"StringLike\":{\"s3:prefix\":[\"arn:";
 const std::string ResumeManager::USER_RESUME_POLICY_PT3 = "/*\"]}}\
 },\
 {\
 	\"Sid\": \"Stmt1487575487000\",\
-		\"Effect\" : \"Allow\",\
-		\"Action\" : [\
-			\"s3:GetObject\",\
+	\"Effect\" : \"Allow\",\
+	\"Action\" : [\
+		\"s3:GetObject\",\
 			\"s3:PutObject\"\
-		],\
-		\"Resource\" : [\
-			\"arn:";
-
+	],\
+	\"Resource\" : [\
+		\"arn:";
 const std::string ResumeManager::USER_RESUME_POLICY_PT4 = "/*\"\
-		],\
+	]\
 }\
 ]\
 }";
+
+const std::string ResumeManager::USER_RESUME_BUCKET_ARN = "aws:s3:::beachbev-resumes";
 
 const std::string ResumeManager::USER_RESUME_NAME = "pdf_usr";
 
