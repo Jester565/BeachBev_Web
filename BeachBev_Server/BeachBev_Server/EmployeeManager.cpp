@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "EmployeeManager.h"
 #include "Packets/BBPacks.pb.h"
 #include "BB_Server.h"
@@ -8,6 +7,8 @@
 #include "EmailManager.h"
 #include "ResumeManager.h"
 #include "DebugManager.h"
+#include "MasterManager.h"
+#include "AcceptManager.h"
 #include <WSS_TCPConnection.h>
 #include <WSOPacket.h>
 #include <ClientManager.h>
@@ -59,7 +60,7 @@ void EmployeeManager::CreateAccountEmailHandler(const Aws::SES::SESClient * clie
 	}
 	else
 	{
-		replyPacket.set_msg("Failed to send verification email: " + AwsStrToStr(outcome.GetError().GetMessage()));
+		replyPacket.set_msg("Failed to send verification email: " + AwsErrorToStr(outcome.GetError()));
 	}
 	if (sender != nullptr) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
@@ -101,8 +102,12 @@ EmployeeManager::EmployeeManager(BB_Server* bbServer)
 	addKey(new PKey("A4", this, &EmployeeManager::handleA4));
 	addKey(new PKey("A6", this, &EmployeeManager::handleA6));
 	addKey(new PKey("A8", this, &EmployeeManager::handleA8));
+	addKey(new PKey("C0", this, &EmployeeManager::handleC0));
+	addKey(new PKey("C2", this, &EmployeeManager::handleC2));
+	masterManager = new MasterManager(bbServer);
 	emailManager = new EmailManager(bbServer, this);
-	resumeManager = new ResumeManager(bbServer, emailManager);
+	resumeManager = new ResumeManager(bbServer, emailManager, masterManager);
+	acceptManager = new AcceptManager(bbServer, masterManager, emailManager);
 }
 
 void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
@@ -426,6 +431,49 @@ void EmployeeManager::handleA8(boost::shared_ptr<IPacket> iPack)
 	bbServer->getClientManager()->send(oPack, sender);
 }
 
+void EmployeeManager::handleC0(boost::shared_ptr<IPacket> iPack)
+{
+	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	if (sender == nullptr) {
+		return;
+	}
+	DBManager* dbManager = sender->getDBManager();
+	ProtobufPackets::PackC1 replyPacket;
+	replyPacket.set_name("ERROR");
+	if (masterManager->isMaster(sender->getEmpID(), dbManager)) {
+		ProtobufPackets::PackC0 packC0;
+		packC0.ParseFromString(*iPack->getData());
+		std::string name;
+		if (eIDToName(packC0.eid(), dbManager, name))
+		{
+			replyPacket.set_name(name);
+		}
+	}
+	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("C1");
+	oPack->setSenderID(0);
+	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+	bbServer->getClientManager()->send(oPack, sender);
+}
+
+void EmployeeManager::handleC2(boost::shared_ptr<IPacket> iPack)
+{
+	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	if (sender == nullptr) {
+		return;
+	}
+	DBManager* dbManager = sender->getDBManager();
+	ProtobufPackets::PackC3 replyPacket;
+	replyPacket.set_name("ERROR");
+	std::string name;
+	if (eIDToName(sender->getEmpID(), dbManager, name)) {
+		replyPacket.set_name(name);
+	}
+	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("C3");
+	oPack->setSenderID(0);
+	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+	bbServer->getClientManager()->send(oPack, sender);
+}
+
 BB_Client* EmployeeManager::getEmployee(IDType eID)
 {
 	auto it = employees.find(eID);
@@ -701,6 +749,23 @@ void EmployeeManager::loginClient(BB_Client * bbClient, IDType eID)
 {
 	bbClient->setEmpID(eID);
 	employees.emplace(std::make_pair(eID, bbClient));
+}
+
+bool EmployeeManager::eIDToName(IDType eID, DBManager * dbManager, std::string & name)
+{
+	std::string query = "SELECT name FROM Employees WHERE eID=:f1<int>";
+	try {
+		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
+		otlStream << (int)eID;
+		if (!otlStream.eof()) {
+			otlStream >> name;
+			return true;
+		}
+	}
+	catch (otl_exception ex)
+	{
+		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
+	}
 }
 
 EmployeeManager::~EmployeeManager()

@@ -82,6 +82,7 @@
     <Linkage-AWSSDKCPP-S3>static</Linkage-AWSSDKCPP-S3>
     <Linkage-AWSSDKCPP-STS>static</Linkage-AWSSDKCPP-STS>
     <Linkage-AWSSDKCPP-IAM>static</Linkage-AWSSDKCPP-IAM>
+    <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -125,6 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AcceptManager.cpp" />
     <ClCompile Include="BB_Client.cpp" />
     <ClCompile Include="BB_Server.cpp" />
     <ClCompile Include="BB_ServicePool.cpp" />
@@ -134,11 +136,13 @@
     <ClCompile Include="DebugManager.cpp" />
     <ClCompile Include="EmailManager.cpp" />
     <ClCompile Include="EmployeeManager.cpp" />
+    <ClCompile Include="MasterManager.cpp" />
     <ClCompile Include="Packets\BBPacks.pb.cc" />
     <ClCompile Include="ResumeManager.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AcceptManager.h" />
     <ClInclude Include="BB_Client.h" />
     <ClInclude Include="BB_Server.h" />
     <ClInclude Include="BB_ServicePool.h" />
@@ -148,6 +152,7 @@
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="EmailManager.h" />
     <ClInclude Include="EmployeeManager.h" />
+    <ClInclude Include="MasterManager.h" />
     <ClInclude Include="Packets\BBPacks.pb.h" />
     <ClInclude Include="ResumeManager.h" />
     <ClInclude Include="stdafx.h" />
@@ -158,30 +163,30 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\AWSSDKCPP-S3.redist.1.0.20060301.82\build\native\AWSSDKCPP-S3.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-S3.redist.1.0.20060301.82\build\native\AWSSDKCPP-S3.redist.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-S3.1.0.20060301.82\build\native\AWSSDKCPP-S3.targets" Condition="Exists('..\packages\AWSSDKCPP-S3.1.0.20060301.82\build\native\AWSSDKCPP-S3.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-SES.redist.1.0.20101201.82\build\native\AWSSDKCPP-SES.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-SES.redist.1.0.20101201.82\build\native\AWSSDKCPP-SES.redist.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-SES.1.0.20101201.82\build\native\AWSSDKCPP-SES.targets" Condition="Exists('..\packages\AWSSDKCPP-SES.1.0.20101201.82\build\native\AWSSDKCPP-SES.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-Core.redist.1.0.82\build\native\AWSSDKCPP-Core.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.redist.1.0.82\build\native\AWSSDKCPP-Core.redist.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-Core.1.0.82\build\native\AWSSDKCPP-Core.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.1.0.82\build\native\AWSSDKCPP-Core.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-STS.redist.1.0.20110615.82\build\native\AWSSDKCPP-STS.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-STS.redist.1.0.20110615.82\build\native\AWSSDKCPP-STS.redist.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-STS.1.0.20110615.82\build\native\AWSSDKCPP-STS.targets" Condition="Exists('..\packages\AWSSDKCPP-STS.1.0.20110615.82\build\native\AWSSDKCPP-STS.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-IAM.redist.1.0.20100508.82\build\native\AWSSDKCPP-IAM.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-IAM.redist.1.0.20100508.82\build\native\AWSSDKCPP-IAM.redist.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-IAM.1.0.20100508.82\build\native\AWSSDKCPP-IAM.targets" Condition="Exists('..\packages\AWSSDKCPP-IAM.1.0.20100508.82\build\native\AWSSDKCPP-IAM.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Core.redist.1.0.90\build\native\AWSSDKCPP-Core.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.redist.1.0.90\build\native\AWSSDKCPP-Core.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Core.1.0.90\build\native\AWSSDKCPP-Core.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.1.0.90\build\native\AWSSDKCPP-Core.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-IAM.redist.1.0.20100508.90\build\native\AWSSDKCPP-IAM.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-IAM.redist.1.0.20100508.90\build\native\AWSSDKCPP-IAM.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-IAM.1.0.20100508.90\build\native\AWSSDKCPP-IAM.targets" Condition="Exists('..\packages\AWSSDKCPP-IAM.1.0.20100508.90\build\native\AWSSDKCPP-IAM.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-S3.redist.1.0.20060301.90\build\native\AWSSDKCPP-S3.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-S3.redist.1.0.20060301.90\build\native\AWSSDKCPP-S3.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-S3.1.0.20060301.90\build\native\AWSSDKCPP-S3.targets" Condition="Exists('..\packages\AWSSDKCPP-S3.1.0.20060301.90\build\native\AWSSDKCPP-S3.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-SES.redist.1.0.20101201.90\build\native\AWSSDKCPP-SES.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-SES.redist.1.0.20101201.90\build\native\AWSSDKCPP-SES.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-SES.1.0.20101201.90\build\native\AWSSDKCPP-SES.targets" Condition="Exists('..\packages\AWSSDKCPP-SES.1.0.20101201.90\build\native\AWSSDKCPP-SES.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-STS.redist.1.0.20110615.90\build\native\AWSSDKCPP-STS.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-STS.redist.1.0.20110615.90\build\native\AWSSDKCPP-STS.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-STS.1.0.20110615.90\build\native\AWSSDKCPP-STS.targets" Condition="Exists('..\packages\AWSSDKCPP-STS.1.0.20110615.90\build\native\AWSSDKCPP-STS.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-S3.redist.1.0.20060301.82\build\native\AWSSDKCPP-S3.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-S3.redist.1.0.20060301.82\build\native\AWSSDKCPP-S3.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-S3.1.0.20060301.82\build\native\AWSSDKCPP-S3.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-S3.1.0.20060301.82\build\native\AWSSDKCPP-S3.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-SES.redist.1.0.20101201.82\build\native\AWSSDKCPP-SES.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-SES.redist.1.0.20101201.82\build\native\AWSSDKCPP-SES.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-SES.1.0.20101201.82\build\native\AWSSDKCPP-SES.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-SES.1.0.20101201.82\build\native\AWSSDKCPP-SES.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.redist.1.0.82\build\native\AWSSDKCPP-Core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.redist.1.0.82\build\native\AWSSDKCPP-Core.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.1.0.82\build\native\AWSSDKCPP-Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.1.0.82\build\native\AWSSDKCPP-Core.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-STS.redist.1.0.20110615.82\build\native\AWSSDKCPP-STS.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-STS.redist.1.0.20110615.82\build\native\AWSSDKCPP-STS.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-STS.1.0.20110615.82\build\native\AWSSDKCPP-STS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-STS.1.0.20110615.82\build\native\AWSSDKCPP-STS.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-IAM.redist.1.0.20100508.82\build\native\AWSSDKCPP-IAM.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-IAM.redist.1.0.20100508.82\build\native\AWSSDKCPP-IAM.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-IAM.1.0.20100508.82\build\native\AWSSDKCPP-IAM.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-IAM.1.0.20100508.82\build\native\AWSSDKCPP-IAM.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.redist.1.0.90\build\native\AWSSDKCPP-Core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.redist.1.0.90\build\native\AWSSDKCPP-Core.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.1.0.90\build\native\AWSSDKCPP-Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.1.0.90\build\native\AWSSDKCPP-Core.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-IAM.redist.1.0.20100508.90\build\native\AWSSDKCPP-IAM.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-IAM.redist.1.0.20100508.90\build\native\AWSSDKCPP-IAM.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-IAM.1.0.20100508.90\build\native\AWSSDKCPP-IAM.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-IAM.1.0.20100508.90\build\native\AWSSDKCPP-IAM.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-S3.redist.1.0.20060301.90\build\native\AWSSDKCPP-S3.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-S3.redist.1.0.20060301.90\build\native\AWSSDKCPP-S3.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-S3.1.0.20060301.90\build\native\AWSSDKCPP-S3.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-S3.1.0.20060301.90\build\native\AWSSDKCPP-S3.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-SES.redist.1.0.20101201.90\build\native\AWSSDKCPP-SES.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-SES.redist.1.0.20101201.90\build\native\AWSSDKCPP-SES.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-SES.1.0.20101201.90\build\native\AWSSDKCPP-SES.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-SES.1.0.20101201.90\build\native\AWSSDKCPP-SES.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-STS.redist.1.0.20110615.90\build\native\AWSSDKCPP-STS.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-STS.redist.1.0.20110615.90\build\native\AWSSDKCPP-STS.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-STS.1.0.20110615.90\build\native\AWSSDKCPP-STS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-STS.1.0.20110615.90\build\native\AWSSDKCPP-STS.targets'))" />
   </Target>
 </Project>

@@ -136,6 +136,22 @@ message PackB5 {
 		string unverifiedEmail = 2;
 }
 
+message PackC0 {
+	uint32 eID = 1;
+}
+
+message PackC1 {
+	string name = 1;
+}
+
+message PackC2 {
+
+}
+
+message PackC3 {
+		string name = 1;
+}
+
 message PackD0 {
 		
 }
@@ -152,9 +168,32 @@ message PackD2 {
 
 }
 
-message PackD3 {
-	string accessKeyID = 1;
-	string accessKey = 2;
-	string sessionKey = 3;
+message PackE0 {
+	
+}
+
+message PackE1 {
+	repeated uint32 unacceptedEIDs = 1;
+	repeated uint32 acceptedEIDs = 2;
+	bool success = 3;
 	string msg = 4;
+}
+
+message PackE2 {
+	uint32 eID = 1;
+	int32 aState = 2;
+}
+
+message PackE3 {
+	bool success = 1;
+	string msg = 2;
+}
+
+message PackE4 {
+
+}
+
+message PackE5 {
+	int32 aState = 1;
+	string msg = 2;
 }

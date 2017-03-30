@@ -3,6 +3,7 @@
 #include "CryptoManager.h"
 #include "BB_Client.h"
 #include "EmployeeManager.h"
+#include "AcceptManager.h"
 #include "Packets/BBPacks.pb.h"
 #include <WSIPacket.h>
 #include <WSOPacket.h>
@@ -36,8 +37,8 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 	}
 	else
 	{
-		packB1.set_msg("Failed to send verification email: " + AwsStrToStr(outcome.GetError().GetMessage()));
-		std::cerr << "ChangeUnverifiedEmailHandler: " << AwsStrToStr(outcome.GetError().GetMessage()) << std::endl;
+		packB1.set_msg("Failed to send verification email: " + AwsErrorToStr(outcome.GetError()));
+		std::cerr << "ChangeUnverifiedEmailHandler: " << AwsErrorToStr(outcome.GetError()) << std::endl;
 	}
 	if (sender != nullptr) {
 		boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("B1");
@@ -50,7 +51,7 @@ void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * clie
 void EmailManager::ChangeEmailNotificationHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome)
 {
 	if (!outcome.IsSuccess()) {
-		std::cerr << "ChanageEmailNotificationHandler: " << AwsStrToStr(outcome.GetError().GetMessage()) << std::endl;
+		std::cerr << "ChanageEmailNotificationHandler: " << AwsErrorToStr(outcome.GetError()) << std::endl;
 	}
 }
 
@@ -353,10 +354,11 @@ bool EmailManager::verifyEmail(IDType eID, DBManager * dbManager)
 	removeUnverifiedEmail(eID, dbManager);
 	std::string query = "UPDATE Employees SET email=:f1<char[";
 	query += std::to_string(EMAIL_SIZE);
-	query += "]> WHERE eID=:f2<int>";
+	query += "]>, aState=:f2<int> WHERE eID=:f3<int>";
 	try {
 		otl_stream otlStream(OTL_BUFFER_SIZE, query.c_str(), *dbManager->getConnection());
 		otlStream << unverifiedEmail;
+		otlStream << AcceptManager::UNACCEPTED_ASTATE;
 		otlStream << (int)eID;
 		return true;
 	}

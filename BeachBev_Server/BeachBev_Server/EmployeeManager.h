@@ -1,5 +1,4 @@
 #pragma once
-#include <aws/email/SESClient.h>
 #include "stdafx.h"
 #include <Macros.h>
 #include <PKeyOwner.h>
@@ -7,6 +6,7 @@
 #include <unordered_map>
 #include <base64_converter.h>
 #include <string>
+#include <aws/email/SESClient.h>
 #include <aws/core/Aws.h>
 #include <aws/email/model/SendEmailRequest.h>
 
@@ -16,6 +16,8 @@ class BB_Client;
 class Client;
 class EmailManager;
 class ResumeManager;
+class MasterManager;
+class AcceptManager;
 typedef uint16_t DeviceID;
 
 static const int TOKEN_SIZE = 64;
@@ -106,6 +108,10 @@ public:
 	/// for the protobuf packet A8</param>
 	void handleA8(boost::shared_ptr<IPacket> iPack);
 
+	void handleC0(boost::shared_ptr<IPacket> iPack);
+
+	void handleC2(boost::shared_ptr<IPacket> iPack);
+
 	BB_Client* getEmployee(IDType eID);
 
 	std::unordered_map<IDType, Client*> employees;
@@ -129,7 +135,12 @@ protected:
 
 	bool removePwdResetToken(IDType eID, DBManager* dbManager);
 	void loginClient(BB_Client* bbClient, IDType eID);
+
+	bool eIDToName(IDType eID, DBManager* dbManager, std::string& name);
+	
+	AcceptManager* acceptManager;
 	EmailManager* emailManager;
+	MasterManager* masterManager;
 	ResumeManager* resumeManager;
 	BB_Server* bbServer;
 };

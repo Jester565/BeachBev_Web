@@ -23,6 +23,14 @@ static const char* AWS_ALLOC_TAG = "0";
 template <typename T>
 using AwsSharedPtr = std::shared_ptr<T>;
 
-static const char * AWS_SERVER_REGION_1 = Aws::Region::US_WEST_1;
+template<typename T> 
+std::string AwsErrorToStr(T& error) {
+#ifdef _WIN32
+	return AwsStrToStr(error.GetMessageA());
+#else
+	return AwsStrToStr(error.GetMessage());
+#endif
+}
 
+static const char * AWS_SERVER_REGION_1 = Aws::Region::US_WEST_1;
 static const char * AWS_SERVER_REGION_2 = Aws::Region::US_WEST_2;
