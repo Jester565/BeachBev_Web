@@ -107,7 +107,7 @@ function ResumeManager(root) {
 	this.uploadResume = function (file) {
 		var fileKey = encodeURIComponent(resumeManager.s3Prefix) + '/' + file.name;
 		resumeManager.s3Client.upload({
-			Bucket: 'beachbev-resumes',
+			Bucket: BUCKET_NAME,
 			Key: fileKey,
 			ContentType: file.type,
 			Body: file
@@ -129,7 +129,7 @@ function ResumeManager(root) {
 		if (file.uploaded) {
 			var fileKey = encodeURIComponent(resumeManager.s3Prefix) + '/' + file.name;
 			resumeManager.s3Client.getObject({
-				Bucket: 'beachbev-resumes',
+				Bucket: BUCKET_NAME,
 				Key: fileKey
 			}, function (err, data) {
 				if (err) {
