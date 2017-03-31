@@ -95,6 +95,12 @@ extern PackD1DefaultTypeInternal _PackD1_default_instance_;
 class PackD2;
 class PackD2DefaultTypeInternal;
 extern PackD2DefaultTypeInternal _PackD2_default_instance_;
+class PackD3;
+class PackD3DefaultTypeInternal;
+extern PackD3DefaultTypeInternal _PackD3_default_instance_;
+class PackD4;
+class PackD4DefaultTypeInternal;
+extern PackD4DefaultTypeInternal _PackD4_default_instance_;
 class PackE0;
 class PackE0DefaultTypeInternal;
 extern PackE0DefaultTypeInternal _PackE0_default_instance_;
@@ -2255,6 +2261,171 @@ class PackD2 : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
 };
 // -------------------------------------------------------------------
 
+class PackD3 : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ProtobufPackets.PackD3) */ {
+ public:
+  PackD3();
+  virtual ~PackD3();
+
+  PackD3(const PackD3& from);
+
+  inline PackD3& operator=(const PackD3& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PackD3& default_instance();
+
+  static inline const PackD3* internal_default_instance() {
+    return reinterpret_cast<const PackD3*>(
+               &_PackD3_default_instance_);
+  }
+
+  void Swap(PackD3* other);
+
+  // implements Message ----------------------------------------------
+
+  inline PackD3* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  PackD3* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const PackD3& from);
+  void MergeFrom(const PackD3& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(PackD3* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:ProtobufPackets.PackD3)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
+  friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
+  friend const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto();
+  friend void protobuf_ShutdownFile_BBPacks_2eproto();
+
+};
+// -------------------------------------------------------------------
+
+class PackD4 : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ProtobufPackets.PackD4) */ {
+ public:
+  PackD4();
+  virtual ~PackD4();
+
+  PackD4(const PackD4& from);
+
+  inline PackD4& operator=(const PackD4& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PackD4& default_instance();
+
+  static inline const PackD4* internal_default_instance() {
+    return reinterpret_cast<const PackD4*>(
+               &_PackD4_default_instance_);
+  }
+
+  void Swap(PackD4* other);
+
+  // implements Message ----------------------------------------------
+
+  inline PackD4* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  PackD4* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const PackD4& from);
+  void MergeFrom(const PackD4& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(PackD4* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // bool hasResume = 1;
+  void clear_hasresume();
+  static const int kHasResumeFieldNumber = 1;
+  bool hasresume() const;
+  void set_hasresume(bool value);
+
+  // @@protoc_insertion_point(class_scope:ProtobufPackets.PackD4)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool hasresume_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
+  friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
+  friend const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto();
+  friend void protobuf_ShutdownFile_BBPacks_2eproto();
+
+};
+// -------------------------------------------------------------------
+
 class PackE0 : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ProtobufPackets.PackE0) */ {
  public:
   PackE0();
@@ -4248,6 +4419,28 @@ inline void PackD1::set_allocated_msg(::std::string* msg) {
 
 // -------------------------------------------------------------------
 
+// PackD3
+
+// -------------------------------------------------------------------
+
+// PackD4
+
+// bool hasResume = 1;
+inline void PackD4::clear_hasresume() {
+  hasresume_ = false;
+}
+inline bool PackD4::hasresume() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackD4.hasResume)
+  return hasresume_;
+}
+inline void PackD4::set_hasresume(bool value) {
+  
+  hasresume_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackD4.hasResume)
+}
+
+// -------------------------------------------------------------------
+
 // PackE0
 
 // -------------------------------------------------------------------
@@ -4533,6 +4726,10 @@ inline void PackE5::set_allocated_msg(::std::string* msg) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

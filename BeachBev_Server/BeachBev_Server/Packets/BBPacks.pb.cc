@@ -62,6 +62,10 @@ class PackD1DefaultTypeInternal : public ::google::protobuf::internal::Explicitl
 PackD1DefaultTypeInternal _PackD1_default_instance_;
 class PackD2DefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PackD2> {};
 PackD2DefaultTypeInternal _PackD2_default_instance_;
+class PackD3DefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PackD3> {};
+PackD3DefaultTypeInternal _PackD3_default_instance_;
+class PackD4DefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PackD4> {};
+PackD4DefaultTypeInternal _PackD4_default_instance_;
 class PackE0DefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PackE0> {};
 PackE0DefaultTypeInternal _PackE0_default_instance_;
 class PackE1DefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PackE1> {};
@@ -77,7 +81,7 @@ PackE5DefaultTypeInternal _PackE5_default_instance_;
 
 namespace {
 
-::google::protobuf::Metadata file_level_metadata[28];
+::google::protobuf::Metadata file_level_metadata[30];
 
 }  // namespace
 
@@ -211,6 +215,15 @@ const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto() {
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
     ~0u,  // no _has_bits_
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackD3, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _has_bits_
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackD4, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackD4, hasresume_),
+    ~0u,  // no _has_bits_
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackE0, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
@@ -271,12 +284,14 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 108, -1, sizeof(PackD0)},
   { 112, -1, sizeof(PackD1)},
   { 121, -1, sizeof(PackD2)},
-  { 125, -1, sizeof(PackE0)},
-  { 129, -1, sizeof(PackE1)},
-  { 137, -1, sizeof(PackE2)},
-  { 143, -1, sizeof(PackE3)},
-  { 149, -1, sizeof(PackE4)},
-  { 153, -1, sizeof(PackE5)},
+  { 125, -1, sizeof(PackD3)},
+  { 129, -1, sizeof(PackD4)},
+  { 134, -1, sizeof(PackE0)},
+  { 138, -1, sizeof(PackE1)},
+  { 146, -1, sizeof(PackE2)},
+  { 152, -1, sizeof(PackE3)},
+  { 158, -1, sizeof(PackE4)},
+  { 162, -1, sizeof(PackE5)},
 };
 
 static const ::google::protobuf::internal::DefaultInstanceData file_default_instances[] = {
@@ -302,6 +317,8 @@ static const ::google::protobuf::internal::DefaultInstanceData file_default_inst
   {reinterpret_cast<const ::google::protobuf::Message*>(&_PackD0_default_instance_), NULL},
   {reinterpret_cast<const ::google::protobuf::Message*>(&_PackD1_default_instance_), NULL},
   {reinterpret_cast<const ::google::protobuf::Message*>(&_PackD2_default_instance_), NULL},
+  {reinterpret_cast<const ::google::protobuf::Message*>(&_PackD3_default_instance_), NULL},
+  {reinterpret_cast<const ::google::protobuf::Message*>(&_PackD4_default_instance_), NULL},
   {reinterpret_cast<const ::google::protobuf::Message*>(&_PackE0_default_instance_), NULL},
   {reinterpret_cast<const ::google::protobuf::Message*>(&_PackE1_default_instance_), NULL},
   {reinterpret_cast<const ::google::protobuf::Message*>(&_PackE2_default_instance_), NULL},
@@ -328,7 +345,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 28);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 30);
 }
 
 }  // namespace
@@ -378,18 +395,22 @@ void protobuf_ShutdownFile_BBPacks_2eproto() {
   delete file_level_metadata[20].reflection;
   _PackD2_default_instance_.Shutdown();
   delete file_level_metadata[21].reflection;
-  _PackE0_default_instance_.Shutdown();
+  _PackD3_default_instance_.Shutdown();
   delete file_level_metadata[22].reflection;
-  _PackE1_default_instance_.Shutdown();
+  _PackD4_default_instance_.Shutdown();
   delete file_level_metadata[23].reflection;
-  _PackE2_default_instance_.Shutdown();
+  _PackE0_default_instance_.Shutdown();
   delete file_level_metadata[24].reflection;
-  _PackE3_default_instance_.Shutdown();
+  _PackE1_default_instance_.Shutdown();
   delete file_level_metadata[25].reflection;
-  _PackE4_default_instance_.Shutdown();
+  _PackE2_default_instance_.Shutdown();
   delete file_level_metadata[26].reflection;
-  _PackE5_default_instance_.Shutdown();
+  _PackE3_default_instance_.Shutdown();
   delete file_level_metadata[27].reflection;
+  _PackE4_default_instance_.Shutdown();
+  delete file_level_metadata[28].reflection;
+  _PackE5_default_instance_.Shutdown();
+  delete file_level_metadata[29].reflection;
 }
 
 void protobuf_InitDefaults_BBPacks_2eproto_impl() {
@@ -418,6 +439,8 @@ void protobuf_InitDefaults_BBPacks_2eproto_impl() {
   _PackD0_default_instance_.DefaultConstruct();
   _PackD1_default_instance_.DefaultConstruct();
   _PackD2_default_instance_.DefaultConstruct();
+  _PackD3_default_instance_.DefaultConstruct();
+  _PackD4_default_instance_.DefaultConstruct();
   _PackE0_default_instance_.DefaultConstruct();
   _PackE1_default_instance_.DefaultConstruct();
   _PackE2_default_instance_.DefaultConstruct();
@@ -454,16 +477,17 @@ void protobuf_AddDesc_BBPacks_2eproto_impl() {
       "ckC3\022\014\n\004name\030\001 \001(\t\"\010\n\006PackD0\"g\n\006PackD1\022\024"
       "\n\014folderObjKey\030\001 \001(\t\022\023\n\013accessKeyID\030\002 \001("
       "\t\022\021\n\taccessKey\030\003 \001(\t\022\022\n\nsessionKey\030\004 \001(\t"
-      "\022\013\n\003msg\030\005 \001(\t\"\010\n\006PackD2\"\010\n\006PackE0\"T\n\006Pac"
-      "kE1\022\026\n\016unacceptedEIDs\030\001 \003(\r\022\024\n\014acceptedE"
-      "IDs\030\002 \003(\r\022\017\n\007success\030\003 \001(\010\022\013\n\003msg\030\004 \001(\t\""
-      "%\n\006PackE2\022\013\n\003eID\030\001 \001(\r\022\016\n\006aState\030\002 \001(\005\"&"
-      "\n\006PackE3\022\017\n\007success\030\001 \001(\010\022\013\n\003msg\030\002 \001(\t\"\010"
-      "\n\006PackE4\"%\n\006PackE5\022\016\n\006aState\030\001 \001(\005\022\013\n\003ms"
-      "g\030\002 \001(\tb\006proto3"
+      "\022\013\n\003msg\030\005 \001(\t\"\010\n\006PackD2\"\010\n\006PackD3\"\033\n\006Pac"
+      "kD4\022\021\n\thasResume\030\001 \001(\010\"\010\n\006PackE0\"T\n\006Pack"
+      "E1\022\026\n\016unacceptedEIDs\030\001 \003(\r\022\024\n\014acceptedEI"
+      "Ds\030\002 \003(\r\022\017\n\007success\030\003 \001(\010\022\013\n\003msg\030\004 \001(\t\"%"
+      "\n\006PackE2\022\013\n\003eID\030\001 \001(\r\022\016\n\006aState\030\002 \001(\005\"&\n"
+      "\006PackE3\022\017\n\007success\030\001 \001(\010\022\013\n\003msg\030\002 \001(\t\"\010\n"
+      "\006PackE4\"%\n\006PackE5\022\016\n\006aState\030\001 \001(\005\022\013\n\003msg"
+      "\030\002 \001(\tb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1095);
+      descriptor, 1134);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "BBPacks.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_BBPacks_2eproto);
@@ -7486,6 +7510,397 @@ void PackD2::InternalSwap(PackD2* other) {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
+PackD3::PackD3()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_InitDefaults_BBPacks_2eproto();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:ProtobufPackets.PackD3)
+}
+PackD3::PackD3(const PackD3& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:ProtobufPackets.PackD3)
+}
+
+void PackD3::SharedCtor() {
+  _cached_size_ = 0;
+}
+
+PackD3::~PackD3() {
+  // @@protoc_insertion_point(destructor:ProtobufPackets.PackD3)
+  SharedDtor();
+}
+
+void PackD3::SharedDtor() {
+}
+
+void PackD3::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* PackD3::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return file_level_metadata[22].descriptor;
+}
+
+const PackD3& PackD3::default_instance() {
+  protobuf_InitDefaults_BBPacks_2eproto();
+  return *internal_default_instance();
+}
+
+PackD3* PackD3::New(::google::protobuf::Arena* arena) const {
+  PackD3* n = new PackD3;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void PackD3::Clear() {
+// @@protoc_insertion_point(message_clear_start:ProtobufPackets.PackD3)
+}
+
+bool PackD3::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:ProtobufPackets.PackD3)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+  handle_unusual:
+    if (tag == 0 ||
+        ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+        ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+      goto success;
+    }
+    DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+  }
+success:
+  // @@protoc_insertion_point(parse_success:ProtobufPackets.PackD3)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:ProtobufPackets.PackD3)
+  return false;
+#undef DO_
+}
+
+void PackD3::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:ProtobufPackets.PackD3)
+  // @@protoc_insertion_point(serialize_end:ProtobufPackets.PackD3)
+}
+
+::google::protobuf::uint8* PackD3::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:ProtobufPackets.PackD3)
+  // @@protoc_insertion_point(serialize_to_array_end:ProtobufPackets.PackD3)
+  return target;
+}
+
+size_t PackD3::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ProtobufPackets.PackD3)
+  size_t total_size = 0;
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void PackD3::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ProtobufPackets.PackD3)
+  GOOGLE_DCHECK_NE(&from, this);
+  const PackD3* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PackD3>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ProtobufPackets.PackD3)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ProtobufPackets.PackD3)
+    MergeFrom(*source);
+  }
+}
+
+void PackD3::MergeFrom(const PackD3& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ProtobufPackets.PackD3)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+}
+
+void PackD3::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ProtobufPackets.PackD3)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void PackD3::CopyFrom(const PackD3& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ProtobufPackets.PackD3)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool PackD3::IsInitialized() const {
+  return true;
+}
+
+void PackD3::Swap(PackD3* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void PackD3::InternalSwap(PackD3* other) {
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata PackD3::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  return file_level_metadata[22];
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// PackD3
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int PackD4::kHasResumeFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+PackD4::PackD4()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_InitDefaults_BBPacks_2eproto();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:ProtobufPackets.PackD4)
+}
+PackD4::PackD4(const PackD4& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  hasresume_ = from.hasresume_;
+  // @@protoc_insertion_point(copy_constructor:ProtobufPackets.PackD4)
+}
+
+void PackD4::SharedCtor() {
+  hasresume_ = false;
+  _cached_size_ = 0;
+}
+
+PackD4::~PackD4() {
+  // @@protoc_insertion_point(destructor:ProtobufPackets.PackD4)
+  SharedDtor();
+}
+
+void PackD4::SharedDtor() {
+}
+
+void PackD4::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* PackD4::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return file_level_metadata[23].descriptor;
+}
+
+const PackD4& PackD4::default_instance() {
+  protobuf_InitDefaults_BBPacks_2eproto();
+  return *internal_default_instance();
+}
+
+PackD4* PackD4::New(::google::protobuf::Arena* arena) const {
+  PackD4* n = new PackD4;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void PackD4::Clear() {
+// @@protoc_insertion_point(message_clear_start:ProtobufPackets.PackD4)
+  hasresume_ = false;
+}
+
+bool PackD4::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:ProtobufPackets.PackD4)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // bool hasResume = 1;
+      case 1: {
+        if (tag == 8u) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &hasresume_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:ProtobufPackets.PackD4)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:ProtobufPackets.PackD4)
+  return false;
+#undef DO_
+}
+
+void PackD4::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:ProtobufPackets.PackD4)
+  // bool hasResume = 1;
+  if (this->hasresume() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->hasresume(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:ProtobufPackets.PackD4)
+}
+
+::google::protobuf::uint8* PackD4::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:ProtobufPackets.PackD4)
+  // bool hasResume = 1;
+  if (this->hasresume() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->hasresume(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:ProtobufPackets.PackD4)
+  return target;
+}
+
+size_t PackD4::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ProtobufPackets.PackD4)
+  size_t total_size = 0;
+
+  // bool hasResume = 1;
+  if (this->hasresume() != 0) {
+    total_size += 1 + 1;
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void PackD4::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:ProtobufPackets.PackD4)
+  GOOGLE_DCHECK_NE(&from, this);
+  const PackD4* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PackD4>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:ProtobufPackets.PackD4)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:ProtobufPackets.PackD4)
+    MergeFrom(*source);
+  }
+}
+
+void PackD4::MergeFrom(const PackD4& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ProtobufPackets.PackD4)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from.hasresume() != 0) {
+    set_hasresume(from.hasresume());
+  }
+}
+
+void PackD4::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:ProtobufPackets.PackD4)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void PackD4::CopyFrom(const PackD4& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ProtobufPackets.PackD4)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool PackD4::IsInitialized() const {
+  return true;
+}
+
+void PackD4::Swap(PackD4* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void PackD4::InternalSwap(PackD4* other) {
+  std::swap(hasresume_, other->hasresume_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata PackD4::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  return file_level_metadata[23];
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// PackD4
+
+// bool hasResume = 1;
+void PackD4::clear_hasresume() {
+  hasresume_ = false;
+}
+bool PackD4::hasresume() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackD4.hasResume)
+  return hasresume_;
+}
+void PackD4::set_hasresume(bool value) {
+  
+  hasresume_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackD4.hasResume)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
 PackE0::PackE0()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
@@ -7521,7 +7936,7 @@ void PackE0::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PackE0::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[22].descriptor;
+  return file_level_metadata[24].descriptor;
 }
 
 const PackE0& PackE0::default_instance() {
@@ -7641,7 +8056,7 @@ void PackE0::InternalSwap(PackE0* other) {
 
 ::google::protobuf::Metadata PackE0::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[22];
+  return file_level_metadata[24];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -7703,7 +8118,7 @@ void PackE1::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PackE1::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[23].descriptor;
+  return file_level_metadata[25].descriptor;
 }
 
 const PackE1& PackE1::default_instance() {
@@ -8034,7 +8449,7 @@ void PackE1::InternalSwap(PackE1* other) {
 
 ::google::protobuf::Metadata PackE1::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[23];
+  return file_level_metadata[25];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -8207,7 +8622,7 @@ void PackE2::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PackE2::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[24].descriptor;
+  return file_level_metadata[26].descriptor;
 }
 
 const PackE2& PackE2::default_instance() {
@@ -8402,7 +8817,7 @@ void PackE2::InternalSwap(PackE2* other) {
 
 ::google::protobuf::Metadata PackE2::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[24];
+  return file_level_metadata[26];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -8488,7 +8903,7 @@ void PackE3::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PackE3::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[25].descriptor;
+  return file_level_metadata[27].descriptor;
 }
 
 const PackE3& PackE3::default_instance() {
@@ -8695,7 +9110,7 @@ void PackE3::InternalSwap(PackE3* other) {
 
 ::google::protobuf::Metadata PackE3::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[25];
+  return file_level_metadata[27];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -8801,7 +9216,7 @@ void PackE4::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PackE4::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[26].descriptor;
+  return file_level_metadata[28].descriptor;
 }
 
 const PackE4& PackE4::default_instance() {
@@ -8921,7 +9336,7 @@ void PackE4::InternalSwap(PackE4* other) {
 
 ::google::protobuf::Metadata PackE4::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[26];
+  return file_level_metadata[28];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -8979,7 +9394,7 @@ void PackE5::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PackE5::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[27].descriptor;
+  return file_level_metadata[29].descriptor;
 }
 
 const PackE5& PackE5::default_instance() {
@@ -9188,7 +9603,7 @@ void PackE5::InternalSwap(PackE5* other) {
 
 ::google::protobuf::Metadata PackE5::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  return file_level_metadata[27];
+  return file_level_metadata[29];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS

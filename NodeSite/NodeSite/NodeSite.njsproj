@@ -34,7 +34,6 @@
     <Compile Include="appTest.js" />
     <Compile Include="app.js" />
     <Compile Include="public\javascripts\aScore.js" />
-    <Compile Include="public\javascripts\aws-sdk-2.32.0.min.js" />
     <Compile Include="public\javascripts\aws-sdk.js" />
     <Compile Include="public\javascripts\bytebuffer.min.js" />
     <Compile Include="public\javascripts\Client.js" />
@@ -42,6 +41,9 @@
     <Compile Include="public\javascripts\email.js" />
     <Compile Include="public\javascripts\email_confirm.js" />
     <Compile Include="public\javascripts\apply.js" />
+    <Compile Include="public\javascripts\employee.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="public\javascripts\index.js" />
     <Compile Include="public\javascripts\innerLogin.js" />
     <Compile Include="public\javascripts\jquery-1.12.0.js" />
@@ -116,6 +118,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="public\stylesheets\applyStyle.css" />
+    <Content Include="public\stylesheets\EmployeeStyle.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="public\stylesheets\indexStyle.css" />
     <Content Include="public\stylesheets\loginStyle.css" />
     <Content Include="public\stylesheets\mBarStyle.css" />

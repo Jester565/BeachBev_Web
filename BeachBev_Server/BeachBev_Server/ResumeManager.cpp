@@ -9,6 +9,7 @@
 #include <WSIPacket.h>
 #include <boost/make_shared.hpp>
 #include <aws/sts/model/GetFederationTokenRequest.h>
+#include <aws/s3/model/ListObjectsV2Request.h>
 
 const std::string ResumeManager::USER_RESUME_POLICY_PT1 = "{\
 \"Version\": \"2012-10-17\",\
@@ -70,6 +71,8 @@ const std::string ResumeManager::MASTER_RESUME_POLICY_PT3 = "/*\"\
 ]\
 }";
 
+const std::string ResumeManager::RESUME_BUCKET_NAME = "beachbev-resumes";
+
 const std::string ResumeManager::RESUME_BUCKET_ARN = "aws:s3:::beachbev-resumes";
 
 const std::string ResumeManager::IAM_USER_NAME = "pdf_usr";
@@ -80,8 +83,12 @@ ResumeManager::ResumeManager(BB_Server* bbServer, EmailManager* emailManager, Ma
 	if (!initStsClient()) {
 		std::cerr << "Could not initialize STS client!" << std::endl;
 	}
+	if (!initS3Client()) {
+		std::cerr << "Could not initialize S3 client!" << std::endl;
+	}
 	addKey(new PKey("D0", this, &ResumeManager::handleD0));
 	addKey(new PKey("D2", this, &ResumeManager::handleD2));
+	addKey(new PKey("D3", this, &ResumeManager::handleD3));
 }
 
 bool ResumeManager::initStsClient()
@@ -89,6 +96,14 @@ bool ResumeManager::initStsClient()
 	Aws::Client::ClientConfiguration clientConfig;
 	clientConfig.region = AWS_SERVER_REGION_1;
 	stsClient = Aws::MakeShared<Aws::STS::STSClient>(AWS_ALLOC_TAG, clientConfig);
+	return true;
+}
+
+bool ResumeManager::initS3Client()
+{
+	Aws::Client::ClientConfiguration clientConfig;
+	clientConfig.region = AWS_SERVER_REGION_1;
+	s3Client = Aws::MakeShared<Aws::S3::S3Client>(AWS_ALLOC_TAG, clientConfig);
 	return true;
 }
 
@@ -140,6 +155,23 @@ void ResumeManager::handleD2(boost::shared_ptr<IPacket> iPack)
 		oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
 		bbServer->getClientManager()->send(oPack, sender);
 	}
+}
+
+void ResumeManager::handleD3(boost::shared_ptr<IPacket> iPack)
+{
+	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	if (sender == nullptr) {
+		return;
+	}
+	AwsSharedPtr<HasResumeContext> hasResumeContext = Aws::MakeShared<HasResumeContext>(AWS_ALLOC_TAG);
+	hasResumeContext->clientID = sender->getID();
+	Aws::S3::Model::ListObjectsV2Request request;
+	request.SetBucket(RESUME_BUCKET_NAME);
+	std::string folderPrefix = std::to_string(sender->getEmpID());
+	folderPrefix += '/';
+	request.SetPrefix(folderPrefix);
+	s3Client->ListObjectsV2Async(request, std::bind(&ResumeManager::hasResumeHandler, this, std::placeholders::_1,
+		std::placeholders::_2, std::placeholders::_3, std::placeholders::_4), hasResumeContext);
 }
 
 ResumeManager::~ResumeManager()
@@ -207,4 +239,27 @@ void ResumeManager::createMasterResumePolicy(std::string & policy)
 	policy += MASTER_RESUME_POLICY_PT2;
 	policy += RESUME_BUCKET_ARN;
 	policy += MASTER_RESUME_POLICY_PT3;
+}
+
+void ResumeManager::hasResumeHandler(const Aws::S3::S3Client * s3Client, const Aws::S3::Model::ListObjectsV2Request & req, const Aws::S3::Model::ListObjectsV2Outcome & outcome, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
+{
+	auto hasResumeContext = std::static_pointer_cast<const HasResumeContext>(context);
+	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(hasResumeContext->clientID);
+	if (sender == nullptr) {
+		return;
+	}
+	ProtobufPackets::PackD4 packD4;
+	packD4.set_hasresume(false);
+	if (outcome.IsSuccess()) {
+		packD4.set_hasresume((outcome.GetResult().GetKeyCount() > 0));
+	}
+	else
+	{
+		std::cerr << "Error in hasResumeHandler: " << AwsErrorToStr(outcome.GetError()) << std::endl;
+	}
+	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("D4");
+	oPack->setSenderID(0);
+	oPack->addSendToID(sender->getID());
+	oPack->setData(boost::make_shared<std::string>(packD4.SerializeAsString()));
+	bbServer->getClientManager()->send(oPack, sender);
 }
