@@ -168,6 +168,14 @@ message PackD2 {
 
 }
 
+message PackD3 {
+	
+}
+
+message PackD4 {
+	bool hasResume = 1;
+}
+
 message PackE0 {
 	
 }
