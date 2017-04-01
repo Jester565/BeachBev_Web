@@ -77,10 +77,12 @@
     <Content Include="public\images\addClick.png" />
     <Content Include="public\images\bar.png" />
     <Content Include="public\images\beach.jpg" />
+    <Content Include="public\images\clockIcon.png" />
     <Content Include="public\images\closed.png" />
     <Content Include="public\images\confirmOrder.png" />
     <Content Include="public\images\dropDownArrow.png" />
     <Content Include="public\images\editOrder.png" />
+    <Content Include="public\images\emailIcon.png" />
     <Content Include="public\images\foodman.png" />
     <Content Include="public\images\HB2.jpg" />
     <Content Include="public\images\lifeguard.png" />
@@ -97,6 +99,7 @@
     <Content Include="public\images\setting2.png" />
     <Content Include="public\images\subtractClick.png" />
     <Content Include="public\images\tab.png" />
+    <Content Include="public\images\uploadIcon.png" />
     <Content Include="public\images\worker.png" />
     <Content Include="public\images\x.png" />
     <Content Include="public\index.html" />
@@ -118,7 +121,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="public\stylesheets\applyStyle.css" />
-    <Content Include="public\stylesheets\EmployeeStyle.css">
+    <Content Include="public\stylesheets\employeeStyle.css">
       <SubType>Code</SubType>
     </Content>
     <Content Include="public\stylesheets\indexStyle.css" />
