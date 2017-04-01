@@ -1,5 +1,6 @@
 ﻿'use strict';
 
+var innerLoginManager;
 var employeeManager;
 var INVALID_ASTATE = -2;
 var UNVERIFIED_ASTATE = -1;
@@ -61,7 +62,7 @@ function EmployeeManager(root) {
 		employeeManager.PacketD3 = root.lookup("ProtobufPackets.PackD3");
 		employeeManager.PacketD4 = root.lookup("ProtobufPackets.PackD4");
 		client.packetManager.addPKey(new PKey("E5", function (iPack) {
-			var packE5 = employeeManager.PacketE5(iPack.packData);
+			var packE5 = employeeManager.PacketE5.decode(iPack.packData);
 			if (packE5.aState <= INVALID_ASTATE) {
 				employeeManager.setErrorMsg(packE5.msg);
 				employeeManager.initDisplay();
@@ -79,7 +80,7 @@ function EmployeeManager(root) {
 		}));
 
 		client.packetManager.addPKey(new PKey("D4", function (iPack) {
-			var packD4 = emloyeeManager.PacketD4(iPack.packData);
+			var packD4 = emloyeeManager.PacketD4.decode(iPack.packData);
 			if (packD4.hasResume) {
 				employeeManager.setResumeDisplay();
 			}
