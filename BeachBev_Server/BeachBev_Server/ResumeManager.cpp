@@ -251,6 +251,10 @@ void ResumeManager::hasResumeHandler(const Aws::S3::S3Client * s3Client, const A
 	ProtobufPackets::PackD4 packD4;
 	packD4.set_hasresume(false);
 	if (outcome.IsSuccess()) {
+		for (int i = 0; i < outcome.GetResult().GetContents().size(); i++) {
+			auto elm = outcome.GetResult().GetContents().at(i);
+			std::cout << elm.GetKey() << std::endl;
+		}
 		packD4.set_hasresume((outcome.GetResult().GetKeyCount() > 0));
 	}
 	else
