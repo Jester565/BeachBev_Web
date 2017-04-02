@@ -64,7 +64,7 @@ function MasterManager(root) {
 				}
 				for (var i = 0; i < packE1.unacceptedEIDs.length; i++) {
 					masterManager.addEmp('#unacceptEmpDiv', packE1.unacceptedEIDs[i].toString());
-					$('#' + packE1.unacceptedEIDs[i].toString() + ' > .acceptButton').removeClass('hidden');
+					$('#' + packE1.unacceptedEIDs[i].toString() + ' > div > .acceptButton').removeClass('hidden');
 				}
 				masterManager.sendD2();
 			}
@@ -87,7 +87,7 @@ function MasterManager(root) {
 		}));
 
 		client.packetManager.addPKey(new PKey("E3", function (iPack) {
-			var packE3 = masterManager.PacketD1.decode(iPack.packData);
+			var packE3 = masterManager.PacketE3.decode(iPack.packData);
 			if (packE3.success) {
 				$('#' + toString(packE3.eID)).remove();
 				addEmp('#acceptEmpDiv', toString(packE3.eID));
@@ -110,11 +110,11 @@ function MasterManager(root) {
 			else
 			{
 				var files = data.Contents.map(function (file) {
-					var id = parseInt(file.Key.substr(0, file.indexOf('/')));
+					var id = parseInt(file.Key.substr(0, file.Key.indexOf('/')));
 					var fileName = file.Key.substr(file.Key.indexOf('/') + 1);
 					if (fileName.length > 0) {
-						$('#' + id + ' > .resumeButton').removeClass('hidden');
-						$('#' + id + ' > .resumeButton').click({ fKey: file.Key }, function (event) {
+						$('#' + id + ' > div > .resumeButton').removeClass('hidden');
+						$('#' + id + ' > div > .resumeButton').click({ fKey: file.Key }, function (event) {
 							masterManager.viewResume(event.data.fKey);
 						});
 					}
@@ -129,7 +129,7 @@ function MasterManager(root) {
 		$(divID + ' > ul').append(masterManager.listHtml);
 		$(divID + ' > ul > li').last().attr('id', id);
 		$('#' + id + ' > div > h2').text(id);
-		$('#' + id + ' > .acceptButton').click({ eID: id }, function (event) {
+		$('#' + id + ' > div > .acceptButton').click({ eID: id }, function (event) {
 			masterManager.sendE2(event.data.eID, ACCEPT_ASTATE);
 		});
 	}
@@ -144,7 +144,7 @@ function MasterManager(root) {
 			}
 			else {
 				var fileArr = data.Body;
-				masterManager.showPDF(substr(fKey.indexOf('/') + 1), fileArr);
+				masterManager.showPDF(fKey.substr(fKey.indexOf('/') + 1), fileArr);
 			}
 		});
 	}
@@ -202,12 +202,12 @@ function MasterManager(root) {
 	}
 
 	this.sendD2 = function () {
-		var packD2 = employeeManager.PacketD2.create({});
+		var packD2 = masterManager.PacketD2.create({});
 		client.tcpConnection.sendPack(new OPacket("D2", true, [0], packD2, masterManager.PacketD2));
 	}
 
 	this.sendE2 = function (id, nAState) {
-		var packE2 = employeeManager.PacketE2.create({
+		var packE2 = masterManager.PacketE2.create({
 			eID: parseInt(id),
 			aState: nAState
 		});
