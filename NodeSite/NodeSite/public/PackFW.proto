@@ -195,6 +195,7 @@ message PackE2 {
 message PackE3 {
 	bool success = 1;
 	string msg = 2;
+	uint32 eID = 3;
 }
 
 message PackE4 {

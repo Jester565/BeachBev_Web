@@ -247,6 +247,7 @@ const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto() {
     ~0u,  // no _oneof_case_
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackE3, success_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackE3, msg_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackE3, eid_),
     ~0u,  // no _has_bits_
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PackE4, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -290,8 +291,8 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 138, -1, sizeof(PackE1)},
   { 146, -1, sizeof(PackE2)},
   { 152, -1, sizeof(PackE3)},
-  { 158, -1, sizeof(PackE4)},
-  { 162, -1, sizeof(PackE5)},
+  { 159, -1, sizeof(PackE4)},
+  { 163, -1, sizeof(PackE5)},
 };
 
 static const ::google::protobuf::internal::DefaultInstanceData file_default_instances[] = {
@@ -481,13 +482,13 @@ void protobuf_AddDesc_BBPacks_2eproto_impl() {
       "kD4\022\021\n\thasResume\030\001 \001(\010\"\010\n\006PackE0\"T\n\006Pack"
       "E1\022\026\n\016unacceptedEIDs\030\001 \003(\r\022\024\n\014acceptedEI"
       "Ds\030\002 \003(\r\022\017\n\007success\030\003 \001(\010\022\013\n\003msg\030\004 \001(\t\"%"
-      "\n\006PackE2\022\013\n\003eID\030\001 \001(\r\022\016\n\006aState\030\002 \001(\005\"&\n"
-      "\006PackE3\022\017\n\007success\030\001 \001(\010\022\013\n\003msg\030\002 \001(\t\"\010\n"
-      "\006PackE4\"%\n\006PackE5\022\016\n\006aState\030\001 \001(\005\022\013\n\003msg"
-      "\030\002 \001(\tb\006proto3"
+      "\n\006PackE2\022\013\n\003eID\030\001 \001(\r\022\016\n\006aState\030\002 \001(\005\"3\n"
+      "\006PackE3\022\017\n\007success\030\001 \001(\010\022\013\n\003msg\030\002 \001(\t\022\013\n"
+      "\003eID\030\003 \001(\r\"\010\n\006PackE4\"%\n\006PackE5\022\016\n\006aState"
+      "\030\001 \001(\005\022\013\n\003msg\030\002 \001(\tb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1134);
+      descriptor, 1147);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "BBPacks.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_BBPacks_2eproto);
@@ -8858,6 +8859,7 @@ void PackE2::set_astate(::google::protobuf::int32 value) {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int PackE3::kSuccessFieldNumber;
 const int PackE3::kMsgFieldNumber;
+const int PackE3::kEIDFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PackE3::PackE3()
@@ -8877,13 +8879,16 @@ PackE3::PackE3(const PackE3& from)
   if (from.msg().size() > 0) {
     msg_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.msg_);
   }
-  success_ = from.success_;
+  ::memcpy(&success_, &from.success_,
+    reinterpret_cast<char*>(&eid_) -
+    reinterpret_cast<char*>(&success_) + sizeof(eid_));
   // @@protoc_insertion_point(copy_constructor:ProtobufPackets.PackE3)
 }
 
 void PackE3::SharedCtor() {
   msg_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  success_ = false;
+  ::memset(&success_, 0, reinterpret_cast<char*>(&eid_) -
+    reinterpret_cast<char*>(&success_) + sizeof(eid_));
   _cached_size_ = 0;
 }
 
@@ -8922,7 +8927,8 @@ PackE3* PackE3::New(::google::protobuf::Arena* arena) const {
 void PackE3::Clear() {
 // @@protoc_insertion_point(message_clear_start:ProtobufPackets.PackE3)
   msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  success_ = false;
+  ::memset(&success_, 0, reinterpret_cast<char*>(&eid_) -
+    reinterpret_cast<char*>(&success_) + sizeof(eid_));
 }
 
 bool PackE3::MergePartialFromCodedStream(
@@ -8957,6 +8963,19 @@ bool PackE3::MergePartialFromCodedStream(
             this->msg().data(), this->msg().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "ProtobufPackets.PackE3.msg"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // uint32 eID = 3;
+      case 3: {
+        if (tag == 24u) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &eid_)));
         } else {
           goto handle_unusual;
         }
@@ -9002,6 +9021,11 @@ void PackE3::SerializeWithCachedSizes(
       2, this->msg(), output);
   }
 
+  // uint32 eID = 3;
+  if (this->eid() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->eid(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:ProtobufPackets.PackE3)
 }
 
@@ -9025,6 +9049,11 @@ void PackE3::SerializeWithCachedSizes(
         2, this->msg(), target);
   }
 
+  // uint32 eID = 3;
+  if (this->eid() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->eid(), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:ProtobufPackets.PackE3)
   return target;
 }
@@ -9043,6 +9072,13 @@ size_t PackE3::ByteSizeLong() const {
   // bool success = 1;
   if (this->success() != 0) {
     total_size += 1 + 1;
+  }
+
+  // uint32 eID = 3;
+  if (this->eid() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->eid());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -9078,6 +9114,9 @@ void PackE3::MergeFrom(const PackE3& from) {
   if (from.success() != 0) {
     set_success(from.success());
   }
+  if (from.eid() != 0) {
+    set_eid(from.eid());
+  }
 }
 
 void PackE3::CopyFrom(const ::google::protobuf::Message& from) {
@@ -9105,6 +9144,7 @@ void PackE3::Swap(PackE3* other) {
 void PackE3::InternalSwap(PackE3* other) {
   msg_.Swap(&other->msg_);
   std::swap(success_, other->success_);
+  std::swap(eid_, other->eid_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
@@ -9172,6 +9212,20 @@ void PackE3::set_allocated_msg(::std::string* msg) {
   }
   msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
   // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackE3.msg)
+}
+
+// uint32 eID = 3;
+void PackE3::clear_eid() {
+  eid_ = 0u;
+}
+::google::protobuf::uint32 PackE3::eid() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackE3.eID)
+  return eid_;
+}
+void PackE3::set_eid(::google::protobuf::uint32 value) {
+  
+  eid_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackE3.eID)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

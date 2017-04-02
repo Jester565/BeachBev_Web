@@ -2807,12 +2807,19 @@ class PackE3 : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_msg();
   void set_allocated_msg(::std::string* msg);
 
+  // uint32 eID = 3;
+  void clear_eid();
+  static const int kEIDFieldNumber = 3;
+  ::google::protobuf::uint32 eid() const;
+  void set_eid(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:ProtobufPackets.PackE3)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr msg_;
   bool success_;
+  ::google::protobuf::uint32 eid_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
   friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
@@ -4657,6 +4664,20 @@ inline void PackE3::set_allocated_msg(::std::string* msg) {
   }
   msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
   // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackE3.msg)
+}
+
+// uint32 eID = 3;
+inline void PackE3::clear_eid() {
+  eid_ = 0u;
+}
+inline ::google::protobuf::uint32 PackE3::eid() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackE3.eID)
+  return eid_;
+}
+inline void PackE3::set_eid(::google::protobuf::uint32 value) {
+  
+  eid_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackE3.eID)
 }
 
 // -------------------------------------------------------------------

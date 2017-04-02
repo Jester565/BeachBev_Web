@@ -84,6 +84,7 @@ void AcceptManager::handleE2(boost::shared_ptr<IPacket> iPack)
 		packE2.ParseFromString(*iPack->getData());
 		if (setAState(packE2.eid(), packE2.astate(), dbManager)) {
 			replyPacket.set_success(true);
+			replyPacket.set_eid(packE2.eid());
 		}
 		else
 		{

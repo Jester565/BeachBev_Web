@@ -51,6 +51,9 @@
     <Compile Include="public\javascripts\jquery.scrollTo.min.js" />
     <Compile Include="public\javascripts\login.js" />
     <Compile Include="public\javascripts\long.min.js" />
+    <Compile Include="public\javascripts\master.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="public\javascripts\mBar.js" />
     <Compile Include="public\javascripts\mBarImpl.js" />
     <Compile Include="public\javascripts\menu.js" />
@@ -103,6 +106,9 @@
     <Content Include="public\images\worker.png" />
     <Content Include="public\images\x.png" />
     <Content Include="public\index.html" />
+    <Content Include="public\master.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="public\resume.html">
       <SubType>Code</SubType>
     </Content>
@@ -126,6 +132,9 @@
     </Content>
     <Content Include="public\stylesheets\indexStyle.css" />
     <Content Include="public\stylesheets\loginStyle.css" />
+    <Content Include="public\stylesheets\masterStyle.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="public\stylesheets\mBarStyle.css" />
     <Content Include="public\stylesheets\menuStyle.css" />
     <Content Include="public\stylesheets\noGeoStyle.css" />

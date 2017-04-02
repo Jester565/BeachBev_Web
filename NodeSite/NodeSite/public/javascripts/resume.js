@@ -1,5 +1,4 @@
 ﻿'use strict';
-var resumeManager;
 var innerLoginManager;
 
 var BUCKET_REGION = 'us-west-1';
