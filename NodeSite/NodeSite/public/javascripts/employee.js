@@ -81,7 +81,7 @@ function EmployeeManager(root) {
 
 		client.packetManager.addPKey(new PKey("D4", function (iPack) {
 			var packD4 = employeeManager.PacketD4.decode(iPack.packData);
-			if (packD4.hasResume) {
+			if (!packD4.hasResume) {
 				employeeManager.setResumeDisplay();
 			}
 			else
