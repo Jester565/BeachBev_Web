@@ -60,11 +60,11 @@ function MasterManager(root) {
 			var packE1 = masterManager.PacketE1.decode(iPack.packData);
 			if (packE1.success) {
 				for (var i = 0; i < packE1.acceptedEIDs.length; i++) {
-					masterManager.addEmp('#acceptEmpDiv', packE1.acceptedEIDs[i]);
+					masterManager.addEmp('#acceptEmpDiv', toString(packE1.acceptedEIDs[i]));
 				}
 				for (var i = 0; i < packE1.unacceptedEIDs.length; i++) {
-					masterManager.addEmp('#unacceptEmpDiv', packE1.unacceptedEIDs[i]);
-					$('#' + id + ' > .acceptButton').removeClass('hidden');
+					masterManager.addEmp('#unacceptEmpDiv', toString(packE1.unacceptedEIDs[i]));
+					$('#' + toString(packE1.unacceptedEIDs[i]) + ' > .acceptButton').removeClass('hidden');
 				}
 				masterManager.sendD2();
 			}
