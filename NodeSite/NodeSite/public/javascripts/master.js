@@ -18,7 +18,7 @@ var client = new Client(function (root) {
 	};
 });
 
-function MasterManager() {
+function MasterManager(root) {
 	masterManager = this;
 
 	this.s3Client = null;
