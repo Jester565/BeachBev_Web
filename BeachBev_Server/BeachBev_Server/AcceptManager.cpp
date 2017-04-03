@@ -14,6 +14,7 @@ AcceptManager::AcceptManager(BB_Server * bbServer, MasterManager * masterManager
 	addKey(new PKey("E0", this, &AcceptManager::handleE0));
 	addKey(new PKey("E2", this, &AcceptManager::handleE2));
 	addKey(new PKey("E4", this, &AcceptManager::handleE4));
+	addKey(new PKey("E6", this, &AcceptManager::handleE6));
 }
 
 void AcceptManager::handleE0(boost::shared_ptr<IPacket> iPack)
@@ -160,7 +161,7 @@ void AcceptManager::handleE6(boost::shared_ptr<IPacket> iPack)
 	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
 	ProtobufPackets::PackE6 packE6;
 	packE6.ParseFromString(*iPack->getData());
-	ProtobufPackets::PackE3 replyPacket;
+	ProtobufPackets::PackE7 replyPacket;
 	replyPacket.set_msg("Failed to set aState");
 	if (packE6.accept()) {
 		replyPacket.set_success(setAState(sender->getEmpID(), EMPLOYEE_ASTATE, sender->getDBManager()));
@@ -169,7 +170,7 @@ void AcceptManager::handleE6(boost::shared_ptr<IPacket> iPack)
 	{
 		replyPacket.set_success(setAState(sender->getEmpID(), DECLINE_ASTATE, sender->getDBManager()));
 	}
-	auto oPack = boost::make_shared<WSOPacket>("E3");
+	auto oPack = boost::make_shared<WSOPacket>("E7");
 	oPack->setSenderID(0);
 	oPack->addSendToID(sender->getID());
 	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
