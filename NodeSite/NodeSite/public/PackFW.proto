@@ -181,10 +181,11 @@ message PackE0 {
 }
 
 message PackE1 {
-	repeated uint32 unacceptedEIDs = 1;
-	repeated uint32 acceptedEIDs = 2;
-	bool success = 3;
-	string msg = 4;
+	repeated uint32 employeeEIDs = 1;
+	repeated uint32 unacceptedEIDs = 2;
+	repeated uint32 acceptedEIDs = 3;
+	bool success = 4;
+	string msg = 5;
 }
 
 message PackE2 {
@@ -204,5 +205,14 @@ message PackE4 {
 
 message PackE5 {
 	int32 aState = 1;
+	string msg = 2;
+}
+
+message PackE6 {
+	bool accept = 1;
+}
+
+message PackE7 {
+	bool success = 1;
 	string msg = 2;
 }

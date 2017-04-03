@@ -2,6 +2,7 @@
 #include "BB_Server.h"
 #include "DBManager.h"
 #include "MasterManager.h"
+#include "EmailManager.h"
 #include <ClientManager.h>
 #include <WSIPacket.h>
 #include <WSOPacket.h>
@@ -85,6 +86,9 @@ void AcceptManager::handleE2(boost::shared_ptr<IPacket> iPack)
 		if (setAState(packE2.eid(), packE2.astate(), dbManager)) {
 			replyPacket.set_success(true);
 			replyPacket.set_eid(packE2.eid());
+			if (packE2.astate() == ACCEPTED_ASTATE) {
+				sendAcceptEmail(packE2.eid(), sender->getDBManager());
+			}
 		}
 		else
 		{
@@ -149,6 +153,51 @@ int AcceptManager::getAState(IDType eID, DBManager * dbManager)
 		std::cerr << "Code: " << ex.code << std::endl << "MSG: " << ex.msg << std::endl;
 	}
 	return INVALID_ASTATE;
+}
+
+void AcceptManager::handleE6(boost::shared_ptr<IPacket> iPack)
+{
+	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	ProtobufPackets::PackE6 packE6;
+	packE6.ParseFromString(*iPack->getData());
+	ProtobufPackets::PackE3 replyPacket;
+	replyPacket.set_msg("Failed to set aState");
+	if (packE6.accept()) {
+		replyPacket.set_success(setAState(sender->getEmpID(), EMPLOYEE_ASTATE, sender->getDBManager()));
+	}
+	else
+	{
+		replyPacket.set_success(setAState(sender->getEmpID(), DECLINE_ASTATE, sender->getDBManager()));
+	}
+	auto oPack = boost::make_shared<WSOPacket>("E3");
+	oPack->setSenderID(0);
+	oPack->addSendToID(sender->getID());
+	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
+	bbServer->getClientManager()->send(oPack, sender);
+}
+
+void AcceptManager::sendAcceptEmail(IDType eID, DBManager * dbManager)
+{
+	std::string email;
+	if (emailManager->getVerifiedEmail(eID, email, dbManager)) {
+		std::stringstream stringIn;
+		{
+			std::ifstream fileIn(EmailManager::HTML_DIR + "accept.html");
+			stringIn << fileIn.rdbuf();
+		}
+		if (!emailManager->sendEmail(email, "management@beachbevs.com", "BeachBevs",
+			"Accepted!", stringIn.str(), std::bind(&AcceptManager::acceptEmailHandler, this,
+				std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), nullptr, true)) {
+			std::cerr << "Send acceptance email failed to run" << std::endl;
+		}
+	}
+}
+
+void AcceptManager::acceptEmailHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome)
+{
+	if (!outcome.IsSuccess()) {
+		std::cerr << "ERROR SENDING ACCEPTANCE EMAIL: " << AwsErrorToStr(outcome.GetError()) << std::endl;
+	}
 }
 
 AcceptManager::~AcceptManager()

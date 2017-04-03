@@ -5,6 +5,9 @@ var employeeManager;
 var INVALID_ASTATE = -2;
 var UNVERIFIED_ASTATE = -1;
 var UNACCEPTED_ASTATE = 0;
+var ACCEPTED_ASTATE = 1;
+var DECLINED_ASTATE = 2;
+var EMPLOYEE_ASTATE = 3;
 
 var client = new Client(function (root) {
 	innerLoginManager = new InnerLoginManager(client, root,
@@ -31,7 +34,6 @@ function EmployeeManager(root) {
 	}
 
 	this.initDisplay = function () {
-		$('.container').removeClass('hidden');
 		$('#linkDiv').removeClass('hidden');
 		$('#loading').addClass('hidden');
 	}
@@ -41,12 +43,14 @@ function EmployeeManager(root) {
 			<a href= \"email.html\" > Click here</a > to change your email or resend the verification message.");
 		$('#emailStep').addClass('active');
 		$('#resumeLink').addClass('hidden');
+		$('.container').removeClass('hidden');
 	}
 
 	this.setResumeDisplay = function () {
 		$('#summary').html("<a href=\"resume.html\">Click here</a> to upload a pdf of your resume");
 		$('#resumeStep').addClass('active');
 		$('#emailStep').addClass('passed');
+		$('.container').removeClass('hidden');
 	}
 
 	this.setWaitDisplay = function () {
@@ -54,11 +58,37 @@ function EmployeeManager(root) {
 		$('#waitStep').addClass('active');
 		$('#resumeStep').addClass('passed');
 		$('#emailStep').addClass('passed');
+		$('.container').removeClass('hidden');
+	}
+
+	this.setOfferDisplay = function () {
+		$('#offerDiv').removeClass('hidden');
+	}
+
+	this.bindOfferButtons = function () {
+		$('#acceptOfferButton').removeClass('processing');
+		$('#acceptOfferButton').click(function () {
+			masterManager.sendOffer(true);
+		});
+		$('#declineOfferButton').removeClass('processing');
+		$('#declineOfferButton').click(function () {
+			masterManager.sendOffer(false);
+		});
+	}
+
+	this.sendOffer = function (accept) {
+		$('#acceptOfferButton').unbind('click');
+		$('declineOfferButton').unbind('click');
+		$('#acceptOfferButton').addClass('processing');
+		$('#declineOfferButton').addClass('processing');
+		masterManager.sendE6(accept);
 	}
 
 	this.initPackets = function (root) {
 		employeeManager.PacketE4 = root.lookup("ProtobufPackets.PackE4");
 		employeeManager.PacketE5 = root.lookup("ProtobufPackets.PackE5");
+		employeeManager.PacketE6 = root.lookup("ProtobufPackets.PackE6");
+		employeeManager.PacketE7 = root.lookup("ProtobufPackets.PackE7");
 		employeeManager.PacketD3 = root.lookup("ProtobufPackets.PackD3");
 		employeeManager.PacketD4 = root.lookup("ProtobufPackets.PackD4");
 		client.packetManager.addPKey(new PKey("E5", function (iPack) {
@@ -74,8 +104,10 @@ function EmployeeManager(root) {
 			else if (packE5.aState <= UNACCEPTED_ASTATE) {
 				employeeManager.sendD3();
 			}
-			else {
-				
+			else if (packE5.aState <= ACCEPTED_ASTATE) {
+				employeeManager.bindOfferButtons();
+				employeeManager.setOfferDisplay();
+				employeeManager.initDisplay();
 			}
 		}));
 
@@ -91,17 +123,37 @@ function EmployeeManager(root) {
 			employeeManager.initDisplay();
 		}));
 
+		client.packetManager.addPKey(new PKey("E7", function (iPack) {
+			var packE7 = employeeManager.PacketE7.decode(iPack.packData);
+			if (packE7.success) {
+				//handle added employee
+			}
+			else
+			{
+				employeeManager.bindOfferButtons();
+				setErrorMsg(packE7.msg);
+			}
+		}));
+
 		employeeManager.sendE4();
 	}
 
 	this.sendD3 = function () {
+		clearErrorMsg();
 		var packD3 = employeeManager.PacketD3.create({});
 		client.tcpConnection.sendPack(new OPacket("D3", true, [0], packD3, employeeManager.PacketD3));
 	}
 
 	this.sendE4 = function () {
+		clearErrorMsg();
 		var packE4 = employeeManager.PacketE4.create({});
 		client.tcpConnection.sendPack(new OPacket("E4", true, [0], packE4, employeeManager.PacketE4));
+	}
+
+	this.sendE6 = function (nAccept) {
+		clearErrorMsg();
+		var packE6 = employeeManager.PacketE6.create({accept: nAccept});
+		client.tcpConnection.sendPack(new OPacket("E6", true, [0], packE6, employeeManager.PacketE6));
 	}
 
 	this.initPackets(root);
