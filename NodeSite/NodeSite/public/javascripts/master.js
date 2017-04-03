@@ -89,7 +89,7 @@ function MasterManager(root) {
 		client.packetManager.addPKey(new PKey("E3", function (iPack) {
 			var packE3 = masterManager.PacketE3.decode(iPack.packData);
 			if (packE3.success) {
-				$('#' + toString(packE3.eID)).remove();
+					$('#' + packE3.eID.toString()).remove();
 				addEmp('#acceptEmpDiv', toString(packE3.eID));
 			}
 			else {
