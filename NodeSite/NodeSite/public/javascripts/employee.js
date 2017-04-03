@@ -139,19 +139,19 @@ function EmployeeManager(root) {
 	}
 
 	this.sendD3 = function () {
-		clearErrorMsg();
+		employeeManager.clearErrorMsg();
 		var packD3 = employeeManager.PacketD3.create({});
 		client.tcpConnection.sendPack(new OPacket("D3", true, [0], packD3, employeeManager.PacketD3));
 	}
 
 	this.sendE4 = function () {
-		clearErrorMsg();
+		employeeManager.clearErrorMsg();
 		var packE4 = employeeManager.PacketE4.create({});
 		client.tcpConnection.sendPack(new OPacket("E4", true, [0], packE4, employeeManager.PacketE4));
 	}
 
 	this.sendE6 = function (nAccept) {
-		clearErrorMsg();
+		employeeManager.clearErrorMsg();
 		var packE6 = employeeManager.PacketE6.create({accept: nAccept});
 		client.tcpConnection.sendPack(new OPacket("E6", true, [0], packE6, employeeManager.PacketE6));
 	}
