@@ -139,17 +139,26 @@ function EmailManager(root) {
 	client.tcpConnection.sendPack(new OPacket("B4", true, [0], packB4, emailManager.PacketB4));
 }
 
-var emailManager;
-var innerLoginManager;
+var emailManager = null;
+var innerLoginManager = null;
 
 var client = new Client(function (root) {
 	console.log("ON LOAD CALLED");
 	innerLoginManager = new InnerLoginManager(client, root,
 		function () {
 			console.log("LOGGED IN");
-			emailManager = new EmailManager(client.root);
+			if (emailManager === null) {
+				emailManager = new EmailManager(client.root);
+			}
+			else {
+				if ($('#resendButton').hasClass('processing')) {
+					emailManager.setErrorMsg("Lost connection to server");
+					emailManager.bindButtons();
+				}
+				HandleConnectServer();
+			}
 		});
 	client.tcpConnection.onclose = function () {
-		redirect('./noServer.html');
+		HandleNoServer();
 	};
 });

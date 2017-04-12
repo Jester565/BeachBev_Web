@@ -1,7 +1,7 @@
 ﻿'use strict';
 
-var innerLoginManager;
-var employeeManager;
+var innerLoginManager = null;
+var employeeManager = null;
 var INVALID_ASTATE = -2;
 var UNVERIFIED_ASTATE = -1;
 var UNACCEPTED_ASTATE = 0;
@@ -12,10 +12,22 @@ var EMPLOYEE_ASTATE = 3;
 var client = new Client(function (root) {
 	innerLoginManager = new InnerLoginManager(client, root,
 		function () {
-			employeeManager = new EmployeeManager(client.root);
+			if (employeeManager === null) {
+				employeeManager = new EmployeeManager(client.root);
+			}
+			else {
+				if ($('#acceptOfferButton').hasClass('processing')) {
+					employeeManager.bindOfferButtons();
+					employeeManager.setErrorMsg(packE7.msg);
+				}
+				if ($('#linkDiv').hasClass('hidden')) {
+					employeeManager.sendE4();
+				}
+				HandleConnectServer();
+			}
 		});
 	client.tcpConnection.onclose = function () {
-		redirect('./noServer.html');
+		HandleNoServer();
 	}
 });
 

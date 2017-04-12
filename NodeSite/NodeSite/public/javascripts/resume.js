@@ -12,10 +12,18 @@ var client = new Client(function (root) {
 	innerLoginManager = new InnerLoginManager(client, root,
 		function () {
 			console.log("LOGGED IN");
-			resumeManager = new ResumeManager(client.root);
+			if (resumeManager === null) {
+				resumeManager = new ResumeManager(client.root);
+			}
+			else {
+				if ($('#uploadDiv').hasClass('hidden')) {
+					resumeManager.sendD0();
+				}
+				HandleConnectServer();
+			}
 		});
 	client.tcpConnection.onclose = function () {
-		redirect('./noServer.html');
+		HandleNoServer();
 	};
 });
 

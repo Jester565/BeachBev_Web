@@ -180,6 +180,21 @@ nav ul {
 		transform: rotate(-180deg);
 	}
 
+#noServerDiv {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 199;
+	background-color: rgba(10, 10, 10, .99);
+}
+
+#noServerDiv p{
+	margin-top: 44vh;
+	text-align: center;
+	color: white;
+	font-size: xx-large;
+}
+
 .hidden {
 	display: none !important;
 }

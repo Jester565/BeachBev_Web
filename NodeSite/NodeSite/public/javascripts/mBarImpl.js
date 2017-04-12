@@ -40,4 +40,32 @@ $(document).ready(function () {
 	$('#applyLink').click(function () {
 		redirect("./apply.html");
 	});
+
+	
 });
+
+var dotInterval = null;
+
+function ShowNoServer() {
+	$('#noServerDiv').removeClass('hidden');
+	if (dotInterval === null) {
+		dotInterval = setInterval(function () {
+			var dotText = $('#noServerDiv > p > a').text();
+			if (dotText.length < 3) {
+				dotText += ".";
+			}
+			else {
+				dotText = "";
+			}
+			$('#noServerDiv > p > a').text(dotText);
+		}, 1000);
+	}
+}
+
+function HideNoServer() {
+	$('#noServerDiv').addClass('hidden');
+	if (dotInterval !== null) {
+		clearInterval(dotInterval);
+		dotInterval = null;
+	}
+}

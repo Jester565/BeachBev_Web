@@ -67,14 +67,22 @@ function ApplyManager(root) {
 	$('#applyButton').click(this.submit);
 }
 
-var applyManager;
+var applyManager = null;
 
 var client = new Client(function (root) {
 	console.log("ON LOAD CALLED");
 	client.tcpConnection.onopen = function () {
-		applyManager = new ApplyManager(client.root);
+		if (applyManager == null) {
+			applyManager = new ApplyManager(client.root);
+		}
+		else {
+			if ($('#applyButton').hasClass('load')) {
+				setErrorMsg('Requst not submitted: lost connection');
+			}
+			HandleConnectServer();
+		}
 	};
 	client.tcpConnection.onclose = function () {
-		redirect('./noServer.html');
+		HandleNoServer();
 	};
 });

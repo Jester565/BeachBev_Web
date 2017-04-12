@@ -125,14 +125,24 @@ function LoginManager(root) {
 	$('#loading').addClass('hidden');
 }
 
-var loginManager;
+var loginManager = null;
 
 var client = new Client(function (root) {
 	console.log("ON LOAD CALLED");
 	client.tcpConnection.onopen = function () {
-		loginManager = new LoginManager(client.root);
+		if (loginManager === null) {
+			loginManager = new LoginManager(client.root);
+		}
+		else
+		{
+			if ($('#pwdResetButton').hasClass('processing')) {
+				loginManager.bindButtons();
+				loginManager.setErrorMsg('Lost server connection');
+			}
+			HandleConnectServer();
+		}
 	};
 	client.tcpConnection.onclose = function () {
-		redirect('./noServer.html');
+		HandleNoServer();
 	};
 });
