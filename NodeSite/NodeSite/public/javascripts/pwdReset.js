@@ -18,7 +18,7 @@ function PwdResetManager(root) {
 			Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: 'beachbevs.com', secure: true });
 			Cookies.set('eID', packA1.eID, { path: '/', domain: 'beachbevs.com', secure: true });
 			$('#checkmark').removeClass('hidden');
-			$('#pwdResetDive').addClass('hidden');
+			$('#pwdResetDiv').addClass('hidden');
 			pwdResetManager.setMsg(packA1.msg);
 		}
 	}, pwdResetManager, "Gets the success of the login"));
@@ -89,14 +89,23 @@ function PwdResetManager(root) {
 	}
 }
 
-var pwdResetManager;
+var pwdResetManager = null;
 
 var client = new Client(function (root) {
 	console.log("ON LOAD CALLED");
 	client.tcpConnection.onopen = function () {
-		pwdResetManager = new PwdResetManager(client.root);
+		if (pwdResetManager === null) {
+			pwdResetManager = new PwdResetManager(client.root);
+		}
+		else {
+			if ($('#changeButton').hasClass('processing')) {
+				pwdRestManager.setErrorMsg('Lost connection to server');
+				pwdResetManager.bindButtons();
+			}
+			HandleConnectServer();
+		}
 	};
 	client.tcpConnection.onclose = function () {
-		redirect('./noServer.html');
+		HandleNoServer();
 	};
 });

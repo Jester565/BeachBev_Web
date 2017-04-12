@@ -45,17 +45,22 @@ function EmailConfirmManager(root) {
 	};
 }
 
-var emailConfirmManager;
-var innerLoginManager;
+var emailConfirmManager = null;
+var innerLoginManager = null;
 
 var client = new Client(function (root) {
 	console.log("ON LOAD CALLED");
 	innerLoginManager = new InnerLoginManager(client, root,
 		function () {
 			console.log("LOGGED IN");
-			emailConfirmManager = new EmailConfirmManager(client.root);
+			if (emailConfirmManager === null) {
+				emailConfirmManager = new EmailConfirmManager(client.root);
+			}
+			else {
+				HandleConnectServer();
+			}
 		});
 	client.tcpConnection.onclose = function () {
-		redirect('./noServer.html');
+		HandleNoServer();
 	};
 });
