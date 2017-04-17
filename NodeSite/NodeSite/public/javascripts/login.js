@@ -14,9 +14,9 @@ function LoginManager(root) {
 			loginManager.setErrorMsg(packA1.msg);
 		}
 		else {
-			Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
-			Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: 'beachbevs.com', secure: true });
-			Cookies.set('eID', packA1.eID, { path: '/', domain: 'beachbevs.com', secure: true });
+			Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: window.location.hostname, secure: true });
+			Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: window.location.hostname, secure: true });
+			Cookies.set('eID', packA1.eID, { path: '/', domain: window.location.hostname, secure: true });
 			var url = document.location.href;
 			var questionI = url.indexOf('?');
 			if (questionI !== -1) {

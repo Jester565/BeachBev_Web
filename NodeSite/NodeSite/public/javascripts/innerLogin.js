@@ -27,9 +27,9 @@ function InnerLoginManager(client, root, onLogin) {
 			redirect('./login.html?' + document.location.href);
 		}
 		else {
-			Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: 'beachbevs.com', secure: true });
-			Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: 'beachbevs.com', secure: true });
-			Cookies.set('eID', packA1.eID, { path: '/', domain: 'beachbevs.com', secure: true });
+			Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: window.location.hostname, secure: true });
+			Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: window.location.hostname, secure: true });
+			Cookies.set('eID', packA1.eID, { path: '/', domain: window.location.hostname, secure: true });
 			if (innerLoginManager.onLogin !== undefined) {
 				innerLoginManager.onLogin();
 			}

@@ -135,6 +135,8 @@ function MasterManager(root) {
 	}
 
 	this.viewResume = function (fKey) {
+		var title = fKey.substr(fKey.indexOf('/') + 1);
+		masterManager.initPDFDisplay(title);
 		masterManager.s3Client.getObject({
 			Bucket: BUCKET_NAME,
 			Key: fKey
@@ -144,13 +146,12 @@ function MasterManager(root) {
 			}
 			else {
 				var fileArr = data.Body;
-				masterManager.showPDF(fKey.substr(fKey.indexOf('/') + 1), fileArr);
+				masterManager.showPDF(title, fileArr);
 			}
 		});
 	}
 
 	this.showPDF = function (name, fileArr) {
-		$('#pdfTitle').text(name);
 		masterManager.pdfIndex = 1;
 		PDFJS.getDocument(fileArr).then(function (pdf) {
 			masterManager.pdf = pdf;
@@ -180,19 +181,25 @@ function MasterManager(root) {
 					pdf.getPage(masterManager.pdfIndex).then(masterManager.loadPDFPage);
 				}
 				else {
-					$('body').css('background-color', 'lightgrey');
-					$('#pdfBackDiv').removeClass('hidden');
-					$('#pdfExit').click(function () {
-						$('body').css('background-color', 'white');
-						$('#pdfBackDiv').addClass('hidden');
-						$('.pdfPage').remove();
-						$('#pdfExit').unbind('click');
-						masterManager.pdf = null;
-						masterManager.pdfIndex = 0;
-					});
+					$('#loader').addClass('hidden');
 				}
 			}
 			pdf.getPage(masterManager.pdfIndex).then(masterManager.loadPDFPage);
+		});
+	}
+
+	this.initPDFDisplay = function(title) {
+		$('#pdfTitle').text(title);
+		$('body').css('background-color', 'lightgrey');
+		$('#pdfBackDiv').removeClass('hidden');
+		$('#loader').removeClass('hidden');
+		masterManager.pdf = null;
+		masterManager.pdfIndex = 0;
+		$('#pdfExit').click(function () {
+			$('body').css('background-color', 'white');
+			$('#pdfBackDiv').addClass('hidden');
+			$('.pdfPage').remove();
+			$('#pdfExit').unbind('click');
 		});
 	}
 

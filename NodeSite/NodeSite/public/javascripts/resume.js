@@ -133,6 +133,7 @@ function ResumeManager(root) {
 	}
 
 	this.viewResume = function (file) {
+		resumeManager.initPDFDisplay(file.name);
 		if (file.uploaded) {
 			var fileKey = encodeURIComponent(resumeManager.s3Prefix) + '/' + file.name;
 			resumeManager.s3Client.getObject({
@@ -161,7 +162,6 @@ function ResumeManager(root) {
 	}
 
 	this.showPDF = function (name, fileArr) {
-		$('#pdfTitle').text(name);
 		resumeManager.pdfIndex = 1;
 		PDFJS.getDocument(fileArr).then(function (pdf) {
 			resumeManager.pdf = pdf;
@@ -192,19 +192,24 @@ function ResumeManager(root) {
 				}
 				else
 				{
-					$('body').css('background-color', 'lightgrey');
-					$('#pdfBackDiv').removeClass('hidden');
-					$('#pdfExit').click(function () {
-						$('body').css('background-color', 'white');
-						$('#pdfBackDiv').addClass('hidden');
-						$('.pdfPage').remove();
-						$('#pdfExit').unbind('click');
-						resumeManager.pdf = null;
-						resumeManager.pdfIndex = 0;
-					});
+					$('#loader').addClass('hidden');
 				}
 			}
 			pdf.getPage(resumeManager.pdfIndex).then(resumeManager.loadPDFPage);
+		});
+	}
+	this.initPDFDisplay = function (title) {
+		$('#loader').removeClass('hidden');
+		$('#pdfTitle').text(title);
+		$('body').css('background-color', 'lightgrey');
+		$('#pdfBackDiv').removeClass('hidden');
+		resumeManager.pdf = null;
+		resumeManager.pdfIndex = 0;
+		$('#pdfExit').click(function () {
+			$('body').css('background-color', 'white');
+			$('#pdfBackDiv').addClass('hidden');
+			$('.pdfPage').remove();
+			$('#pdfExit').unbind('click');
 		});
 	}
 	this.initPackets(root);
@@ -258,9 +263,16 @@ Dropzone.options.resumezone = {
 
 		this.on("error", function (file) {
 			if (!file.accepted) {
+				this.removeFile(file);
 				if (file.type !== 'application/pdf') {
-					this.removeFile(file);
 					resumeManager.setErrorMsg("File was not a pdf");
+				}
+				else if (file.size > 2000000) {
+					resumeManager.setErrorMsg("File size exceeded 2 Mb");
+				}
+				else
+				{
+					resumeManager.setErrorMsg("File not accepted");
 				}
 			}
 		});
