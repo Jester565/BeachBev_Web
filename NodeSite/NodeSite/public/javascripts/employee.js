@@ -80,11 +80,11 @@ function EmployeeManager(root) {
 	this.bindOfferButtons = function () {
 		$('#acceptOfferButton').removeClass('processing');
 		$('#acceptOfferButton').click(function () {
-			masterManager.sendOffer(true);
+			employeeManager.sendOffer(true);
 		});
 		$('#declineOfferButton').removeClass('processing');
 		$('#declineOfferButton').click(function () {
-			masterManager.sendOffer(false);
+			employeeManager.sendOffer(false);
 		});
 	}
 
@@ -93,7 +93,7 @@ function EmployeeManager(root) {
 		$('declineOfferButton').unbind('click');
 		$('#acceptOfferButton').addClass('processing');
 		$('#declineOfferButton').addClass('processing');
-		masterManager.sendE6(accept);
+		employeeManager.sendE6(accept);
 	}
 
 	this.initPackets = function (root) {
