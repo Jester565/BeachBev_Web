@@ -74,12 +74,28 @@
 	transition: .25s ease-in-out;
 }
 
-nav ul {
+#accountDiv {
+	text-align: center;
+	font-family: 'Bitter', serif;
+	background-color: rgba(0,0,0,.2);
+	border-color: rgba(0,0,0,.3);
+	border-width: 2px;
+	border-radius: 5px;
+	overflow-wrap: normal;
+	overflow-wrap: break-word;
+}
+
+#logText {
+	font-size: xx-small;
+	margin-bottom: -10px;
+}
+
+ul {
 	display: block;
 	list-style: none;
 }
 
-	nav ul li a {
+	ul li a {
 		cursor: pointer;
 		font-family: 'Bitter', serif;
 		font-weight: bold;
@@ -92,10 +108,18 @@ nav ul {
 		font-size: 2em;
 	}
 
-		nav ul li a:hover {
+		ul li a:hover {
 			background-color: rgba(0, 0, 0, .2);
 		}
 
+#accountDiv a {
+	font-size: x-small;
+	text-align: left;
+	margin-left: 5px;
+	font-weight:normal;
+	margin-top: -10px;
+	margin-bottom: -10px;
+}
 #employeeMenuDiv a {
 	font-size: 1.4em;
 	margin-left: 1em;

@@ -67,7 +67,6 @@
     <Compile Include="public\javascripts\resume.js">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="public\javascripts\SetupManager.js" />
     <Compile Include="public\javascripts\TCPConnection.js" />
     <Compile Include="routes\users.js" />
     <Content Include="package.json" />

@@ -41,7 +41,28 @@ $(document).ready(function () {
 		redirect("./apply.html");
 	});
 
-	
+	$('#subEmpLogOut').click(function () {
+		Cookies.remove('eID');
+		Cookies.remove('deviceID');
+		Cookies.remove('pwdToken');
+		redirect("./login.html");
+	});
+
+	$('#subEmpHome').click(function () {
+		redirect("employee.html");
+	});
+
+	$('#subEmpEmail').click(function () {
+		redirect("./email.html");
+	});
+
+	$('#subEmpResume').click(function () {
+		redirect("./resume.html");
+	});
+
+	$('#subEmpMaster').click(function () {
+		redirect("./master.html");
+	});
 });
 
 var dotInterval = null;
