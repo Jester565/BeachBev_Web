@@ -92,6 +92,16 @@ message PackA8 {
 }
 
 /*
+Response to A2. Includes token and name for displaying in mbar
+*/
+message PackA9 {
+	string pwdToken = 1;
+	uint32 eID = 2;
+	uint32 deviceID = 3;
+	string msg = 4;
+}
+
+/*
 Request to set or change unverified email
 */
 message PackB0 {

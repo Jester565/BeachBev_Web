@@ -42,7 +42,7 @@ declare module "morgan" {
 			 */
 			(format: 'common', options?: Options): express.RequestHandler;
 			/**
-			 * Concise output colored by response status for development use. The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
+			 * Concise output colored by response status for development use. The :status token will be colored red for server error codes, yellow for client error codes, cyan for Redirection codes, and uncolored for all other codes.
 			 * :method :url :status :response-time ms - :res[content-length]
 			 * @param format
 			 * @param options
@@ -172,7 +172,7 @@ declare module "morgan" {
 	function morgan(format: 'common', options?: morgan.Options): express.RequestHandler;
 
 	/***
-	 * Concise output colored by response status for development use. The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
+	 * Concise output colored by response status for development use. The :status token will be colored red for server error codes, yellow for client error codes, cyan for Redirection codes, and uncolored for all other codes.
 	 * :method :url :status :response-time ms - :res[content-length]
 	 * @param format
 	 * @param options

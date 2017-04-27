@@ -6,6 +6,7 @@
 
 class BB_Server;
 
+typedef std::function<bool(BB_Server*)> CommandFunc;
 class CommandHandler
 {
 public:
@@ -15,9 +16,12 @@ public:
 
 	void run();
 
+	bool StopInputCommand(BB_Server*);
+
 	~CommandHandler();
 
 private:
-	std::unordered_map <std::string, std::function<bool(BB_Server*)>> commands;
+	std::unordered_map <std::string, CommandFunc> commands;
 	BB_Server* bbServer;
+	bool readInput;
 };

@@ -1,29 +1,42 @@
 ﻿'use strict';
-var masterManager;
-var innerLoginManager;
 
 var BUCKET_REGION = 'us-west-1';
 var BUCKET_NAME = 'beachbev-resumes'
 
 var ACCEPT_ASTATE = 1;
 
-var client = new Client(function (root) {
-	innerLoginManager = new InnerLoginManager(client, root,
-		function () {
-			console.log("LOGGED IN");
-			masterManager = new MasterManager(client.root);
-		});
-	client.tcpConnection.onclose = function () {
-		redirect('./noServer.html');
-	};
+var setman = null;
+var masterManager = null;
+
+$('document').ready(function () {
+	$("#mBar").load("./mBar.html", function () {
+		masterManager = new MasterManager();
+		setman = new SetupManager(true, masterManager);
+	});
 });
 
-function MasterManager(root) {
+function MasterManager() {
 	masterManager = this;
-
 	this.s3Client = null;
 	this.pdf = null;
 	this.pdfIndex = 0;
+
+	this.onProto = function () {
+		masterManager.initPackets();
+	}
+
+	this.onOpen = function () {
+		masterManager.sendE0();
+	}
+
+	this.onReopen = function () {
+		masterManager.sendE0();
+	}
+
+	this.onClose = function () {
+		$('#loading').removeClass('hidden');
+		$('#empViewDiv').addClass('hidden');
+	}
 
 	this.initDisplay = function () {
 		$('#loading').addClass('hidden');
@@ -50,13 +63,13 @@ function MasterManager(root) {
 	}
 
 	this.initPackets = function (root) {
-		masterManager.PacketD2 = root.lookup("ProtobufPackets.PackD2");
-		masterManager.PacketD1 = root.lookup("ProtobufPackets.PackD1");
-		masterManager.PacketE0 = root.lookup("ProtobufPackets.PackE0");
-		masterManager.PacketE1 = root.lookup("ProtobufPackets.PackE1");
-		masterManager.PacketE2 = root.lookup("ProtobufPackets.PackE2");
-		masterManager.PacketE3 = root.lookup("ProtobufPackets.PackE3");
-		client.packetManager.addPKey(new PKey("E1", function (iPack) {
+		masterManager.PacketD2 = setman.client.root.lookup("ProtobufPackets.PackD2");
+		masterManager.PacketD1 = setman.client.root.lookup("ProtobufPackets.PackD1");
+		masterManager.PacketE0 = setman.client.root.lookup("ProtobufPackets.PackE0");
+		masterManager.PacketE1 = setman.client.root.lookup("ProtobufPackets.PackE1");
+		masterManager.PacketE2 = setman.client.root.lookup("ProtobufPackets.PackE2");
+		masterManager.PacketE3 = setman.client.root.lookup("ProtobufPackets.PackE3");
+		setman.client.packetManager.addPKey(new PKey("E1", function (iPack) {
 			var packE1 = masterManager.PacketE1.decode(iPack.packData);
 			if (packE1.success) {
 				for (var i = 0; i < packE1.acceptedEIDs.length; i++) {
@@ -73,7 +86,7 @@ function MasterManager(root) {
 				console.log(packE1.msg);
 			}
 		}));
-		client.packetManager.addPKey(new PKey("D1", function (iPack) {
+		setman.client.packetManager.addPKey(new PKey("D1", function (iPack) {
 			var packD1 = masterManager.PacketD1.decode(iPack.packData);
 			if (packD1.accessKey.length > 0) {
 				var credentials = new AWS.Credentials(packD1.accessKeyID, packD1.accessKey, packD1.sessionKey);
@@ -86,14 +99,14 @@ function MasterManager(root) {
 			}
 		}));
 
-		client.packetManager.addPKey(new PKey("E3", function (iPack) {
+		setman.client.packetManager.addPKey(new PKey("E3", function (iPack) {
 			var packE3 = masterManager.PacketE3.decode(iPack.packData);
 			if (packE3.success) {
 					$('#' + packE3.eID.toString()).remove();
 				addEmp('#acceptEmpDiv', toString(packE3.eID));
 			}
 			else {
-				setErrorMsg(packE3.msg);
+				masterManager.setErrorMsg(packE3.msg);
 			}
 		}));
 	}
@@ -205,12 +218,12 @@ function MasterManager(root) {
 
 	this.sendE0 = function () {
 		var packE0 = masterManager.PacketE0.create({});
-		client.tcpConnection.sendPack(new OPacket("E0", true, [0], packE0, masterManager.PacketE0));
+		setman.client.tcpConnection.sendPack(new OPacket("E0", true, [0], packE0, masterManager.PacketE0));
 	}
 
 	this.sendD2 = function () {
 		var packD2 = masterManager.PacketD2.create({});
-		client.tcpConnection.sendPack(new OPacket("D2", true, [0], packD2, masterManager.PacketD2));
+		setman.client.tcpConnection.sendPack(new OPacket("D2", true, [0], packD2, masterManager.PacketD2));
 	}
 
 	this.sendE2 = function (id, nAState) {
@@ -218,9 +231,6 @@ function MasterManager(root) {
 			eID: parseInt(id),
 			aState: nAState
 		});
-		client.tcpConnection.sendPack(new OPacket("E2", true, [0], packE2, masterManager.PacketE2));
+		setman.client.tcpConnection.sendPack(new OPacket("E2", true, [0], packE2, masterManager.PacketE2));
 	}
-
-	this.initPackets(root);
-	this.sendE0();
 }

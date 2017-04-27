@@ -56,6 +56,9 @@ extern PackA7DefaultTypeInternal _PackA7_default_instance_;
 class PackA8;
 class PackA8DefaultTypeInternal;
 extern PackA8DefaultTypeInternal _PackA8_default_instance_;
+class PackA9;
+class PackA9DefaultTypeInternal;
+extern PackA9DefaultTypeInternal _PackA9_default_instance_;
 class PackB0;
 class PackB0DefaultTypeInternal;
 extern PackB0DefaultTypeInternal _PackB0_default_instance_;
@@ -1054,6 +1057,123 @@ class PackA8 : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr pwdresettoken_;
   ::google::protobuf::internal::ArenaStringPtr pwd_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
+  friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
+  friend const ::google::protobuf::uint32* protobuf_Offsets_BBPacks_2eproto();
+  friend void protobuf_ShutdownFile_BBPacks_2eproto();
+
+};
+// -------------------------------------------------------------------
+
+class PackA9 : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ProtobufPackets.PackA9) */ {
+ public:
+  PackA9();
+  virtual ~PackA9();
+
+  PackA9(const PackA9& from);
+
+  inline PackA9& operator=(const PackA9& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PackA9& default_instance();
+
+  static inline const PackA9* internal_default_instance() {
+    return reinterpret_cast<const PackA9*>(
+               &_PackA9_default_instance_);
+  }
+
+  void Swap(PackA9* other);
+
+  // implements Message ----------------------------------------------
+
+  inline PackA9* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  PackA9* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const PackA9& from);
+  void MergeFrom(const PackA9& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(PackA9* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // string pwdToken = 1;
+  void clear_pwdtoken();
+  static const int kPwdTokenFieldNumber = 1;
+  const ::std::string& pwdtoken() const;
+  void set_pwdtoken(const ::std::string& value);
+  void set_pwdtoken(const char* value);
+  void set_pwdtoken(const char* value, size_t size);
+  ::std::string* mutable_pwdtoken();
+  ::std::string* release_pwdtoken();
+  void set_allocated_pwdtoken(::std::string* pwdtoken);
+
+  // uint32 eID = 2;
+  void clear_eid();
+  static const int kEIDFieldNumber = 2;
+  ::google::protobuf::uint32 eid() const;
+  void set_eid(::google::protobuf::uint32 value);
+
+  // uint32 deviceID = 3;
+  void clear_deviceid();
+  static const int kDeviceIDFieldNumber = 3;
+  ::google::protobuf::uint32 deviceid() const;
+  void set_deviceid(::google::protobuf::uint32 value);
+
+  // string msg = 4;
+  void clear_msg();
+  static const int kMsgFieldNumber = 4;
+  const ::std::string& msg() const;
+  void set_msg(const ::std::string& value);
+  void set_msg(const char* value);
+  void set_msg(const char* value, size_t size);
+  ::std::string* mutable_msg();
+  ::std::string* release_msg();
+  void set_allocated_msg(::std::string* msg);
+
+  // @@protoc_insertion_point(class_scope:ProtobufPackets.PackA9)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr pwdtoken_;
+  ::google::protobuf::internal::ArenaStringPtr msg_;
+  ::google::protobuf::uint32 eid_;
+  ::google::protobuf::uint32 deviceid_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_BBPacks_2eproto_impl();
   friend void  protobuf_AddDesc_BBPacks_2eproto_impl();
@@ -3964,6 +4084,126 @@ inline void PackA8::set_allocated_pwd(::std::string* pwd) {
 
 // -------------------------------------------------------------------
 
+// PackA9
+
+// string pwdToken = 1;
+inline void PackA9::clear_pwdtoken() {
+  pwdtoken_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PackA9::pwdtoken() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackA9.pwdToken)
+  return pwdtoken_.GetNoArena();
+}
+inline void PackA9::set_pwdtoken(const ::std::string& value) {
+  
+  pwdtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackA9.pwdToken)
+}
+inline void PackA9::set_pwdtoken(const char* value) {
+  
+  pwdtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.PackA9.pwdToken)
+}
+inline void PackA9::set_pwdtoken(const char* value, size_t size) {
+  
+  pwdtoken_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.PackA9.pwdToken)
+}
+inline ::std::string* PackA9::mutable_pwdtoken() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.PackA9.pwdToken)
+  return pwdtoken_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PackA9::release_pwdtoken() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.PackA9.pwdToken)
+  
+  return pwdtoken_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PackA9::set_allocated_pwdtoken(::std::string* pwdtoken) {
+  if (pwdtoken != NULL) {
+    
+  } else {
+    
+  }
+  pwdtoken_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pwdtoken);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackA9.pwdToken)
+}
+
+// uint32 eID = 2;
+inline void PackA9::clear_eid() {
+  eid_ = 0u;
+}
+inline ::google::protobuf::uint32 PackA9::eid() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackA9.eID)
+  return eid_;
+}
+inline void PackA9::set_eid(::google::protobuf::uint32 value) {
+  
+  eid_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackA9.eID)
+}
+
+// uint32 deviceID = 3;
+inline void PackA9::clear_deviceid() {
+  deviceid_ = 0u;
+}
+inline ::google::protobuf::uint32 PackA9::deviceid() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackA9.deviceID)
+  return deviceid_;
+}
+inline void PackA9::set_deviceid(::google::protobuf::uint32 value) {
+  
+  deviceid_ = value;
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackA9.deviceID)
+}
+
+// string msg = 4;
+inline void PackA9::clear_msg() {
+  msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PackA9::msg() const {
+  // @@protoc_insertion_point(field_get:ProtobufPackets.PackA9.msg)
+  return msg_.GetNoArena();
+}
+inline void PackA9::set_msg(const ::std::string& value) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ProtobufPackets.PackA9.msg)
+}
+inline void PackA9::set_msg(const char* value) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ProtobufPackets.PackA9.msg)
+}
+inline void PackA9::set_msg(const char* value, size_t size) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ProtobufPackets.PackA9.msg)
+}
+inline ::std::string* PackA9::mutable_msg() {
+  
+  // @@protoc_insertion_point(field_mutable:ProtobufPackets.PackA9.msg)
+  return msg_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PackA9::release_msg() {
+  // @@protoc_insertion_point(field_release:ProtobufPackets.PackA9.msg)
+  
+  return msg_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PackA9::set_allocated_msg(::std::string* msg) {
+  if (msg != NULL) {
+    
+  } else {
+    
+  }
+  msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
+  // @@protoc_insertion_point(field_set_allocated:ProtobufPackets.PackA9.msg)
+}
+
+// -------------------------------------------------------------------
+
 // PackB0
 
 // string email = 1;
@@ -5061,6 +5301,8 @@ inline void PackE7::set_allocated_msg(::std::string* msg) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

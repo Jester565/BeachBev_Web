@@ -1,66 +1,70 @@
-﻿"use strict";
+﻿'use strict';
 
-function EmailConfirmManager(root) {
+var setman = null;
+var emailConfirmManager = null;
+
+$('document').ready(function () {
+	$("#mBar").load("./mBar.html", function () {
+		emailConfirmManager = new EmailConfirmManager();
+		setman = new SetupManager(true, emailConfirmManager);
+	});
+});
+
+function EmailConfirmManager() {
 	emailConfirmManager = this;
-	emailConfirmManager.PacketB2 = root.lookup("ProtobufPackets.PackB2");
-	emailConfirmManager.PacketB3 = root.lookup("ProtobufPackets.PackB3");
 
-	client.packetManager.addPKey(new PKey("B3", function (iPack) {
-		$('#loading').addClass('hidden');
-		var packB3 = emailConfirmManager.PacketB3.decode(iPack.packData);
-		if (packB3.success) {
-			console.log("Success!");
-			$('#checkmark').removeClass('hidden');
-			$('#msg').removeClass('hidden');
-			$('#msg').addClass('success');
-			$('#msg').text(packB3.msg);
-		}
-		else {
-			emailConfirmManager.setErrorMsg(packB3.msg);
-		}
-	}, emailConfirmManager, "Gets if the confirmation was successful"));
+	this.onProto = function () {
+		emailConfirmManager.initPacks();
+	}
 
-	emailConfirmManager.setErrorMsg = function (str) {
+	this.onOpen = function () {
+		emailConfirmManager.sendB2();
+	}
+
+	this.onReopen = function () {
+		if ($('#checkmark').hasClass('hidden')) {
+			emailConfirmManager.sendB2();
+		}
+	}
+
+	this.initPacks = function () {
+		emailConfirmManager.PacketB2 = setman.client.root.lookup("ProtobufPackets.PackB2");
+		emailConfirmManager.PacketB3 = setman.client.root.lookup("ProtobufPackets.PackB3");
+
+		setman.client.packetManager.addPKey(new PKey("B3", function (iPack) {
+			$('#loading').addClass('hidden');
+			var packB3 = emailConfirmManager.PacketB3.decode(iPack.packData);
+			if (packB3.success) {
+				console.log("Success!");
+				$('#checkmark').removeClass('hidden');
+				$('#msg').removeClass('hidden');
+				$('#msg').addClass('success');
+				$('#msg').text(packB3.msg);
+			}
+			else {
+				emailConfirmManager.setErrorMsg(packB3.msg);
+			}
+		}, emailConfirmManager, "Gets if the confirmation was successful"));
+	}
+
+	this.setErrorMsg = function (str) {
 		$('#msg').removeClass('hidden');
 		$('#msg').text(str);
 		$('#msg').focus();
 		$('html, body').scrollTo($('#msg'), 100);
 	};
 
-	var url = window.location.href;
-	var questionI = url.indexOf('?');
-	if (questionI !== -1) {
-		emailConfirmManager.emailToken = url.substring(++questionI);
-		console.log("Email Token: " + emailConfirmManager.emailToken);
-		var packB2 = emailConfirmManager.PacketB2.create({
-			emailToken: emailConfirmManager.emailToken
-		});
-		client.tcpConnection.sendPack(new OPacket("B2", true, [0], packB2, emailConfirmManager.PacketB2));
-	} else {
-		emailConfirmManager.setErrorMsg("No email token in url");
+	this.sendB2 = function () {
+		var url = window.location.href;
+		var questionI = url.indexOf('?');
+		if (questionI !== -1) {
+			emailConfirmManager.emailToken = url.substring(++questionI);
+			var packB2 = emailConfirmManager.PacketB2.create({
+				emailToken: emailConfirmManager.emailToken
+			});
+			setman.client.tcpConnection.sendPack(new OPacket("B2", true, [0], packB2, emailConfirmManager.PacketB2));
+		} else {
+			emailConfirmManager.setErrorMsg("No email token in url");
+		}
 	}
-	this.setErrorMsg = function (msg) {
-		$('#msg').html(msg);
-		$('#msg').removeClass('hidden');
-	};
 }
-
-var emailConfirmManager = null;
-var innerLoginManager = null;
-
-var client = new Client(function (root) {
-	console.log("ON LOAD CALLED");
-	innerLoginManager = new InnerLoginManager(client, root,
-		function () {
-			console.log("LOGGED IN");
-			if (emailConfirmManager === null) {
-				emailConfirmManager = new EmailConfirmManager(client.root);
-			}
-			else {
-				HandleConnectServer();
-			}
-		});
-	client.tcpConnection.onclose = function () {
-		HandleNoServer();
-	};
-});

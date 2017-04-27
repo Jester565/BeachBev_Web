@@ -12,7 +12,6 @@ function PacketManager() {
 	this.addPKey = function (pKey) {
 		if (pKey !== undefined) {
 			this.pKeys.set(pKey.locKey, pKey);
-			console.log("pKey: " + pKey.locKey + " was set");
 		}
 	};
 	this.processPacket = function (iPack) {
@@ -21,12 +20,11 @@ function PacketManager() {
 			pKey.func(iPack);
 		}
 		else {
-			console.log("The key " + iPack.locKey + " was not found in pKeys, locKey Size: " + iPack.locKey.length);
+			console.error("The key " + iPack.locKey + " was not found in pKeys, locKey Size: " + iPack.locKey.length);
 			alert(JSON.stringify(this.pKeys, null, 4));
 		}
 	};
 	this.removePKey = function (pKey) {
-		console.log("REMOVE CALLED");
 		if (typeof pKey === "string") {
 			this.pKeys.delete(pKey);
 		}

@@ -710,7 +710,7 @@ declare module "express-serve-static-core" {
 				* Set the location header to `url`.
 				*
 				* The given `url` can also be the name of a mapped url, for
-				* example by default express supports "back" which redirects
+				* example by default express supports "back" which Redirects
 				* to the _Referrer_ or _Referer_ headers or "/".
 				*
 				* Examples:
@@ -746,15 +746,15 @@ declare module "express-serve-static-core" {
 				*
 				* Examples:
 				*
-				*    res.redirect('/foo/bar');
-				*    res.redirect('http://example.com');
-				*    res.redirect(301, 'http://example.com');
-				*    res.redirect('http://example.com', 301);
-				*    res.redirect('../login'); // /blog/post/1 -> /blog/login
+				*    res.Redirect('/foo/bar');
+				*    res.Redirect('http://example.com');
+				*    res.Redirect(301, 'http://example.com');
+				*    res.Redirect('http://example.com', 301);
+				*    res.Redirect('../login'); // /blog/post/1 -> /blog/login
 				*/
-		redirect(url: string): void;
-		redirect(status: number, url: string): void;
-		redirect(url: string, status: number): void;
+		Redirect(url: string): void;
+		Redirect(status: number, url: string): void;
+		Redirect(url: string, status: number): void;
 
 		/**
 				* Render `view` with the given `options` and optional callback `fn`.

@@ -179,7 +179,7 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 {
 	ProtobufPackets::PackA2 packA2;
 	packA2.ParseFromString(*iPack->getData());
-	ProtobufPackets::PackA1 replyPacket;
+	ProtobufPackets::PackA9 replyPacket;
 	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
 	if (sender == nullptr) {
 		return;
@@ -224,7 +224,7 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 	{
 		replyPacket.set_msg("Could not aquire a token");
 	}
-	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A1");
+	boost::shared_ptr<OPacket> oPack = boost::make_shared<WSOPacket>("A9");
 	oPack->setSenderID(0);
 	oPack->setData(boost::make_shared<std::string>(replyPacket.SerializeAsString()));
 	bbServer->getClientManager()->send(oPack, sender);

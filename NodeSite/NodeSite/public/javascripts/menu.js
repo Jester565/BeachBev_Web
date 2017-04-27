@@ -487,6 +487,6 @@ client.packetManager.addPKey(new PKey("H1", function (iPack) {
 		client.tcpConnection.sendPack(new OPacket("B0", true, [0], packB0));
 	}
 	else {
-		redirect("outRange.html");
+		Redirect("outRange.html");
 	}
 }, this, "Gets the success of the login"));

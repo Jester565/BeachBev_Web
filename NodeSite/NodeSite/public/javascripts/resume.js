@@ -1,34 +1,28 @@
 ﻿'use strict';
-var innerLoginManager;
 
 var BUCKET_REGION = 'us-west-1';
-var BUCKET_NAME = 'beachbev-resumes'
+var BUCKET_NAME = 'beachbev-resumes';
 
+var setman = null;
 var resumeManager = null;
-var resumeZone = null;
 
-var client = new Client(function (root) {
-	console.log("ON LOAD CALLED");
-	innerLoginManager = new InnerLoginManager(client, root,
-		function () {
-			console.log("LOGGED IN");
-			if (resumeManager === null) {
-				resumeManager = new ResumeManager(client.root);
-			}
-			else {
-				if ($('#uploadDiv').hasClass('hidden')) {
-					resumeManager.sendD0();
-				}
-				HandleConnectServer();
-			}
-		});
-	client.tcpConnection.onclose = function () {
-		HandleNoServer();
-	};
+$('document').ready(function () {
+	$("#mBar").load("./mBar.html", function () {
+		resumeManager = new ResumeManager();
+		setman = new SetupManager(true, resumeManager);
+	});
 });
 
-function ResumeManager(root) {
+function ResumeManager() {
 	resumeManager = this;
+
+	this.onProto = function () {
+		resumeManager.initPackets();
+	}
+
+	this.onOpen = function () {
+		resumeManager.sendD0();
+	}
 
 	this.s3Client = null;
 	this.s3Prefix = null;
@@ -60,9 +54,9 @@ function ResumeManager(root) {
 	}
 
 	this.initPackets = function (root) {
-		resumeManager.PacketD0 = root.lookup("ProtobufPackets.PackD0");
-		resumeManager.PacketD1 = root.lookup("ProtobufPackets.PackD1");
-		client.packetManager.addPKey(new PKey("D1", function (iPack) {
+		resumeManager.PacketD0 = setman.client.root.lookup("ProtobufPackets.PackD0");
+		resumeManager.PacketD1 = setman.client.root.lookup("ProtobufPackets.PackD1");
+		setman.client.packetManager.addPKey(new PKey("D1", function (iPack) {
 			var packD1 = resumeManager.PacketD1.decode(iPack.packData);
 			if (packD1.accessKey.length > 0) {
 				resumeManager.s3Prefix = packD1.folderObjKey;
@@ -78,7 +72,7 @@ function ResumeManager(root) {
 
 	this.sendD0 = function () {
 		var packD0 = resumeManager.PacketD0.create({});
-		client.tcpConnection.sendPack(new OPacket("D0", true, [0], packD0, resumeManager.PacketD0));
+		setman.client.tcpConnection.sendPack(new OPacket("D0", true, [0], packD0, resumeManager.PacketD0));
 	}
 
 	this.loadResumes = function () {
@@ -212,8 +206,6 @@ function ResumeManager(root) {
 			$('#pdfExit').unbind('click');
 		});
 	}
-	this.initPackets(root);
-	this.sendD0();
 }
 
 Dropzone.options.resumezone = {

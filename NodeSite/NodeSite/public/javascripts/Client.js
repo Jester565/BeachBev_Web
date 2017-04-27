@@ -1,43 +1,29 @@
-function redirect(url) {
-	if (client !== null && client.tcpConnection !== null) {
-		client.tcpConnection.onclose = null;
-	}
-	document.location.href = url;
-}
+'use strict';
 
-function HandleConnectServer() {
-	HideNoServer();
-}
-
-function HandleNoServer() {
-	ShowNoServer();
-	client.connect();
-	console.log("Attempting reconnection");
-}
-
-function Client(protoInitCallback) {
-	var client = this;
+var client = null;
+function Client(domain, port, protoInitCallback) {
+	client = this;
+	this._domain = domain;
+	this._port = port;
+	this._protoInitCallback = protoInitCallback;
 
 	this.connect = function () {
-		if (window.location.protocol !== "https:") {
-			client.tcpConnection.connect("beachbevs.com", "8000");
-		}
-		else {
-			client.tcpConnection.connect("beachbevs.com", "8443");
-		}
+		client.tcpConnection.connect(client._domain, client._port);
 	}
 
+	//Initializes the protobuf addon
 	protobuf.load("PackFW.proto", function (err, root) {
 		if (err) {
 			throw err;
 		}
 		client.root = root;
+		//Create the tcpConnection object
 		client.tcpConnection = new TCPConnection(root);
 
 		client.packetManager = new PacketManager();
 		client.tcpConnection.onmessage = function (iPack) { client.packetManager.processPacket(iPack); };
 
-		protoInitCallback(root);
+		client._protoInitCallback(root);
 		client.connect();
 	});
 }

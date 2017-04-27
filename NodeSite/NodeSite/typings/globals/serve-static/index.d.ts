@@ -63,7 +63,7 @@ declare module "serve-static" {
 			/**
 			 * Redirect to trailing "/" when the pathname is a dir. Defaults to true.
 			 */
-			redirect?: boolean;
+			Redirect?: boolean;
 
 			/**
 			 * Function to set custom headers on response. Alterations to the headers need to occur synchronously.

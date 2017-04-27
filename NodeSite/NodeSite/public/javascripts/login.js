@@ -1,45 +1,75 @@
-"use strict";
+'use strict';
 
-function LoginManager(root) {
+var setman = null;
+var loginManager = null;
+
+$('document').ready(function () {
+	$("#mBar").load("./mBar.html", function () {
+		loginManager = new LoginManager();
+		setman = new SetupManager(false, loginManager);
+	});
+});
+
+function LoginManager() {
 	loginManager = this;
-	loginManager.PacketA3 = root.lookup("ProtobufPackets.PackA3");
-	loginManager.PacketA1 = root.lookup("ProtobufPackets.PackA1");
-	loginManager.PacketA4 = root.lookup("ProtobufPackets.PackA4");
-	loginManager.PacketA5 = root.lookup("ProtobufPackets.PackA5");
 
-	client.packetManager.addPKey(new PKey("A1", function (iPack) {
-		var packA1 = loginManager.PacketA1.decode(iPack.packData);
-		if (packA1.pwdToken === null || packA1.pwdToken.length <= 0) {
+	this.onProto = function () {
+		loginManager.initPacks();
+	}
+
+	this.onOpen = function () {
+		loginManager.bindButtons();
+		$('#loginDiv').removeClass('hidden');
+		$('#loading').addClass('hidden');
+	}
+
+	this.onReopen = function () {
+		if ($('#cancelButton').hasClass('processing')) {
 			loginManager.bindButtons();
-			loginManager.setErrorMsg(packA1.msg);
+			loginManager.setErrorMsg("Request Failed: Connection Lost");
 		}
-		else {
-			Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: window.location.hostname, secure: true });
-			Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: window.location.hostname, secure: true });
-			Cookies.set('eID', packA1.eID, { path: '/', domain: window.location.hostname, secure: true });
-			var url = document.location.href;
-			var questionI = url.indexOf('?');
-			if (questionI !== -1) {
-				redirect(url.substring(++questionI));
+	}
+
+	this.initPacks = function () {
+		loginManager.PacketA3 = setman.client.root.lookup("ProtobufPackets.PackA3");
+		loginManager.PacketA1 = setman.client.root.lookup("ProtobufPackets.PackA1");
+		loginManager.PacketA4 = setman.client.root.lookup("ProtobufPackets.PackA4");
+		loginManager.PacketA5 = setman.client.root.lookup("ProtobufPackets.PackA5");
+
+		setman.client.packetManager.addPKey(new PKey("A1", function (iPack) {
+			var packA1 = loginManager.PacketA1.decode(iPack.packData);
+			if (packA1.pwdToken === null || packA1.pwdToken.length <= 0) {
+				loginManager.bindButtons();
+				loginManager.setErrorMsg(packA1.msg);
 			}
 			else {
-				redirect('./employee.html');
+				Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: window.location.hostname, secure: true });
+				Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: window.location.hostname, secure: true });
+				Cookies.set('eID', packA1.eID, { path: '/', domain: window.location.hostname, secure: true });
+				var url = document.location.href;
+				var questionI = url.indexOf('?');
+				if (questionI !== -1) {
+					Redirect(url.substring(++questionI));
+				}
+				else {
+					Redirect('./employee.html');
+				}
 			}
-		}
-	}, loginManager, "Gets the success of the login"));
+		}, loginManager, "Gets the success of the login"));
 
-	client.packetManager.addPKey(new PKey("A5", function (iPack) {
-		loginManager.bindButtons();
-		var packA5 = loginManager.PacketA5.decode(iPack.packData);
-		if (packA5.success) {
-			loginManager.setMsg(packA5.msg);
-		}
-		else {
-			loginManager.setErrorMsg(packA5.msg);
-		}
-	}, loginManager, "Gets the success of the password reset email"));
+		setman.client.packetManager.addPKey(new PKey("A5", function (iPack) {
+			loginManager.bindButtons();
+			var packA5 = loginManager.PacketA5.decode(iPack.packData);
+			if (packA5.success) {
+				loginManager.setMsg(packA5.msg);
+			}
+			else {
+				loginManager.setErrorMsg(packA5.msg);
+			}
+		}, loginManager, "Gets the success of the password reset email"));
+	}
 
-	loginManager.bindButtons = function () {
+	this.bindButtons = function () {
 		$('#loginButton').removeClass('processing');
 		$('#pwdResetButton').removeClass('processing');
 		$('#cancelButton').removeClass('processing');
@@ -60,7 +90,7 @@ function LoginManager(root) {
 					pwd: $('#pwd').val(),
 					deviceID: devID
 				});
-				client.tcpConnection.sendPack(new OPacket("A3", true, [0], packA3, loginManager.PacketA3));
+				setman.client.tcpConnection.sendPack(new OPacket("A3", true, [0], packA3, loginManager.PacketA3));
 				loginManager.unbindButtons();
 			}
 		});
@@ -96,7 +126,7 @@ function LoginManager(root) {
 		});
 	};
 
-	loginManager.unbindButtons = function () {
+	this.unbindButtons = function () {
 		$('#msg').addClass('hidden');
 		$('#loginButton').unbind('click');
 		$('#pwdResetButton').unbind('click');
@@ -106,43 +136,17 @@ function LoginManager(root) {
 		$('#cancelButton').addClass('processing');
 	};
 
-	loginManager.setMsg = function (msg) {
+	this.setMsg = function (msg) {
 		$('#msg').text(msg);
 		$('#msg').removeClass('error');
 		$('#msg').removeClass('hidden');
 	};
 
-	loginManager.setErrorMsg = function (msg) {
+	this.setErrorMsg = function (msg) {
 		$('#msg').text(msg);
 		$('#msg').addClass('error');
 		$('#msg').removeClass('hidden');
 		$('#msg').focus();
 		$('html, body').scrollTo($('#msg'), 100);
 	};
-
-	loginManager.bindButtons();
-	$('#loginDiv').removeClass('hidden');
-	$('#loading').addClass('hidden');
 }
-
-var loginManager = null;
-
-var client = new Client(function (root) {
-	console.log("ON LOAD CALLED");
-	client.tcpConnection.onopen = function () {
-		if (loginManager === null) {
-			loginManager = new LoginManager(client.root);
-		}
-		else
-		{
-			if ($('#pwdResetButton').hasClass('processing')) {
-				loginManager.bindButtons();
-				loginManager.setErrorMsg('Lost server connection');
-			}
-			HandleConnectServer();
-		}
-	};
-	client.tcpConnection.onclose = function () {
-		HandleNoServer();
-	};
-});

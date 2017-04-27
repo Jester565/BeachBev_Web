@@ -54,7 +54,9 @@
     <Compile Include="public\javascripts\master.js">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="public\javascripts\mBar.js" />
+    <Compile Include="public\javascripts\mBar.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="public\javascripts\mBarImpl.js" />
     <Compile Include="public\javascripts\menu.js" />
     <Compile Include="public\javascripts\orders.js" />
@@ -62,9 +64,15 @@
     <Compile Include="public\javascripts\PacketManager.js" />
     <Compile Include="public\javascripts\pdf.js" />
     <Compile Include="public\javascripts\pdf.worker.js" />
+    <Compile Include="public\javascripts\PKeyButton.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="public\javascripts\protobuf.min.js" />
     <Compile Include="public\javascripts\pwdReset.js" />
     <Compile Include="public\javascripts\resume.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="public\javascripts\setup.js">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="public\javascripts\TCPConnection.js" />

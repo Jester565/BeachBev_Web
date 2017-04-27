@@ -12,28 +12,24 @@ this.CONNECTION_STATES = {
 
 function TCPConnection(root) {
 	var tcpConnect = this;
-	this.connectionState = CONNECTION_STATES.SEARCHING;
 	if (root === undefined) {
 		tcpConnect.connectionState = CONNECTION_STATES.INVALID_ARGS;
 		throw (new Error("root is undefined"));
 	}
+	this.connectionState = CONNECTION_STATES.SEARCHING;
 
 	this.PackHeaderIn = root.lookup("ProtobufPackets.PackHeaderOut");
 	this.PackHeaderOut = root.lookup("ProtobufPackets.PackHeaderIn");
 
-	this.connect = function (ip, port) {
-		if (typeof ip !== 'string' || typeof port !== 'string') {
+	this.connect = function (domain, port) {
+		if (typeof domain !== 'string' || typeof port !== 'string') {
 			this.connectionState = CONNECTION_STATES.INVALID_ARGS;
 			throw (new Error("IP and Port must both be strings"));
 		}
 
 		this.bigEndian = isBigEndian();
-		var connectPrefix = "ws://";
-		if (window.location.protocol === "https:") {
-			connectPrefix = "wss://";
-		}
 
-		tcpConnect.socket = new WebSocket(connectPrefix + ip + ":" + port);
+		tcpConnect.socket = new WebSocket(domain + ":" + port);
 		tcpConnect.socket.binaryType = "arraybuffer";
 		tcpConnect.socket.onopen = function () {
 			tcpConnect.connectionState = CONNECTION_STATES.CONNECTED;
@@ -50,7 +46,6 @@ function TCPConnection(root) {
 			console.log("Connection Closed: " + evt.code + " - " + evt.reason);
 		};
 		this.socket.onmessage = function (evt) {
-			console.log("new Message");
 			var dataArr = new Uint8Array(evt.data);
 			var headerSize = 0;
 			if (!tcpConnect.bigEndian) {
@@ -68,7 +63,7 @@ function TCPConnection(root) {
 				packArr[i] = dataArr[i + MAX_SIZE_BYTES + headerSize];
 			}
 			var headerPackIn = tcpConnect.PackHeaderIn.decode(headerPackArr);
-			console.log("SENT FROM ID: " + headerPackIn.sentFromID);
+			console.log("Packet with key: " + headerPackIn.locKey + " received");
 			var iPack = new IPacket(headerPackIn.locKey, headerPackIn.sentFromID, packArr);
 			if (tcpConnect.onmessage !== undefined) {
 				tcpConnect.onmessage(iPack);
@@ -78,21 +73,20 @@ function TCPConnection(root) {
 			}
 		};
 		this.socket.onerror = function (evt) {
-			console.log("Socket error: " + evt.data);
+			console.warn("Socket error: " + evt.data);
 			this.connectionState = CONNECTION_STATES.TIMED_OUT;
 			if (TCPConnection.onerror !== undefined) {
 				TCPConnection.onerror();
 			}
 		};
 		this.sendPack = function (oPack) {
-			console.log(this.connectionState.val);
+			console.log("Sending pack with key: " + oPack.locKey);
 			var packUintArr = oPack.packBuilder.encode(oPack.pack).finish();
 			var packSize = packUintArr.length;
 
 			var headerPack = this.PackHeaderOut.create({ serverRead: oPack.serverRead, locKey: oPack.locKey, sendToIDs: oPack.sendToIDs });
 			var headerPackUintArr = this.PackHeaderOut.encode(headerPack).finish();
 			var headerPackSize = headerPackUintArr.length;
-			console.log("HEADER_PACK_SIZE: " + headerPackSize);
 			if (headerPackSize % 1 !== 0) {
 				alert("headerSize was not an integer...");
 			}
@@ -107,8 +101,6 @@ function TCPConnection(root) {
 			}
 			totalArr.set(headerPackUintArr, MAX_SIZE_BYTES);
 			totalArr.set(packUintArr, MAX_SIZE_BYTES + headerPackSize);
-			console.log("Total size: " + totalArr.length);
-			console.log("Pack size: " + packUintArr.length);
 			this.socket.send(totalArr.buffer);
 		};
 	};

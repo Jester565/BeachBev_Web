@@ -1,7 +1,5 @@
 ﻿'use strict';
 
-var innerLoginManager = null;
-var employeeManager = null;
 var INVALID_ASTATE = -2;
 var UNVERIFIED_ASTATE = -1;
 var UNACCEPTED_ASTATE = 0;
@@ -9,30 +7,26 @@ var ACCEPTED_ASTATE = 1;
 var DECLINED_ASTATE = 2;
 var EMPLOYEE_ASTATE = 3;
 
-var client = new Client(function (root) {
-	innerLoginManager = new InnerLoginManager(client, root,
-		function () {
-			if (employeeManager === null) {
-				employeeManager = new EmployeeManager(client.root);
-			}
-			else {
-				if ($('#acceptOfferButton').hasClass('processing')) {
-					employeeManager.bindOfferButtons();
-					employeeManager.setErrorMsg(packE7.msg);
-				}
-				if ($('#linkDiv').hasClass('hidden')) {
-					employeeManager.sendE4();
-				}
-				HandleConnectServer();
-			}
-		});
-	client.tcpConnection.onclose = function () {
-		HandleNoServer();
-	}
+var setman = null;
+var employeeManager = null;
+
+$('document').ready(function () {
+	$("#mBar").load("./mBar.html", function () {
+		employeeManager = new EmployeeManager();
+		setman = new SetupManager(true, employeeManager);
+	});
 });
 
-function EmployeeManager(root) {
+function EmployeeManager() {
 	employeeManager = this;
+
+	this.onProto = function () {
+		employeeManager.initPackets();
+	}
+
+	this.onOpen = function () {
+		employeeManager.sendE4();
+	}
 
 	this.setErrorMsg = function (msg) {
 		$('#msg').text(msg);
@@ -78,32 +72,28 @@ function EmployeeManager(root) {
 	}
 
 	this.bindOfferButtons = function () {
-		$('#acceptOfferButton').removeClass('processing');
-		$('#acceptOfferButton').click(function () {
-			employeeManager.sendOffer(true);
-		});
-		$('#declineOfferButton').removeClass('processing');
-		$('#declineOfferButton').click(function () {
-			employeeManager.sendOffer(false);
-		});
+		employeeManager.acceptOfferButton.removeClass('processing');
+		employeeManager.acceptOfferButton.bind();
+		employeeManager.declineOfferButton.removeClass('processing');
+		employeeManager.declineOfferButton.bind();
 	}
 
 	this.sendOffer = function (accept) {
-		$('#acceptOfferButton').unbind('click');
-		$('declineOfferButton').unbind('click');
-		$('#acceptOfferButton').addClass('processing');
-		$('#declineOfferButton').addClass('processing');
+		employeeManager.acceptOfferButton.unbind();
+		employeeManager.declineOfferButton.unbind();
+		employeeManager.acceptOfferButton.addClass('processing');
+		employeeManager.declineOfferButton.addClass('processing');
 		employeeManager.sendE6(accept);
 	}
 
 	this.initPackets = function (root) {
-		employeeManager.PacketE4 = root.lookup("ProtobufPackets.PackE4");
-		employeeManager.PacketE5 = root.lookup("ProtobufPackets.PackE5");
-		employeeManager.PacketE6 = root.lookup("ProtobufPackets.PackE6");
-		employeeManager.PacketE7 = root.lookup("ProtobufPackets.PackE7");
-		employeeManager.PacketD3 = root.lookup("ProtobufPackets.PackD3");
-		employeeManager.PacketD4 = root.lookup("ProtobufPackets.PackD4");
-		client.packetManager.addPKey(new PKey("E5", function (iPack) {
+		employeeManager.PacketE4 = setman.client.root.lookup("ProtobufPackets.PackE4");
+		employeeManager.PacketE5 = setman.client.root.lookup("ProtobufPackets.PackE5");
+		employeeManager.PacketE6 = setman.client.root.lookup("ProtobufPackets.PackE6");
+		employeeManager.PacketE7 = setman.client.root.lookup("ProtobufPackets.PackE7");
+		employeeManager.PacketD3 = setman.client.root.lookup("ProtobufPackets.PackD3");
+		employeeManager.PacketD4 = setman.client.root.lookup("ProtobufPackets.PackD4");
+		setman.client.packetManager.addPKey(new PKey("E5", function (iPack) {
 			var packE5 = employeeManager.PacketE5.decode(iPack.packData);
 			if (packE5.aState <= INVALID_ASTATE) {
 				employeeManager.setErrorMsg(packE5.msg);
@@ -123,7 +113,7 @@ function EmployeeManager(root) {
 			}
 		}));
 
-		client.packetManager.addPKey(new PKey("D4", function (iPack) {
+		setman.client.packetManager.addPKey(new PKey("D4", function (iPack) {
 			var packD4 = employeeManager.PacketD4.decode(iPack.packData);
 			if (!packD4.hasResume) {
 				employeeManager.setResumeDisplay();
@@ -135,7 +125,7 @@ function EmployeeManager(root) {
 			employeeManager.initDisplay();
 		}));
 
-		client.packetManager.addPKey(new PKey("E7", function (iPack) {
+		setman.client.packetManager.addPKey(new PKey("E7", function (iPack) {
 			var packE7 = employeeManager.PacketE7.decode(iPack.packData);
 			if (packE7.success) {
 				//handle added employee
@@ -143,30 +133,34 @@ function EmployeeManager(root) {
 			else
 			{
 				employeeManager.bindOfferButtons();
-				setErrorMsg(packE7.msg);
+				employeeManager.setErrorMsg(packE7.msg);
 			}
 		}));
-
-		employeeManager.sendE4();
 	}
 
 	this.sendD3 = function () {
 		employeeManager.clearErrorMsg();
 		var packD3 = employeeManager.PacketD3.create({});
-		client.tcpConnection.sendPack(new OPacket("D3", true, [0], packD3, employeeManager.PacketD3));
+		setman.client.tcpConnection.sendPack(new OPacket("D3", true, [0], packD3, employeeManager.PacketD3));
 	}
 
 	this.sendE4 = function () {
 		employeeManager.clearErrorMsg();
 		var packE4 = employeeManager.PacketE4.create({});
-		client.tcpConnection.sendPack(new OPacket("E4", true, [0], packE4, employeeManager.PacketE4));
+		setman.client.tcpConnection.sendPack(new OPacket("E4", true, [0], packE4, employeeManager.PacketE4));
 	}
 
 	this.sendE6 = function (nAccept) {
 		employeeManager.clearErrorMsg();
 		var packE6 = employeeManager.PacketE6.create({accept: nAccept});
-		client.tcpConnection.sendPack(new OPacket("E6", true, [0], packE6, employeeManager.PacketE6));
+		setman.client.tcpConnection.sendPack(new OPacket("E6", true, [0], packE6, employeeManager.PacketE6));
 	}
 
-	this.initPackets(root);
+	this.acceptOfferButton = new PKeyButton('#acceptOfferButton', function () {
+		employeeManager.sendOffer(true);
+	});
+
+	this.declineOfferButton = new PKeyButton('#declineOfferButton', function () {
+		employeeManager.sendOffer(false);
+	});
 }

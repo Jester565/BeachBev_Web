@@ -1,6 +1,7 @@
 #include "DBManager.h"
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <Logger.h>
 
 typedef boost::archive::text_oarchive ArchiveOut;
 typedef boost::archive::text_iarchive ArchiveIn;
@@ -108,12 +109,12 @@ bool DBManager::connect(const ConnectionInformation& connectionInfo)
 		connectStr += "; ";
 	}
 	connectStr += '\0';
-	std::cout << connectStr << std::endl;
 	return connect(connectStr);
 }
 
 bool DBManager::connect(const std::string & connectStr)
 {
+	Logger::Log(LOG_LEVEL::DebugHigh, "Connecting to database with connectStr of: " + connectStr);
 	dbConnection = new otl_connect();
 	try
 	{

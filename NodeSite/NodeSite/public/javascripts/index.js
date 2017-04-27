@@ -2,6 +2,6 @@
 
 $(document).ready(function () {
 	$('#ordernow').click(function () {
-		redirect("menu.html");
+		Redirect("menu.html");
 	});
 });

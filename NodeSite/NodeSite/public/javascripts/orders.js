@@ -47,7 +47,7 @@ function OrderManager() {
 		}
 		else {
 			if (window.confirm("Your Login Token Has Expired... Click YES To Redirect")) {
-				redirect("login.html");
+				Redirect("login.html");
 			}
 		}
 	}, this, "Gets the success of the login"));
@@ -57,7 +57,7 @@ function OrderManager() {
 	$('#logout').click(function () {
 		localStorage.removeItem("token");
 		localStorage.removeItem("name");
-		redirect("login.html");
+		Redirect("login.html");
 	});
 	this.oLongitude = 0;
 	this.oLatitude = 0;
@@ -70,7 +70,7 @@ function OrderManager() {
 		gMapStr += "+";
 		gMapStr += new String((orderManager.oLongitude).toFixed(8));
 		console.log(gMapStr);
-		redirect(gMapStr);
+		Redirect(gMapStr);
 	});
 	$('#oDone').click(function () {
 		var packG2 = new availibleManager.PackG2();
@@ -102,7 +102,7 @@ client.tcpConnection.onopen = function () {
 	}
 	else {
 		if (window.confirm("You Don't Have A Login Token... Click YES To Redirect")) {
-			redirect("login.html");
+			Redirect("login.html");
 		}
 	}
 };

@@ -3636,7 +3636,7 @@ _xamzrequire = function e(t, n, r) {
                 this.data = null;
                 this.error = null;
                 this.retryCount = 0;
-                this.redirectCount = 0;
+                this.RedirectCount = 0;
                 this.httpResponse = new AWS.HttpResponse();
                 if (request) {
                     this.maxRetries = request.service.numRetries();
@@ -6726,13 +6726,13 @@ _xamzrequire = function e(t, n, r) {
                     if (resp.error && resp.error.statusCode >= 300 && resp.error.statusCode < 400 && resp.httpResponse.headers["location"]) {
                         this.httpRequest.endpoint = new AWS.Endpoint(resp.httpResponse.headers["location"]);
                         this.httpRequest.headers["Host"] = this.httpRequest.endpoint.host;
-                        resp.error.redirect = true;
+                        resp.error.Redirect = true;
                         resp.error.retryable = true;
                     }
                 });
                 add("RETRY_CHECK", "retry", function RETRY_CHECK(resp) {
                     if (resp.error) {
-                        if (resp.error.redirect && resp.redirectCount < resp.maxRedirects) {
+                        if (resp.error.Redirect && resp.RedirectCount < resp.maxRedirects) {
                             resp.error.retryDelay = 0;
                         } else if (resp.retryCount < resp.maxRetries) {
                             resp.error.retryDelay = this.service.retryDelays(resp.retryCount) || 0;
@@ -6746,8 +6746,8 @@ _xamzrequire = function e(t, n, r) {
                         if (resp.error.retryable && resp.retryCount < resp.maxRetries) {
                             resp.retryCount++;
                             willRetry = true;
-                        } else if (resp.error.redirect && resp.redirectCount < resp.maxRedirects) {
-                            resp.redirectCount++;
+                        } else if (resp.error.Redirect && resp.RedirectCount < resp.maxRedirects) {
+                            resp.RedirectCount++;
                             willRetry = true;
                         }
                     }
@@ -18898,7 +18898,7 @@ _xamzrequire = function e(t, n, r) {
                     },
                     WebsiteRedirectLocation: {
                         location: "header",
-                        locationName: "x-amz-website-redirect-location"
+                        locationName: "x-amz-website-Redirect-location"
                     },
                     SSECustomerAlgorithm: {
                         location: "header",
@@ -19128,7 +19128,7 @@ _xamzrequire = function e(t, n, r) {
                     },
                     WebsiteRedirectLocation: {
                         location: "header",
-                        locationName: "x-amz-website-redirect-location"
+                        locationName: "x-amz-website-Redirect-location"
                     },
                     SSECustomerAlgorithm: {
                         location: "header",
@@ -20147,7 +20147,7 @@ _xamzrequire = function e(t, n, r) {
                     },
                     WebsiteRedirectLocation: {
                         location: "header",
-                        locationName: "x-amz-website-redirect-location"
+                        locationName: "x-amz-website-Redirect-location"
                     },
                     ServerSideEncryption: {
                         location: "header",
@@ -20469,7 +20469,7 @@ _xamzrequire = function e(t, n, r) {
                     },
                     WebsiteRedirectLocation: {
                         location: "header",
-                        locationName: "x-amz-website-redirect-location"
+                        locationName: "x-amz-website-Redirect-location"
                     },
                     ServerSideEncryption: {
                         location: "header",
@@ -21721,7 +21721,7 @@ _xamzrequire = function e(t, n, r) {
                     },
                     WebsiteRedirectLocation: {
                         location: "header",
-                        locationName: "x-amz-website-redirect-location"
+                        locationName: "x-amz-website-Redirect-location"
                     },
                     SSECustomerAlgorithm: {
                         location: "header",
