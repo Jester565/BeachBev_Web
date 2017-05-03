@@ -43,6 +43,8 @@ function LoginManager() {
 				loginManager.setErrorMsg(packA1.msg);
 			}
 			else {
+				console.log("EID: " + packA1.eID);
+				console.log("WinLoc: " + window.location.hostname);
 				Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: window.location.hostname, secure: true });
 				Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: window.location.hostname, secure: true });
 				Cookies.set('eID', packA1.eID, { path: '/', domain: window.location.hostname, secure: true });

@@ -3,6 +3,28 @@
 	src: url('../fonts/BERNHC.TTF');
 }
 
+ul {
+	display: block;
+	list-style: none;
+}
+
+	ul li a {
+		cursor: pointer;
+		font-family: 'Bitter', serif;
+		font-weight: bold;
+		text-decoration: none;
+		display: block;
+		text-align: left;
+		margin-left: -20px;
+		color: black;
+		padding: 10px 0;
+		font-size: 2em;
+	}
+
+		ul li a:hover {
+			background-color: rgba(0, 0, 0, .2);
+		}
+
 #headerRect {
 	position: fixed;
 	top: -6px;
@@ -90,35 +112,20 @@
 	margin-bottom: -10px;
 }
 
-ul {
-	display: block;
-	list-style: none;
+#subEmpName {
+	margin-bottom: -10px;
 }
-
-	ul li a {
-		cursor: pointer;
-		font-family: 'Bitter', serif;
-		font-weight: bold;
-		text-decoration: none;
-		display: block;
-		text-align: left;
-		margin-left: -20px;
-		color: black;
-		padding: 10px 0;
-		font-size: 2em;
-	}
-
-		ul li a:hover {
-			background-color: rgba(0, 0, 0, .2);
-		}
 
 #accountDiv a {
 	font-size: x-small;
 	text-align: left;
-	margin-left: 5px;
+	margin-left: 4px;
 	font-weight:normal;
-	margin-top: -10px;
-	margin-bottom: -10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 4px;
+	border-radius: 3px;
+	padding-right: 0px;
 }
 #employeeMenuDiv a {
 	font-size: 1.4em;
@@ -196,6 +203,12 @@ ul {
 	height: auto;
 	margin-top: -2.5em;
 }
+
+	#dropArrowImg:hover {
+		background-color: rgba(0, 0, 0, .2);
+		border-radius: 5px;
+		cursor: pointer;
+	}
 
 	#dropArrowImg.dropped {
 		-ms-transform: rotate(-180deg);

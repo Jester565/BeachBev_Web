@@ -8,6 +8,10 @@ body {
 	overflow-x: hidden;
 }
 
+#space {
+	height: 4em;
+}
+
 h2 {
 	font-family: 'Bitter', serif;
 }
@@ -99,6 +103,7 @@ ul {
 	}
 
 #msg {
+
 	text-align: center;
 	font-family: 'Bitter', serif;
 	font-size: 1em;

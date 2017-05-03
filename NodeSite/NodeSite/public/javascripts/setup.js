@@ -52,11 +52,12 @@ function SetupManager(loginRequired, manager) {
 				setman.innerLoginManager = new InnerLoginManager(setman.client, setman.client.root,
 					function () //onlogin
 					{
+						if (!setman._mbarCalled) {
+							setman.mbarManager.initPacks();
+							setman.mbarManager.initSubEmpDiv();
+							setman._mbarCalled = true;
+						}
 						if (setman._loginRequired) {
-							if (!setman._opened) {
-								setman.mbarManager.initPacks();
-								setman.mbarManager.initSubEmpDiv();
-							}
 							setman._openCaller();
 						}
 					},
@@ -84,6 +85,7 @@ function SetupManager(loginRequired, manager) {
 	setman.mbarManager = new MBarManager();
 
 	setman._opened = false;
+	setman._mbarCalled = false;
 	setman._loginRequired = loginRequired;
 	setman._manager = manager;
 	setman._checkManager();

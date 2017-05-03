@@ -5,6 +5,7 @@ var BUCKET_NAME = 'beachbev-resumes';
 
 var setman = null;
 var resumeManager = null;
+var resumeZone = null;
 
 $('document').ready(function () {
 	$("#mBar").load("./mBar.html", function () {

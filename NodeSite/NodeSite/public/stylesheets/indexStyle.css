@@ -16,7 +16,14 @@ html,body {
 
 body {
     background-color: rgb(255,255,255);
-    overflow-x: hidden;
+}
+
+#homeDiv {
+	display: block;
+	max-width: 700px;
+	min-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #slogan1 {
@@ -42,26 +49,26 @@ body {
 }
 
 #lgdiv {
-    margin-top: 3em;
-    width: 130%;
-    margin-left: -30%;
-    height: 55vw;
-    overflow: hidden;
+	display: block;
+  margin-top: 3em;
+  height: auto;
+  overflow: hidden;
+	padding-bottom: 20%;
 }
 
 #lifeguard {
-    position: relative;
-    z-index: 1;
-    width: 130%;
-    margin-left: -30%;
-    height: auto;
+  z-index: 1;
+	width: 150%;
+	margin-left: -50%;
+	min-height: 100px;
+	right: 0;
+	overflow: hidden;
 }
 #ordernow {
-    position: relative;
     display: block;
     width: 45%;
-    height: auto;
-    margin-left: 40%;
+		height: auto;
+    margin-left: auto;
     margin-right: auto;
     margin-top: -30%;
     z-index: 2;
@@ -79,8 +86,9 @@ body {
 #hdiw {
     text-align: center;
     font-family: "Berlin";
-    font-size: 6vw;
+    font-size: xx-large;
     text-decoration: underline;
+		margin-bottom: 9px;
 }
 
 #beachdiv {
@@ -89,38 +97,46 @@ body {
     overflow: hidden;
 }
 
+#stepDiv {
+	position: relative;
+	display: block;
+	margin-top: 30px;
+	margin-right: 0;
+	margin-left: auto;
+	text-align: left;
+	width: 50%;
+	z-index: 2;
+}
+
 #step1 {
-    position: relative;
-    font-family: "Berlin";
-    margin-left: 44vw;
-    font-size: 4.5vw;
-    margin-bottom: -4vw;
-    z-index: 2;
+	margin: 5px;
+	font-family: "Berlin";
+	font-size: x-large;
 }
 
 #step2 {
-    position: relative;
-    font-family: "Berlin";
-    font-size: 4.5vw;
-    margin-left: 51vw;
-    margin-bottom: -3.7vw;
-    z-index: 2;
+	margin: 5px;
+	font-family: "Berlin";
+	margin-left: 20px;
+	font-size: x-large;
+	margin-top: 10px;
 }
 
 #step3 {
-    position: relative;
-    font-family: "Berlin";
-    margin-left: 58vw;
-    font-size: 4.5vw;
-    z-index: 2;
+	margin: 5px;
+	font-family: "Berlin";
+	margin-left: 40px;
+	font-size: x-large;
+	margin-top: 10px;
 }
 
 #phoneman {
-    background-color: rgb(81, 188, 255);
-    width: 100%;
-    height: auto;
-    margin-top: -20vw;
-    z-index: 1;
+	position: relative;
+	margin-top: -100px;
+  background-color: rgb(81, 188, 255);
+  width: 100%;
+  height: auto;
+  z-index: 1 !important;
 }
 
 #foodman {
@@ -133,8 +149,8 @@ body {
 #step4 {
     position: relative;
     font-family: "Berlin";
-    font-size: 12vw;
-    margin-left: 2vw;
-    margin-top: -18vw;
+    font-size: 70px;
+		margin-left: 3%;
+    margin-top: -110px;
     z-index: 2;
 }

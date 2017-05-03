@@ -55,15 +55,18 @@ app.post('/inLocation.html', function (request, response) {
 	}
 });
 
-/*
 var httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(httpsPort, localAddress, function () {
 	console.log("HTTPS Running");
 });
-*/
 
-var httpServer = http.createServer(app);
+
+var httpServer = http.createServer(function (req, res) {
+	res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+	res.end();
+});
+
 httpServer.listen(httpPort, localAddress, function () {
-	console.log("HTTP Running");
+	console.log("HTTP RUNNING");
 });

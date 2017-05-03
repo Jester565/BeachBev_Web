@@ -77,12 +77,14 @@ function PwdResetManager() {
 	};
 
 	this.setMsg = function (msg) {
+		$('#loading').addClass('hidden');
 		$('#msg').text(msg);
 		$('#msg').removeClass('error');
 		$('#msg').removeClass('hidden');
 	};
 
 	this.setErrorMsg = function (msg) {
+		$('#loading').addClass('hidden');
 		$('#msg').text(msg);
 		$('#msg').addClass('error');
 		$('#msg').removeClass('hidden');

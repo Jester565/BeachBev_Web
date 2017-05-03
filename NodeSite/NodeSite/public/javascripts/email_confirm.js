@@ -35,11 +35,10 @@ function EmailConfirmManager() {
 			$('#loading').addClass('hidden');
 			var packB3 = emailConfirmManager.PacketB3.decode(iPack.packData);
 			if (packB3.success) {
-				console.log("Success!");
 				$('#checkmark').removeClass('hidden');
 				$('#msg').removeClass('hidden');
 				$('#msg').addClass('success');
-				$('#msg').text(packB3.msg);
+				$('#msg').html(packB3.msg);
 			}
 			else {
 				emailConfirmManager.setErrorMsg(packB3.msg);
@@ -49,7 +48,7 @@ function EmailConfirmManager() {
 
 	this.setErrorMsg = function (str) {
 		$('#msg').removeClass('hidden');
-		$('#msg').text(str);
+		$('#msg').html(str);
 		$('#msg').focus();
 		$('html, body').scrollTo($('#msg'), 100);
 	};

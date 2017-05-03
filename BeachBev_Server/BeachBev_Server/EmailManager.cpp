@@ -164,7 +164,7 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 					}
 					verifyEmail(sender->getEmpID(), dbManager);
 					replyPacket.set_success(true);
-					replyPacket.set_msg("Email verified");
+					replyPacket.set_msg("Email Verified! Goto <a href=\'javascript:document.location.href=\"employee.html?\" + document.location.href\'>employee home</a> to use your account");
 				}
 				else
 				{

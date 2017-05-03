@@ -11,6 +11,8 @@ $('document').ready(function () {
 });
 
 function ApplyManager() {
+	applyManager = this;
+
 	this.onProto = function () {
 		applyManager.initPacks();
 	}

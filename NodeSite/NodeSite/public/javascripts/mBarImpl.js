@@ -11,7 +11,7 @@ function MBarManager() {
 		mbarManager.PacketC2 = setman.client.root.lookup("ProtobufPackets.PackC2");
 		mbarManager.PacketC3 = setman.client.root.lookup("ProtobufPackets.PackC3");
 
-		setman.client.packetManager.addPKey(new PKey("C3"), function (iPack) {
+		setman.client.packetManager.addPKey(new PKey("C3", function (iPack) {
 			var packC3 = mbarManager.PacketC3.decode(iPack.packData);
 			if (packC3.name === null) {
 				console.error("Failed to aquire name (C3 handler)");
@@ -20,7 +20,7 @@ function MBarManager() {
 			{
 				mbarManager._initSubEmpDivDisplay(packC3.name);
 			}
-		});
+		}));
 	}
 
 	this.initSubEmpDiv = function () {

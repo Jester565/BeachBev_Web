@@ -169,6 +169,8 @@
 	padding-top: 15px;
 	padding-bottom: 15px;
 	width: 110%;
+	position: fixed;
+	bottom: 0;
 }
 
 #linkDiv table {

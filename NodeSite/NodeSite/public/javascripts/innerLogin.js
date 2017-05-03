@@ -35,14 +35,14 @@ function InnerLoginManager(client, root, onLogin, onFail) {
 	};
 
 	client.packetManager.addPKey(new PKey("A9", function (iPack) {
-		var packA1 = innerLoginManager.PacketA1.decode(iPack.packData);
-		if (packA1.pwdToken === null || packA1.pwdToken.length <= 0) {
+		var packA9 = innerLoginManager.PacketA9.decode(iPack.packData);
+		if (packA9.pwdToken == null || packA9.pwdToken.length <= 0) {
 			innerLoginManager._onFail();
 		}
 		else {
-			Cookies.set('pwdToken', packA1.pwdToken, { expires: 1, path: '/', domain: window.location.hostname, secure: true });
-			Cookies.set('deviceID', packA1.deviceID, { path: '/', domain: window.location.hostname, secure: true });
-			Cookies.set('eID', packA1.eID, { path: '/', domain: window.location.hostname, secure: true });
+			Cookies.set('pwdToken', packA9.pwdToken, { expires: 1, path: '/', domain: window.location.hostname, secure: true });
+			Cookies.set('deviceID', packA9.deviceID, { path: '/', domain: window.location.hostname, secure: true });
+			Cookies.set('eID', packA9.eID, { path: '/', domain: window.location.hostname, secure: true });
 			if (innerLoginManager._onLogin !== undefined) {
 				innerLoginManager._onLogin();
 			}
