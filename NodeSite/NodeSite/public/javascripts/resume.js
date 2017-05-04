@@ -218,7 +218,7 @@ function ResumeManager() {
 		resumeManager.pdf = null;
 		resumeManager.pdfIndex = 0;
 		$('#pdfDownload').click(function () {
-			var pdfBlob = new Blob([resumeManager.pdfData.buffer], { type: "application/pdf;charset=utf-8" });
+			var pdfBlob = new Blob([resumeManager.pdfData.buffer], { type: "application/octet-stream" });
 			saveAs(pdfBlob, $('#pdfTitle').text());
 		});
 		$('#pdfExit').click(function () {
