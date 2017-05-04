@@ -29,6 +29,8 @@ function ResumeManager() {
 	this.s3Prefix = null;
 	this.pdf = null;
 	this.pdfIndex = 0;
+	this.pdfW = 0;
+	this.pdfData = null;
 
 	this.setErrorMsg = function (msg) {
 		$('#msg').text(msg);
@@ -149,15 +151,26 @@ function ResumeManager() {
 		{
 			var fReader = new FileReader();
 			fReader.onload = function () {
-				var arr = new Uint8Array(this.result);
-				resumeManager.showPDF(file.name, arr);
+				var fileData = new Uint8Array(this.result);
+				resumeManager.showPDF(file.name, fileData);
 			}
 			fReader.readAsArrayBuffer(file);
 		}
 	}
 
+	this.setPDFSize = function () {
+		var w = $(window).width();
+		if (resumeManager.pdfW < $(window).width()) {
+			w = resumeManager.pdfW;
+		}
+		$('#pdfDiv').css('width', String(w) + 'px');
+		$('#pdfHeadDiv').css('width', String(w) + 'px');
+		$('.pdfPage').css('width', String(w - 20) + 'px');
+	}
+
 	this.showPDF = function (name, fileArr) {
 		resumeManager.pdfIndex = 1;
+		resumeManager.pdfData = fileArr;
 		PDFJS.getDocument(fileArr).then(function (pdf) {
 			resumeManager.pdf = pdf;
 			resumeManager.loadPDFPage = function (page) {
@@ -175,11 +188,13 @@ function ResumeManager() {
 					canvasContext: context,
 					viewport: viewport
 				};
+
 				page.render(renderContext);
 
+				resumeManager.pdfW = canvas.width;
+				resumeManager.pdfH = canvas.height;
 				$('#pdfDiv').append(canvas);
-				$('#pdfDiv').css('width', String(canvas.width));
-				$('#pdfHeadDiv').css('width', String(canvas.width));
+				resumeManager.setPDFSize();
 
 				resumeManager.pdfIndex++;
 				if (resumeManager.pdfIndex <= resumeManager.pdf.numPages) {
@@ -194,17 +209,24 @@ function ResumeManager() {
 		});
 	}
 	this.initPDFDisplay = function (title) {
+		$(window).resize(resumeManager.setPDFSize);
 		$('#loader').removeClass('hidden');
 		$('#pdfTitle').text(title);
 		$('body').css('background-color', 'lightgrey');
+		$('#uploadDiv').addClass('hidden');
 		$('#pdfBackDiv').removeClass('hidden');
 		resumeManager.pdf = null;
 		resumeManager.pdfIndex = 0;
+		$('#pdfDownload').click(function () {
+			var pdfBlob = new Blob([resumeManager.pdfData], { type: "application/pdf" });
+			saveAs(pdfBlob, $('#pdfTitle').text());
+		});
 		$('#pdfExit').click(function () {
 			$('body').css('background-color', 'white');
 			$('#pdfBackDiv').addClass('hidden');
 			$('.pdfPage').remove();
 			$('#pdfExit').unbind('click');
+			$('#uploadDiv').removeClass('hidden');
 		});
 	}
 }

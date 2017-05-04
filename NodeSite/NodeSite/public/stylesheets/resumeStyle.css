@@ -87,7 +87,7 @@
 }
 #pdfBackDiv {
 	display: block;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -97,7 +97,7 @@
 
 #pdfDiv {
 	display: block;
-	position: absolute;
+	position: fixed;
 	top: 5em;
 	right: 0;
 	left: 0;
@@ -110,6 +110,7 @@
 }
 
 #pdfHeadDiv {
+	overflow-x: hidden;
 	display: block;
 	position: fixed;
 	width: auto;
@@ -121,8 +122,9 @@
 
 #pdfTitle {
 	font-family: 'Bitter', serif;
-	font-size: xx-large;
+	font-size: x-large;
 	color: dimgray;
+	margin-top: 40px;
 	text-align: center;
 }
 
@@ -173,6 +175,29 @@
 #pdfExit:active {
 	background-color: rgba(255, 255, 255, .4);
 }
+
+#pdfDownload {
+	display: block;
+	position: absolute;
+	left: 30px;
+	width: 22px;
+	height: 22px;
+	top: 12px;
+}
+
+	#pdfDownload:hover {
+		border: solid;
+		border-radius: 3px;
+		margin-right: -1px;
+		margin-top: -1px;
+		border-color: rgba(255, 255, 255, .3);
+		background-color: rgba(255, 255, 255, .2);
+		border-width: 1px;
+	}
+
+	#pdfDownload:active {
+		background-color: rgba(255, 255, 255, .4);
+	}
 
 .pdfPage {
 	display: block;
