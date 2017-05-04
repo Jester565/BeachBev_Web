@@ -21,7 +21,6 @@ body {
 #homeDiv {
 	display: block;
 	max-width: 700px;
-	min-width: 600px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -104,21 +103,19 @@ body {
 	margin-right: 0;
 	margin-left: auto;
 	text-align: left;
-	width: 50%;
+	width: 43%;
 	z-index: 2;
 }
 
 #step1 {
 	margin: 5px;
 	font-family: "Berlin";
-	font-size: x-large;
 }
 
 #step2 {
 	margin: 5px;
 	font-family: "Berlin";
 	margin-left: 20px;
-	font-size: x-large;
 	margin-top: 10px;
 }
 
@@ -126,7 +123,6 @@ body {
 	margin: 5px;
 	font-family: "Berlin";
 	margin-left: 40px;
-	font-size: x-large;
 	margin-top: 10px;
 }
 
