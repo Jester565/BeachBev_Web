@@ -25,6 +25,7 @@ function HomeManager() {
 
 	this.setBeachDivFontSize = function () {
 		var fontSize = $('#homeDiv').width() / 35.0;
+		$('#phoneman').css("margin-top", '-' + String(100 - (20 - fontSize) * 3) + 'px');
 		$("#stepDiv").css("margin-top", String(fontSize * 1.4 - 15) + 'px');
 		$("#stepDiv").css("margin-right", String(fontSize) + 'px');
 		$("#stepDiv").css("fontSize", String(fontSize * 1.2) + 'px');
