@@ -220,6 +220,11 @@ function ResumeManager() {
 		$('#pdfDownload').click(function () {
 			var pdfBlob = new Blob([resumeManager.pdfData], { type: "application/pdf" });
 			saveAs(pdfBlob, $('#pdfTitle').text());
+
+			var android = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+			if (android) {
+				alert("Android may say the file did not download correctly. However, you can open it via Chrome Settings->Downloads->" + $('#pdfTitle').text());
+			}
 		});
 		$('#pdfExit').click(function () {
 			$('body').css('background-color', 'white');
