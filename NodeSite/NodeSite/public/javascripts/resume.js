@@ -109,7 +109,7 @@ function ResumeManager() {
 	}
 
 	this.uploadResume = function (file) {
-		var fileKey = encodeURIComponent(resumeManager.s3Prefix) + '/' + file.name;
+		var fileKey = encodeURIComponent(resumeManager.s3Prefix) + '/' + file.name.replace(' ', '+');
 		resumeManager.s3Client.upload({
 			Bucket: BUCKET_NAME,
 			Key: fileKey,
@@ -143,7 +143,7 @@ function ResumeManager() {
 				else
 				{
 					var fileArr = data.Body;
-					resumeManager.showPDF(file.name, fileArr);
+					resumeManager.showPDF(file.name.replace('+', ' '), fileArr);
 				}
 			});
 		}
