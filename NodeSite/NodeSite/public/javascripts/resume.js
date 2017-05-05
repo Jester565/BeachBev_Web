@@ -7,6 +7,10 @@ var setman = null;
 var resumeManager = null;
 var resumeZone = null;
 
+function s3Decode(str) {
+	return decodeURIComponent((str + '').replace(/\+/g, '%20'));
+}
+
 $('document').ready(function () {
 	$("#mBar").load("./mBar.html", function () {
 		resumeManager = new ResumeManager();
@@ -79,7 +83,7 @@ function ResumeManager() {
 	}
 
 	this.loadResumes = function () {
-		var resumeFolderKey = encodeURIComponent(resumeManager.s3Prefix) + '/';
+		var resumeFolderKey = resumeManager.s3Prefix + '/';
 		var params = {
 			Bucket: BUCKET_NAME,
 			Prefix: resumeFolderKey,
@@ -93,7 +97,7 @@ function ResumeManager() {
 			}
 			else {
 				var files = data.Contents.map(function (file) {
-					var fileName = file.Key.substr(file.Key.indexOf('/') + 1);
+					var fileName = s3Decode(file.Key.substr(file.Key.indexOf('/') + 1));
 					if (fileName.length > 0) {
 						file.size = file.Size;
 						file.name = fileName;
@@ -109,7 +113,7 @@ function ResumeManager() {
 	}
 
 	this.uploadResume = function (file) {
-		var fileKey = encodeURIComponent(resumeManager.s3Prefix) + '/' + file.name.replace(' ', '+');
+		var fileKey = resumeManager.s3Prefix + '/' + file.name;
 		resumeManager.s3Client.upload({
 			Bucket: BUCKET_NAME,
 			Key: fileKey,
@@ -132,7 +136,7 @@ function ResumeManager() {
 	this.viewResume = function (file) {
 		resumeManager.initPDFDisplay(file.name);
 		if (file.uploaded) {
-			var fileKey = encodeURIComponent(resumeManager.s3Prefix) + '/' + file.name;
+			var fileKey = resumeManager.s3Prefix + '/' + file.name;
 			resumeManager.s3Client.getObject({
 				Bucket: BUCKET_NAME,
 				Key: fileKey
@@ -143,7 +147,7 @@ function ResumeManager() {
 				else
 				{
 					var fileArr = data.Body;
-					resumeManager.showPDF(file.name.replace('+', ' '), fileArr);
+					resumeManager.showPDF(file.name, fileArr);
 				}
 			});
 		}
