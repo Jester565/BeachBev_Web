@@ -20,7 +20,10 @@ void BB_Server::createManagers()
 
 ClientPtr BB_Server::createClient(boost::shared_ptr<TCPConnection> tcpConnection, IDType id)
 {
-	return boost::make_shared<BB_Client>(tcpConnection, ((BB_ServicePool*)servicePool)->getNextDBManager(), this, id);
+	DBManager* dbManager = ((BB_ServicePool*)servicePool)->getNextDBManager();
+	BB_ClientPtr bbClient = boost::make_shared<BB_Client>(tcpConnection, dbManager, this, id);
+	bbClient->init();
+	return boost::static_pointer_cast<Client>(bbClient);	
 }
 
 void BB_Server::run(uint16_t port)

@@ -10,6 +10,8 @@ class BB_Client : public Client
 public:
 	BB_Client(boost::shared_ptr <TCPConnection> tcpConnection, DBManager* dbManager, Server* server, IDType id);
 
+  void init() override;
+	
 	DBManager* getDBManager() {
 		return dbManager;
 	}
