@@ -114,9 +114,9 @@ public:
 
 	void handleC2(boost::shared_ptr<IPacket> iPack);
 
-	BB_Client* getEmployee(IDType eID);
+	BB_ClientPtr getEmployee(IDType eID);
 
-	std::unordered_map<IDType, Client*> employees;
+	std::unordered_map<IDType, ClientPtr> employees;
 
 	~EmployeeManager();
 

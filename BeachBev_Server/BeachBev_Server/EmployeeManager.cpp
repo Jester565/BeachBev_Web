@@ -482,12 +482,12 @@ void EmployeeManager::handleC2(boost::shared_ptr<IPacket> iPack)
 	bbServer->getClientManager()->send(oPack, sender);
 }
 
-BB_Client* EmployeeManager::getEmployee(IDType eID)
+BB_ClientPtr EmployeeManager::getEmployee(IDType eID)
 {
 	auto it = employees.find(eID);
 	if (it != employees.end())
 	{
-		return (BB_Client*)it->second;
+		return boost::static_pointer_cast<BB_Client>(it->second);
 	}
 	return nullptr;
 }
