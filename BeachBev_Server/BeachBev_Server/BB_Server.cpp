@@ -15,13 +15,12 @@ BB_Server::BB_Server()
 void BB_Server::createManagers()
 {
 	servicePool = new BB_ServicePool(certPath, pemPath, dbConInfo);
-	pm = new PacketManager(this);
 	cm = new ClientManager(this);
 }
 
-Client * BB_Server::createClient(boost::shared_ptr<TCPConnection> tcpConnection, IDType id)
+ClientPtr BB_Server::createClient(boost::shared_ptr<TCPConnection> tcpConnection, IDType id)
 {
-	return new BB_Client(tcpConnection, ((BB_ServicePool*)servicePool)->getNextDBManager(), this, id);
+	return boost::make_shared<BB_Client>(tcpConnection, ((BB_ServicePool*)servicePool)->getNextDBManager(), this, id);
 }
 
 void BB_Server::run(uint16_t port)

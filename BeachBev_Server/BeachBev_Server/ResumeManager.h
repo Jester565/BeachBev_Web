@@ -55,7 +55,7 @@ public:
 	~ResumeManager();
 
 private:
-	bool requestResumePermissions(BB_Client* sender, const std::string& policy);
+	bool requestResumePermissions(BB_ClientPtr sender, const std::string& policy);
 
 	void requestResumeHandler(const Aws::STS::STSClient* stsClient,
 		const Aws::STS::Model::GetFederationTokenRequest& req,

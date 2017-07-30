@@ -18,6 +18,7 @@ Selection: ";
 	int logLevel = 0;
 	std::cin >> logLevel;
 	Logger::SetLogLevel((LOG_LEVEL)logLevel);
+	return true;
 }
 
 bool CommandHandler::StopInputCommand(BB_Server* bbServer) {

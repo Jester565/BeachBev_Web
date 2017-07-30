@@ -29,7 +29,7 @@ void EmployeeManager::CreateAccountEmailHandler(const Aws::SES::SESClient * clie
 	const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	auto createAccountContext = std::static_pointer_cast<const CreateAccountEmailContext>(context);
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(createAccountContext->clientID);
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(bbServer->getClientManager()->getClient(createAccountContext->clientID));
 	if (!outcome.IsSuccess())
 	{
 		std::string query = "DELETE FROM Employees WHERE eID=:f1<int>";
@@ -74,7 +74,7 @@ void EmployeeManager::CreateAccountEmailHandler(const Aws::SES::SESClient * clie
 void EmployeeManager::PwdResetEmailHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	auto pwdResetContext = std::static_pointer_cast<const PasswordResetContext>(context);
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(pwdResetContext->clientID);
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(bbServer->getClientManager()->getClient(pwdResetContext->clientID));
 	if (sender != nullptr) {
 		ProtobufPackets::PackA5 replyPacket;
 		if (outcome.IsSuccess()) {
@@ -94,20 +94,28 @@ void EmployeeManager::PwdResetEmailHandler(const Aws::SES::SESClient * client, c
 }
 
 EmployeeManager::EmployeeManager(BB_Server* bbServer)
-	:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
+	:PKeyOwner(), bbServer(bbServer)
 {
-	addKey(new PKey("A0", this, &EmployeeManager::handleA0));
-	addKey(new PKey("A2", this, &EmployeeManager::handleA2));
-	addKey(new PKey("A3", this, &EmployeeManager::handleA3));
-	addKey(new PKey("A4", this, &EmployeeManager::handleA4));
-	addKey(new PKey("A6", this, &EmployeeManager::handleA6));
-	addKey(new PKey("A8", this, &EmployeeManager::handleA8));
-	addKey(new PKey("C0", this, &EmployeeManager::handleC0));
-	addKey(new PKey("C2", this, &EmployeeManager::handleC2));
+	addKey(boost::make_shared<PKey>("A0", this, &EmployeeManager::handleA0));
+	addKey(boost::make_shared<PKey>("A2", this, &EmployeeManager::handleA2));
+	addKey(boost::make_shared<PKey>("A3", this, &EmployeeManager::handleA3));
+	addKey(boost::make_shared<PKey>("A4", this, &EmployeeManager::handleA4));
+	addKey(boost::make_shared<PKey>("A6", this, &EmployeeManager::handleA6));
+	addKey(boost::make_shared<PKey>("A8", this, &EmployeeManager::handleA8));
+	addKey(boost::make_shared<PKey>("C0", this, &EmployeeManager::handleC0));
+	addKey(boost::make_shared<PKey>("C2", this, &EmployeeManager::handleC2));
 	masterManager = new MasterManager(bbServer);
 	emailManager = new EmailManager(bbServer, this);
 	resumeManager = new ResumeManager(bbServer, emailManager, masterManager);
 	acceptManager = new AcceptManager(bbServer, masterManager, emailManager);
+}
+
+void EmployeeManager::follow(ClientPtr client)
+{
+	PKeyOwner::follow(client);
+	acceptManager->follow(client);
+	emailManager->follow(client);
+	resumeManager->follow(client);
 }
 
 void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
@@ -116,7 +124,7 @@ void EmployeeManager::handleA0(boost::shared_ptr<IPacket> iPack)
 	ProtobufPackets::PackA0 packA0;
 	packA0.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackA1 replyPacket;
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -180,7 +188,7 @@ void EmployeeManager::handleA2(boost::shared_ptr<IPacket> iPack)
 	ProtobufPackets::PackA2 packA2;
 	packA2.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackA9 replyPacket;
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -235,7 +243,7 @@ void EmployeeManager::handleA3(boost::shared_ptr<IPacket> iPack)
 	ProtobufPackets::PackA3 packA3;
 	packA3.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackA1 replyPacket;
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -306,7 +314,7 @@ void EmployeeManager::handleA4(boost::shared_ptr<IPacket> iPack)
 	packA4.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackA5 replyPacket;
 	replyPacket.set_success(false);
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -335,7 +343,7 @@ void EmployeeManager::handleA4(boost::shared_ptr<IPacket> iPack)
 		if (setPwdResetToken(eID, urlEncodedPwdResetToken, dbManager))
 		{
 			AwsSharedPtr<PasswordResetContext> pwdResetContext = std::make_shared<PasswordResetContext>();
-			pwdResetContext->clientID = iPack->getSentFromID();
+			pwdResetContext->clientID = iPack->getSenderID();
 			emailManager->sendPwdResetEmail(packA4.email(), urlEncodedPwdResetToken,
 				std::bind(&EmployeeManager::PwdResetEmailHandler, this, std::placeholders::_1,
 					std::placeholders::_2, std::placeholders::_3, std::placeholders::_4),
@@ -361,7 +369,7 @@ void EmployeeManager::handleA6(boost::shared_ptr<IPacket> iPack)
 	packA6.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackA7 replyPacket;
 	replyPacket.set_success(false);
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -393,7 +401,7 @@ void EmployeeManager::handleA8(boost::shared_ptr<IPacket> iPack)
 	ProtobufPackets::PackA8 packA8;
 	packA8.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackA1 replyPacket;
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -433,7 +441,7 @@ void EmployeeManager::handleA8(boost::shared_ptr<IPacket> iPack)
 
 void EmployeeManager::handleC0(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -457,7 +465,7 @@ void EmployeeManager::handleC0(boost::shared_ptr<IPacket> iPack)
 
 void EmployeeManager::handleC2(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -745,7 +753,7 @@ bool EmployeeManager::removePwdResetToken(IDType eID, DBManager * dbManager)
 	return false;
 }
 
-void EmployeeManager::loginClient(BB_Client * bbClient, IDType eID)
+void EmployeeManager::loginClient(BB_ClientPtr bbClient, IDType eID)
 {
 	bbClient->setEmpID(eID);
 	employees.emplace(std::make_pair(eID, bbClient));

@@ -21,7 +21,7 @@ const std::string EmailManager::HTML_DIR = "/home/ubuntu/BeachBev_Web/";
 void EmailManager::ChangeUnverifiedEmailHandler(const Aws::SES::SESClient * client, const Aws::SES::Model::SendEmailRequest & request, const Aws::SES::Model::SendEmailOutcome & outcome, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	auto unverifiedEmailContext = std::static_pointer_cast<const ChangeUnverifiedEmailContext>(context);
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(unverifiedEmailContext->clientID);
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(bbServer->getClientManager()->getClient(unverifiedEmailContext->clientID));
 	ProtobufPackets::PackB1 packB1;
 	packB1.set_success(false);
 	if (outcome.IsSuccess()) {
@@ -56,11 +56,11 @@ void EmailManager::ChangeEmailNotificationHandler(const Aws::SES::SESClient * cl
 }
 
 EmailManager::EmailManager(BB_Server* bbServer, EmployeeManager* employeeManager)
-	:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer)
+	:PKeyOwner(), bbServer(bbServer)
 {
-	addKey(new PKey("B0", this, &EmailManager::handleB0));
-	addKey(new PKey("B2", this, &EmailManager::handleB2));
-	addKey(new PKey("B4", this, &EmailManager::handleB4));
+	addKey(boost::make_shared<PKey>("B0", this, &EmailManager::handleB0));
+	addKey(boost::make_shared<PKey>("B2", this, &EmailManager::handleB2));
+	addKey(boost::make_shared<PKey>("B4", this, &EmailManager::handleB4));
 	initSESClient();
 }
 
@@ -78,7 +78,7 @@ void EmailManager::handleB0(boost::shared_ptr<IPacket> iPack)
 	packB0.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackB1 replyPacket;
 	replyPacket.set_success(false);
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -97,7 +97,7 @@ void EmailManager::handleB0(boost::shared_ptr<IPacket> iPack)
 
 				AwsSharedPtr<ChangeUnverifiedEmailContext> changeUnverifiedContext = std::make_shared<ChangeUnverifiedEmailContext>();
 				changeUnverifiedContext->dbManager = dbManager;
-				changeUnverifiedContext->clientID = iPack->getSentFromID();
+				changeUnverifiedContext->clientID = iPack->getSenderID();
 				changeUnverifiedContext->eID = sender->getEmpID();
 				changeUnverifiedContext->hashedEmailToken = genTokenHash;
 
@@ -134,7 +134,7 @@ void EmailManager::handleB2(boost::shared_ptr<IPacket> iPack)
 	packB2.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackB3 replyPacket;
 	replyPacket.set_success(false);
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -194,7 +194,7 @@ you may be <a href=\'javascript:document.location.href=\"login.html?\" + documen
 
 void EmailManager::handleB4(boost::shared_ptr<IPacket> iPack) {
 	ProtobufPackets::PackB5 replyPacket;
-	BB_Client* sender = (BB_Client*)(bbServer->getClientManager()->getClient(iPack->getSentFromID()));
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}

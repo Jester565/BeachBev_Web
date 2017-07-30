@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/shared_ptr.hpp>
 #include <aws/core/Region.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -34,3 +35,6 @@ std::string AwsErrorToStr(T& error) {
 
 static const char * AWS_SERVER_REGION_1 = Aws::Region::US_WEST_1;
 static const char * AWS_SERVER_REGION_2 = Aws::Region::US_WEST_2;
+
+class BB_Client;
+typedef boost::shared_ptr<BB_Client> BB_ClientPtr;

@@ -4,6 +4,7 @@
 
 class DBManager;
 
+
 class BB_Client : public Client
 {
 public:

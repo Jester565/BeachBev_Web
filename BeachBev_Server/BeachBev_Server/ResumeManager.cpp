@@ -78,7 +78,7 @@ const std::string ResumeManager::RESUME_BUCKET_ARN = "aws:s3:::beachbev-resumes"
 const std::string ResumeManager::IAM_USER_NAME = "pdf_usr";
 
 ResumeManager::ResumeManager(BB_Server* bbServer, EmailManager* emailManager, MasterManager* masterManager)
-	:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer), emailManager(emailManager), masterManager(masterManager)
+	:PKeyOwner(), bbServer(bbServer), emailManager(emailManager), masterManager(masterManager)
 {
 	if (!initStsClient()) {
 		std::cerr << "Could not initialize STS client!" << std::endl;
@@ -86,9 +86,9 @@ ResumeManager::ResumeManager(BB_Server* bbServer, EmailManager* emailManager, Ma
 	if (!initS3Client()) {
 		std::cerr << "Could not initialize S3 client!" << std::endl;
 	}
-	addKey(new PKey("D0", this, &ResumeManager::handleD0));
-	addKey(new PKey("D2", this, &ResumeManager::handleD2));
-	addKey(new PKey("D3", this, &ResumeManager::handleD3));
+	addKey(boost::make_shared<PKey>("D0", this, &ResumeManager::handleD0));
+	addKey(boost::make_shared<PKey>("D2", this, &ResumeManager::handleD2));
+	addKey(boost::make_shared<PKey>("D3", this, &ResumeManager::handleD3));
 }
 
 bool ResumeManager::initStsClient()
@@ -109,7 +109,7 @@ bool ResumeManager::initS3Client()
 
 void ResumeManager::handleD0(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -135,7 +135,7 @@ void ResumeManager::handleD0(boost::shared_ptr<IPacket> iPack)
 
 void ResumeManager::handleD2(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -159,7 +159,7 @@ void ResumeManager::handleD2(boost::shared_ptr<IPacket> iPack)
 
 void ResumeManager::handleD3(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -178,7 +178,7 @@ ResumeManager::~ResumeManager()
 {
 }
 
-bool ResumeManager::requestResumePermissions(BB_Client * sender, const std::string& policy)
+bool ResumeManager::requestResumePermissions(BB_ClientPtr sender, const std::string& policy)
 {
 	auto context = Aws::MakeShared<RequestResumePermContext>(AWS_ALLOC_TAG);
 	context->clientID = sender->getID();
@@ -195,7 +195,7 @@ bool ResumeManager::requestResumePermissions(BB_Client * sender, const std::stri
 void ResumeManager::requestResumeHandler(const Aws::STS::STSClient * stsClient, const Aws::STS::Model::GetFederationTokenRequest & req, const Aws::STS::Model::GetFederationTokenOutcome & outcome, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	auto resumeContext = std::static_pointer_cast<const RequestResumePermContext>(context);
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(resumeContext->clientID);
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(bbServer->getClientManager()->getClient(resumeContext->clientID));
 	if (sender != nullptr) {
 		ProtobufPackets::PackD1 replyPacket;
 		if (outcome.IsSuccess()) {
@@ -244,7 +244,7 @@ void ResumeManager::createMasterResumePolicy(std::string & policy)
 void ResumeManager::hasResumeHandler(const Aws::S3::S3Client * s3Client, const Aws::S3::Model::ListObjectsV2Request & req, const Aws::S3::Model::ListObjectsV2Outcome & outcome, const AwsSharedPtr<const Aws::Client::AsyncCallerContext>& context)
 {
 	auto hasResumeContext = std::static_pointer_cast<const HasResumeContext>(context);
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(hasResumeContext->clientID);
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(bbServer->getClientManager()->getClient(hasResumeContext->clientID));
 	if (sender == nullptr) {
 		return;
 	}

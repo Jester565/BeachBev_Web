@@ -66,6 +66,8 @@ public:
 
 	EmployeeManager(BB_Server* server);
 
+	void follow(ClientPtr) override;
+
 	/// <summary>
 	/// Adds a new employee to the database, replies with A1
 	/// </summary>
@@ -134,7 +136,7 @@ protected:
 	bool checkPwdResetToken(const std::string& urlEncodedPwdToken, IDType& eID, OTL_BIGINT& tokenTime, DBManager* dbManager);
 
 	bool removePwdResetToken(IDType eID, DBManager* dbManager);
-	void loginClient(BB_Client* bbClient, IDType eID);
+	void loginClient(BB_ClientPtr bbClient, IDType eID);
 
 	bool eIDToName(IDType eID, DBManager* dbManager, std::string& name);
 	

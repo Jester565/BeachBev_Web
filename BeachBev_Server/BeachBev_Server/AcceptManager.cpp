@@ -9,17 +9,17 @@
 #include "Packets/BBPacks.pb.h"
 
 AcceptManager::AcceptManager(BB_Server * bbServer, MasterManager * masterManager, EmailManager * emailManager)
-	:PKeyOwner(bbServer->getPacketManager()), bbServer(bbServer), masterManager(masterManager), emailManager(emailManager)
+	:PKeyOwner(), bbServer(bbServer), masterManager(masterManager), emailManager(emailManager)
 {
-	addKey(new PKey("E0", this, &AcceptManager::handleE0));
-	addKey(new PKey("E2", this, &AcceptManager::handleE2));
-	addKey(new PKey("E4", this, &AcceptManager::handleE4));
-	addKey(new PKey("E6", this, &AcceptManager::handleE6));
+	addKey(boost::make_shared<PKey>("E0", this, &AcceptManager::handleE0));
+	addKey(boost::make_shared<PKey>("E2", this, &AcceptManager::handleE2));
+	addKey(boost::make_shared<PKey>("E4", this, &AcceptManager::handleE4));
+	addKey(boost::make_shared<PKey>("E6", this, &AcceptManager::handleE6));
 }
 
 void AcceptManager::handleE0(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -74,7 +74,7 @@ bool AcceptManager::getEIDsWithAState(int aState, DBManager * dbManager, google:
 
 void AcceptManager::handleE2(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -124,7 +124,7 @@ bool AcceptManager::setAState(IDType eID, int aState, DBManager * dbManager)
 
 void AcceptManager::handleE4(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	if (sender == nullptr) {
 		return;
 	}
@@ -158,7 +158,7 @@ int AcceptManager::getAState(IDType eID, DBManager * dbManager)
 
 void AcceptManager::handleE6(boost::shared_ptr<IPacket> iPack)
 {
-	BB_Client* sender = (BB_Client*)bbServer->getClientManager()->getClient(iPack->getSentFromID());
+	BB_ClientPtr sender = boost::static_pointer_cast<BB_Client>(iPack->getSender());
 	ProtobufPackets::PackE6 packE6;
 	packE6.ParseFromString(*iPack->getData());
 	ProtobufPackets::PackE7 replyPacket;
